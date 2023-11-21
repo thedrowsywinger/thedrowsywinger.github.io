@@ -149,7 +149,7 @@ header {
     max-width: 100px;
 }
 
-.nav {
+/* .nav {
     position: fixed;
     background: var(--clr-dark);
     color: var(--clr-light);
@@ -172,12 +172,32 @@ header {
     align-items: center;
     margin: 0;
     padding: 0;
+} */
+
+.nav {
+    position: sticky;
+    background: white;
+    color: var(--clr-dark);
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.nav__list {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
 .nav__link {
     color: inherit;
     font-weight: var(--fw-bold);
-    font-size: var(--fs-h2);
+    font-size: var(--fs-h3);
     text-decoration: none;
 }
 
