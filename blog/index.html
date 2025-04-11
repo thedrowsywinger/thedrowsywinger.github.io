@@ -4,7 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abdullah Md. Sarwar</title>
+    <meta name="description" content="Blog posts by Abdullah Md. Sarwar on software engineering, backend development, database optimization, and security">
+    <meta name="keywords" content="Blog, Software Engineering, Backend Development, Database Optimization, Security, Node.js, Python">
+    <meta name="author" content="Abdullah Md. Sarwar">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Blog - Abdullah Md. Sarwar">
+    <meta property="og:description" content="Technical articles and insights on software engineering, backend development, and more">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thedrowsywinger.github.io/blog/index.html">
+    <meta property="og:image" content="../img/profile_picture.jpg">
+    
+    <title>Blog</title>
+    <link rel="icon" type="image/x-icon" href="img/profile_picture.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
         integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
@@ -25,35 +37,78 @@
                 <li class="nav__item"><a href="../portfolio.html" class="nav__link">Portfolio</a></li>
                 <li class="nav__item"><a href="./" class="nav__link">My Blog</a></li>
                 <li class="nav__item"><a href="../technical_reports.html" class="nav__link">Technical Reports</a></li>
-                <!--                     <li class="nav__item"><a href="#work" class="nav__link">My Work</a></li> -->
+                <li class="nav__item">
+                    <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon" data-fa-transform="shrink-2" aria-hidden="true"></i>
+                    </button>
+                </li>
             </ul>
         </nav>
     </header>
 
     <section class="my-services" id="services">
-        <h2 class="section__title section__title--services" style="font-weight: 100;">My Technical Ramblings</h2>
+        <h1 class="section__title section__title--services" style="font-weight: 100;">My Technical Ramblings</h1>
     </section>
 
-    <section class="about-me" id="about">
+    <main class="blog-posts" id="posts">
+        <article class="blog-post">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./scoring-goals-securely.html">
+                        Scoring Goals Securely: The JWT Playbook in "FindYourTurf"
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2024-04-10">April 10, 2024</time>
+                    <span class="blog-post__tags">
+                        <a href="#security" class="tag">Security</a>
+                        <a href="#jwt" class="tag">JWT</a>
+                        <a href="#authentication" class="tag">Authentication</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    Here I attempt to explore the use of JSON Web Tokens (JWTs) in the context of user authentication on a
+                    web application named "FindYourTurf." The narrative follows Rooney's journey through registration,
+                    login, secure storage, server-side authentication, accessing protected resources, token refreshment, and
+                    logging out. It emphasizes the role of JWTs as digital passports, facilitating secure and personalized
+                    user experiences.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./scoring-goals-securely.html" class="btn">Read More</a>
+            </footer>
+        </article>
 
-        <div class="about-me__body">
-            <p>
-                <a href="./ScoringGoalsSecurely.html">
-                    <h3><b>Scoring Goals Securely: The JWT Playbook in
-                            "FindYourTurf"</b></h3>
-                </a>
-            </p>
-            <p>
-                Here I attempt to explore the use of JSON Web Tokens (JWTs) in the context of user authentication on a
-                web application named "FindYourTurf." The narrative follows Rooney's journey through registration,
-                login, secure storage, server-side authentication, accessing protected resources, token refreshment, and
-                logging out. It emphasizes the role of JWTs as digital passports, facilitating secure and personalized
-                user experiences.
-            </p>
-
-            <br>
-        </div>
-    </section>
+        <article class="blog-post">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./why-db-optimization-is-not-always-the-best-solution.html">
+                        Why Database Optimization Is Not Always the Best Solution
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2024-03-15">March 15, 2024</time>
+                    <span class="blog-post__tags">
+                        <a href="#database" class="tag">Database</a>
+                        <a href="#optimization" class="tag">Optimization</a>
+                        <a href="#performance" class="tag">Performance</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    Database optimization is often seen as the go-to solution for performance issues, but it's not always the best approach. 
+                    This article explores when database optimization might be overkill and what alternatives you should consider. Through real-world examples 
+                    and practical scenarios, we'll examine the trade-offs and help you make better decisions about optimization strategies.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./why-db-optimization-is-not-always-the-best-solution.html" class="btn">Read More</a>
+            </footer>
+        </article>
+    </main>
 
     <!-- My Work -->
     <section class="my-work" id="work">
@@ -88,12 +143,11 @@
                     <i class="fab fa-twitter"></i>
                 </a>
             </li>
-            
         </ul>
     </footer>
     
     
-    <script src="js/index.js"></script>
+    <script src="../js/index.js"></script>
     
 
 </body>
