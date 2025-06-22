@@ -987,3 +987,9 @@ header {
 .social-list__link {
     padding: .5em;
 }
+
+/* Remove active nav link border */
+.nav__link[aria-current="page"] {
+    border-top: none !important;
+    padding-top: 0 !important;
+}

@@ -37,6 +37,9 @@
 
 <body>
     <header>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span class="hamburger"></span>
+        </button>
         <nav class="nav">
             <ul class="nav__list">
                 <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
@@ -74,42 +77,42 @@
             <section class="blog-post__content">
                 <div class="about-me__body">
 
-                    <p class="has-line-data" data-line-start="2" data-line-end="3">Let’s embark on a journey into the heart of
+                    <p class="has-line-data" data-line-start="2" data-line-end="3">Let's embark on a journey into the heart of
                         JWT
                         authentication, guided by a vivid real-life example set in the realm of a web application known as
-                        “FindYourTurf.” In this narrative, we’ll witness how JWTs empower user authentication, ensuring secure
+                        "FindYourTurf." In this narrative, we'll witness how JWTs empower user authentication, ensuring secure
                         and
                         personalized experiences for our protagonist, Rooney.</p>
                     <h3 class="code-line" data-line-start="4" data-line-end="5"><a
-                            id="Rooneys_Quest_User_Authentication_on_FindYourTurf_4"></a>Rooney’s Quest: User Authentication on
-                        “FindYourTurf”</h3>
-                    <p class="has-line-data" data-line-start="6" data-line-end="7">In the world of “FindYourTurf”, users like
+                            id="Rooneys_Quest_User_Authentication_on_FindYourTurf_4"></a>Rooney's Quest: User Authentication on
+                        "FindYourTurf"</h3>
+                    <p class="has-line-data" data-line-start="6" data-line-end="7">In the world of "FindYourTurf", users like
                         Rooney
                         engage in discovering and finding local football fields to play with friends. This application, designed
                         to
                         provide a personalized experience, employs JWTs as the key to unlocking the gates of user
                         authentication.</p>
                     <h4 class="code-line" data-line-start="8" data-line-end="9"><a
-                            id="1_Rooneys_Journey_Begins_Registration_and_Login_8"></a>1. <strong>Rooney’s Journey Begins:
+                            id="1_Rooneys_Journey_Begins_Registration_and_Login_8"></a>1. <strong>Rooney's Journey Begins:
                             Registration
                             and Login</strong></h4>
                     <ul>
                         <li class="has-line-data" data-line-start="10" data-line-end="12">
                             <p class="has-line-data" data-line-start="10" data-line-end="11">Rooney, our enthusiastic user,
                                 registers on
-                                “FindYourTurf” by providing his email and a secure password.</p>
+                                "FindYourTurf" by providing his email and a secure password.</p>
                         </li>
                         <li class="has-line-data" data-line-start="12" data-line-end="14">
                             <p class="has-line-data" data-line-start="12" data-line-end="13">Upon successful registration, the
                                 server
-                                crafts a JWT as Rooney’s digital passport. This token encapsulates essential user information:
+                                crafts a JWT as Rooney's digital passport. This token encapsulates essential user information:
                                 the User
                                 ID (<code>sub</code>), email (<code>email</code>), and the time of issuance (<code>iat</code>).
                                 The JWT
                                 is securely signed using a secret key.</p>
                         </li>
                         <li class="has-line-data" data-line-start="14" data-line-end="16">
-                            <p class="has-line-data" data-line-start="14" data-line-end="15">Rooney’s browser receives this JWT
+                            <p class="has-line-data" data-line-start="14" data-line-end="15">Rooney's browser receives this JWT
                                 as part
                                 of the registration response, marking the commencement of his journey.</p>
                         </li>
@@ -120,7 +123,7 @@
                     </h4>
                     <ul>
                         <li class="has-line-data" data-line-start="18" data-line-end="20">
-                            <p class="has-line-data" data-line-start="18" data-line-end="19">Rooney’s browser, acting as the
+                            <p class="has-line-data" data-line-start="18" data-line-end="19">Rooney's browser, acting as the
                                 guardian of
                                 his digital identity, securely stores the JWT, often safeguarding it in a secure cookie or local
                                 storage.</p>
@@ -138,20 +141,20 @@
                             Server-Side Authentication</strong></h4>
                     <ul>
                         <li class="has-line-data" data-line-start="24" data-line-end="26">
-                            <p class="has-line-data" data-line-start="24" data-line-end="25">The “FindYourTurf” server receives
-                                Rooney’s
+                            <p class="has-line-data" data-line-start="24" data-line-end="25">The "FindYourTurf" server receives
+                                Rooney's
                                 JWT, presented in the Authorization header.</p>
                         </li>
                         <li class="has-line-data" data-line-start="26" data-line-end="28">
                             <p class="has-line-data" data-line-start="26" data-line-end="27">With the vigilance of a gatekeeper,
                                 the
-                                server validates the JWT’s signature using its secret key, ensuring it hasn’t been tampered
+                                server validates the JWT's signature using its secret key, ensuring it hasn't been tampered
                                 with.</p>
                         </li>
                         <li class="has-line-data" data-line-start="28" data-line-end="30">
                             <p class="has-line-data" data-line-start="28" data-line-end="29">The server scrutinizes the claims
                                 within
-                                the JWT, confirming its freshness (<code>exp</code>) and validating Rooney’s user ID.</p>
+                                the JWT, confirming its freshness (<code>exp</code>) and validating Rooney's user ID.</p>
                         </li>
                     </ul>
                     <h4 class="code-line" data-line-start="30" data-line-end="31"><a
@@ -177,12 +180,12 @@
                         <li class="has-line-data" data-line-start="38" data-line-end="40">
                             <p class="has-line-data" data-line-start="38" data-line-end="39">To maintain a seamless user
                                 experience,
-                                “FindYourTurf” issues refresh tokens alongside access tokens.</p>
+                                "FindYourTurf" issues refresh tokens alongside access tokens.</p>
                         </li>
                         <li class="has-line-data" data-line-start="40" data-line-end="42">
                             <p class="has-line-data" data-line-start="40" data-line-end="41">As the access token nears
                                 expiration,
-                                Rooney’s browser gracefully employs the refresh token, seamlessly obtaining a new access token
+                                Rooney's browser gracefully employs the refresh token, seamlessly obtaining a new access token
                                 without
                                 re-entering credentials.</p>
                         </li>
@@ -195,12 +198,12 @@
                         <li class="has-line-data" data-line-start="44" data-line-end="46">
                             <p class="has-line-data" data-line-start="44" data-line-end="45">Should Rooney choose to bid
                                 farewell to
-                                “FindYourTurf,” the server can invalidate the refresh token on its side.</p>
+                                "FindYourTurf", the server can invalidate the refresh token on its side.</p>
                         </li>
                         <li class="has-line-data" data-line-start="46" data-line-end="48">
                             <p class="has-line-data" data-line-start="46" data-line-end="47">This strategic move renders
                                 existing JWTs
-                                useless for any further authentication attempts, ensuring Rooney’s exit is both secure and
+                                useless for any further authentication attempts, ensuring Rooney's exit is both secure and
                                 definitive.
                             </p>
                         </li>
@@ -208,7 +211,7 @@
                     <h3 class="code-line" data-line-start="48" data-line-end="49"><a
                             id="Conclusion_A_Chapter_Closes_Knowledge_Flourishes_48"></a>Conclusion: A Chapter Closes, Knowledge
                         Flourishes</h3>
-                    <p class="has-line-data" data-line-start="50" data-line-end="51">In the realm of “FindYourTurf”, the story
+                    <p class="has-line-data" data-line-start="50" data-line-end="51">In the realm of "FindYourTurf", the story
                         of JWT
                         authentication unfolds, showcasing its prowess in securing user interactions. As developers,
                         understanding the
@@ -218,16 +221,16 @@
                         authentication.</p>
                     <h6 class="code-line" data-line-start="52" data-line-end="53"><a
                             id="NB_FindYourTurf_is_a_dream_of_mine_not_a_reality_perhaps_one_day_ill_be_motivated_enough_to_create_such_a_platform_52"></a>N.B:
-                        FindYourTurf is a dream of mine, not a reality, perhaps one day i’ll be motivated enough to create such
+                        FindYourTurf is a dream of mine, not a reality, perhaps one day i'll be motivated enough to create such
                         a
                         platform.</h6>
                     <h4 class="code-line" data-line-start="54" data-line-end="55"><a
                             id="Summarizing_the_Magic_of_JWTs_54"></a><strong>Summarizing the Magic of JWTs</strong></h4>
                     <p class="has-line-data" data-line-start="56" data-line-end="57">JSON Web Tokens (JWTs) serve as digital
                         passports,
-                        enabling secure communication between a user’s browser and a server. These tokens signify a user’s
+                        enabling secure communication between a user's browser and a server. These tokens signify a user's
                         identity and
-                        permissions. Let’s delve into some best practices for their secure deployment:</p>
+                        permissions. Let's delve into some best practices for their secure deployment:</p>
                     <ul>
                         <li class="has-line-data" data-line-start="58" data-line-end="60">
                             <p class="has-line-data" data-line-start="58" data-line-end="59"><strong>Use HTTPS
