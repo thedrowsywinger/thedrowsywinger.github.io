@@ -513,10 +513,24 @@ header {
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .service + .service {
         margin-left: 2em;
     }
+}
+
+/* Technical Skills: 2-column grid layout */
+#skills .services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#skills .service {
+    margin: 0;
 }
 
 

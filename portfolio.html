@@ -7,7 +7,7 @@
   <meta name="description" content="Professional portfolio of Abdullah Md. Sarwar - Software Engineer with experience at ShareTrip, Talvette, mPower Social Enterprise, and more">
   <meta name="keywords" content="Software Engineer, Portfolio, ShareTrip, Talvette, mPower, Backend Development, Node.js, Python">
   <meta name="author" content="Abdullah Md. Sarwar">
-  
+
   <!-- Open Graph / Social Media Meta Tags -->
   <meta property="og:title" content="Portfolio - Abdullah Md. Sarwar">
   <meta property="og:description" content="Professional portfolio showcasing my work experience and projects in software engineering">
@@ -39,7 +39,7 @@
         <li class="nav__item"><a href="./" class="nav__link">Home</a></li>
         <li class="nav__item"><a href="./portfolio.html" class="nav__link">Portfolio</a></li>
         <li class="nav__item"><a href="./blog/index.html" class="nav__link">My Blog</a></li>
-        <li class="nav__item"><a href="./technical_reports.html" class="nav__link">Technical Reports</a></li>
+        <li class="nav__item"><a href="./publications.html" class="nav__link">Publications & Reports</a></li>
         <li class="nav__item">
           <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
             <i class="fas fa-moon" data-fa-transform="shrink-2" aria-hidden="true"></i>
@@ -48,6 +48,40 @@
       </ul>
     </nav>
   </header>
+
+  <!-- Technical Skills -->
+  <section class="my-services" id="skills">
+    <h2 class="section__title section__title--services">Technical Skills</h2>
+    <div class="services">
+      <div class="service">
+        <h3>Backend Frameworks & Languages</h3>
+        <p>Node.js (5+ years): NestJS, Express.js, Sails.js, REST API design</p>
+        <p>Python (4+ years): Django, Django REST Framework, FastAPI</p>
+      </div>
+
+      <div class="service">
+        <h3>Databases & Caching</h3>
+        <p>PostgreSQL, MySQL, MongoDB, Typesense</p>
+        <p>Redis, RabbitMQ</p>
+        <p>ORMs: TypeORM, Sequelize, Django ORM, SQLAlchemy</p>
+      </div>
+
+      <div class="service">
+        <h3>Architecture Patterns</h3>
+        <p>Distributed systems design, Microservices, API aggregation</p>
+        <p>Circuit breaker, timeout patterns, Caching strategies, multi-tenancy</p>
+        <p>Third-party API integration (payment gateways, hotel suppliers, telecom APIs)</p>
+      </div>
+
+      <div class="service">
+        <h3>AI/ML</h3>
+        <p>LangGraph (multi-agent systems)</p>
+        <p>FastAPI integration with LLM APIs</p>
+        <p>LLM API integration and prompt engineering</p>
+      </div>
+    </div>
+  </section>
+
   <section class="my-services" id="services">
     <h2 class="section__title section__title--services">Professional Work</h2>
   </section>
@@ -59,21 +93,15 @@
 
     <div class="about-me__body">
       <p>
-        I am currently heading the backend of the hotel and lifestyle sector at ShareTrip. In addition, I am managing and
-        enhancing the public APIs for ShareTrip's B2C and B2B sector.
+        Leading backend engineering for ShareTrip's Hotel and Lifestyle verticals, architecting scalable systems for B2C and B2B platforms serving 10-15K monthly active users.
       <ul>
-        <li>Developed an AI-powered travel assistant using FastAPI and LangGraph with multi-agent architecture, integrating ShareTrip's flight search and visa APIs to provide intelligent travel planning, comprehensive flight analysis, and conversational booking assistance.</li>
-        <li>Built an AI-powered travel assistant with multi-agent architecture, integrating ShareTrip's flight and visa APIs for intelligent travel planning and conversational booking.</li>
-        <li>Leading backend development for ShareTrip’s Hotel Sector, completing core features and integrating with RateHawk and GRNConnect to launch international hotel bookings for B2C and B2B clients.</li>
-        <li>Launched key lifestyle verticals: Shop, Vouchers, Mobile Recharge, and Utility Bill Payment across both B2C and B2B platforms, expanding revenue streams.</li>
-        <li>Spearheaded the integration of Visa Services (B2B), Travel Insurance, Baggage Protection, and a secure Virtual Card Management System, enabling seamless international travel services for customers.</li>
-        <li>Designed and built a dynamic coupon engine, supporting multi-brand bookings, inclusive/exclusive rules, service-specific discounts, modular configuration via admin tools, enabling teams to define complex promotional rules and increase flexibility.</li>
-        <li>Lead technical communications with local and international third-party API vendors, ensuring fast, secure, and aligned integration cycles. Managed third-party integrations for ShareTrip platforms, ensuring secure and efficient solutions.</li>
-        <li>Implemented automated email workflows tied to booking activity and seasonal promotions, improving customer engagement and retention.</li>
-        <li>Contributed to the public API documentation.</li>
-        <li>Act as a mentor to junior team members, providing guidance and support in their professional growth.</li>
-        <li>Conduct research and analyze data to identify insights that drive product improvements.</li>
-        <li>Conduct interviews for potential candidates.</li>
+        <li>Architected and launched international hotel booking system integrating 2.2M+ properties with sub-30s response time for initial results and progressive search, processing 5,000+ monthly bookings across B2C and B2B with 1,000+ daily searches.</li>
+        <li>Shipped 4 lifestyle verticals (Shop, Vouchers, Mobile Recharge, Utility Bills) generating 60-135L BDT monthly revenue (Shop: 30-50L, Mobile Recharge: 21-25L, Utility Bills: 10-30L) serving 10-15K MAU.</li>
+        <li>Led architecture for AI-powered travel assistant using FastAPI and LangGraph multi-agent system, integrating flight search and visa APIs for intelligent travel planning and conversational booking assistance.</li>
+        <li>Designed dynamic coupon engine supporting multi-brand bookings with complex rule validation, enabling 100% of platform transactions with inclusive/exclusive rules and service-specific discounts.</li>
+        <li>Spearheaded integration of Visa Services (B2B), Travel Insurance, and secure Virtual Card Management System, expanding B2B service offerings and enabling seamless international travel services.</li>
+        <li>Manage relationships with 5+ international API vendors (RateHawk, GRNConnect, etc.), ensuring secure, performant, and compliant integrations with sub-30s response times.</li>
+        <li>Contributed to public API documentation and maintained code quality across hotel and lifestyle backend systems.</li>
       </ul>
       </p>
     </div>
@@ -112,98 +140,14 @@
 
     <div class="about-me__body">
       <p>
-        <b>BHALO</b>
-        <br>
-        An Agricultural-based ERP Management System. Currently working in the back-end system logic of the software.
-        This is a JSON API standard maintained API system.
-        <br>Successfully delivered the first phase and it is being used in the field at the moment.
-        <br>Some of the notable features are:
-        <br>
+        Delivered 5 production systems for multiple clients at mPower, managing concurrent projects across humanitarian, agricultural, and financial sectors. Demonstrated ability to context-switch between domains while maintaining code quality and delivery timelines.
       <ul>
-        <li>Account type-based authentication/authorization.</li>
-        <li>Developed Stock Management and Transaction System.</li>
-        <li>Product Distribution/tracking and service management.</li>
-        <li>This is a JSON API standard maintained API system.</li>
-
-        <li><b>Tech Stack</b>: Node JS, JSON API Schema Standard, PostgreSQL, Sequelize ORM, Git, Bitbucket, Jira.</li>
+        <li><b>BHALO</b>: Designed agricultural ERP for stock management and distribution tracking system using Node.js/PostgreSQL with JSON API standard, deployed in field for live use.</li>
+        <li><b>IOM-Gazientep</b>: Built humanitarian crisis response platform with QR-based relief tracking, beneficiary management, and analytics dashboards (Django/React/PostgreSQL).</li>
+        <li><b>FAO-MRV</b>: Developed surveying platform and analytics dashboard for FAO's carbon emissions monitoring program, enabling survey collection and real-time insights (Django/PostgreSQL).</li>
+        <li><b>JANO</b>: Built multi-format content management system supporting text, image, video, audio, and PDF content for Care Bangladesh's nutritional information platform (Django/PostgreSQL).</li>
+        <li><b>Muzzle Recognition</b>: Developed cattle insurance application with image recognition for farmer insurance claims, deployed in 3 live instances (Node.js/PostgreSQL).</li>
       </ul>
-      </p>
-      <p>
-        <b>IOM-Gazientep</b>
-        <br>
-        A Digitized Response Management System for IOM Gazientep in response to the humanitarian crisis to manage the
-        complete cycle of immigrant registration to the system, delivering relief, goods, items, and services to their
-        doors and everything in between. I worked in the back-end system logic of the software, which was writing REST
-        APIs for both front-end and mobile application. I also contributed to the front-end bug fixing.
-        <br>
-        Successfully delivered the project and it was much appreciated by the client.
-        <br>
-        Some of the notable features are:
-        <br>
-      <ul>
-        <li>Tracking the relief items of support beneficiaries with QR code generation and scanning.</li>
-        <li>Target and Allocation, Beneficiary, Implementing Partners, Supply management system.</li>
-        <li>Data collection and transfer to all levels of warehouses. </li>
-        <li>Visual Analytics, Reporting, and Dashboards with actionable insights.</li>
-        <li>Developed technical aspects of the company's strategy for alignment with its business goals.</li>
-        <li>Ensured that the technological resources satisfy the company's short and long-term needs.</li>
-        <li>Verified all technological practices adhering to regulatory standards and compliance.</li>
-        <li>Identified and implemented innovative technologies that yield competitive advantage and managing large
-          teams, big data, and the product life-cycle. </li>
-        <li><b>Tech Stack</b>: Python, Django, Django Rest Framework, PostgreSQL, Numpy, Pandas, React, Git, Bitbucket,
-          Jira.</li>
-      </ul>
-      </p>
-      <p>
-        <b>FAO-MRV</b>
-        <br>
-        A dynamic surveying platform, analytics, and management system for the carbon emission control program by FAO.
-        <br>The project has become live for it's first phase, and the clients are able to conduct their surveys through
-        the platform and view analytics and insights on the responses through the dashboard.
-        <br>Some notable features of the software are:
-      <ul>
-        <li>Monitored system performance.</li>
-        <li>Communicated key project data to team members and built cohesion among teams.</li>
-        <li>Developed and executed project plans.</li>
-        <li>Applied mathematics and statistics to problem-solving initiatives.</li>
-        <li>Focused on the complex and large software systems that make up the core systems for an organization. </li>
-        <li>Formulated a vision for how technology will be utilized within the company.</li>
-        <li>Outlined company goals and timelines for research and development.</li>
-      </ul>
-      <br>
-      <b>Tech Stack</b>: Python, Django, Django Rest Framework, Kobotoolbox/Kobocat, HTML, JavaScript, jQuery, Git,
-      Bitbucket, Jira
-      </p>
-      <p>
-        <b>JANO Knowledge Management Platform</b>
-        <br>
-        This is a content management system for "Care Bangladesh", intended to be a referential resource for all
-        nutritional information. I worked in the solution's back-end system logic and contributed to the front-end. Some
-        of the notable features of the solution are:
-        <br>
-      <ul>
-        <li>Developed a chained content system, a content management system, with user access where contents can be
-          uploaded and customized.</li>
-        <li>Developed and directed software system validation and testing methods.</li>
-        <li>Contents may be of any data type i.e., Text, Image, Video, Audio, PDF, etc</li>
-        <li>Directed our software programming initiatives.</li>
-        <li> Oversaw the development of documentation.</li>
-        <li> Worked closely with clients and cross-functional departments to communicate project statuses and proposals.
-        </li>
-        <li> Analyzed data to effectively coordinate the installation of new systems or the modification of existing
-          systems.</li>
-        <li> Managed the software development lifecycle.</li>
-        <li><b>Tech Stack</b>: Python, Django, Postgresql, Javascript, JQuery.</li>
-      </ul>
-      </p>
-      <p>
-        <b>Muzzle Recognition System:</b>
-        <br>
-        An application for farmers to claim insurance for their cattle.
-        <br> Three instances of the application have gone live and are being used in the field by clients.
-        <br> Features include: farmer profiles, asset information, growth monitoring, muzzle images, an insurance
-        claiming system, report, analytics, etc.
-        <b>Tech Stack</b>: Node JS, JSON API Schema Standard, Postgresql, Sequelize ORM
       </p>
     </div>
     <img src="img/mPower.jpg" alt="mPower Logo" class="about-me__img">
@@ -215,23 +159,13 @@
     <p class="section__subtitle section__subtitle--about">Software Engineer (July 2020 - April 2021)</p>
 
     <div class="about-me__body">
-      Worked as a Python/Django Developer designing the Back-End system logic of software.
-      <br>
-      <b>Tech Stack</b>: Django , Django Rest Framework, Python.
-      <br>
-      <u><b>Software Features</b>:</u>
+      <p>
+        Designed backend systems for comprehensive SME business management platform using Django/Python, building features across contract management, inventory, e-invoicing, cash planning, trend analytics, and accounts management.
       <ul>
-        <li> Supervised system infrastructure to ensure functionality and efficiency.</li>
-        <li> Built quality assurance and data protection processes.</li>
-        <li> Monitored KPIs and IT budgets to assess technological performance.</li>
-        <li> Capitalized on stakeholders' feedback to advise on necessary improvements and adjustments.</li>
-        <li> Communicated tech strategy to partners and investors.</li>
-        <li> Maintained a consumer-focused outlook, centrally on delivering IT projects to market.</li>
-        <li> Made executive decisions on behalf of the company's technological requirements.</li>
-        <li> Worked with project managers, developers, quality assurance, designers, and clients to design and develop
-          robust solutions to meet client requirements for functionality, scalability, and performance.</li>
-        <li> Contributed to optimization and enhancement of overall software.</li>
+        <li>Architected backend systems supporting multiple core modules (contract management, inventory, e-invoicing, cash planning, trend analytics, accounts management) using Django/Python/PostgreSQL.</li>
+        <li>Implemented quality assurance and data protection processes ensuring data integrity across financial and operational modules.</li>
       </ul>
+      </p>
     </div>
     <img src="img/ea.png" alt="EA bd logo" class="about-me__img">
   </section>
@@ -243,30 +177,7 @@
 
     <div class="about-me__body">
       <p>
-        <b>Independent Apparels</b>
-        <br>
-        This is a portfolio website for Independent Apparels, an apparel manufacturing company based in Chittagong,
-        Bangladesh.
-        <br>Some of the notable features are:
-        <br>
-      <ul>
-        <li> The website is run with a customized content management system in the backend, with user authorization and
-          an authentication-based system. </li>
-        <li> Users with the appropriate permissions and access can upload the contents of the website, including any
-          type of files (images, videos, pdf, etc) through it. </li>
-        <li> Compiled and analyzed data, processes, and codes to troubleshoot problems and identify areas for
-          improvement.</li>
-        <li> Collaborating with the front-end developers and other team members to establish objectives and design more
-          functional, cohesive codes to enhance the user experience.</li>
-        <li> Developed ideas for new programs, products, or features by monitoring industry developments and trends.
-        </li>
-        <li> Recorded data and reported it to proper parties, such as clients and leadership.</li>
-        <li> Participated in continuing education and training to remain current on best practices, learn new
-          programming languages, and better assist other team members.</li>
-        <li> Took the lead on projects, as needed.</li>
-        <li> Curated the structure of server-side information.</li>
-        <li> <b>Tech Stack:</b> Python, Django, Django Rest Framework, Git, GitHub.</li>
-      </ul>
+        Built custom CMS backend for Independent Apparels portfolio website with user authorization and file upload system supporting images, videos, and PDFs (Python/Django).
       </p>
     </div>
     <img src="img/alterF4.png" alt="alterF4 Logo" class="about-me__img">
