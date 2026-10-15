@@ -3,215 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A practical, step-by-step guide for software engineers to set up PostgreSQL locally on WSL (Windows Subsystem for Linux), with troubleshooting and best practices.">
-    <meta name="keywords" content="PostgreSQL, WSL, Windows Subsystem for Linux, Database, Development Environment, Ubuntu, DevOps, Tutorial">
+    <meta name="description" content="Install PostgreSQL on Ubuntu in WSL 2, create an application role, configure SCRAM authentication, and connect from Linux or Windows.">
     <meta name="author" content="Abdullah Md. Sarwar">
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Setting Up PostgreSQL Locally on WSL: A Practical Guide">
-    <meta property="og:description" content="A practical, step-by-step guide for software engineers to set up PostgreSQL locally on WSL (Windows Subsystem for Linux), with troubleshooting and best practices.">
+    <meta property="og:title" content="Setting Up PostgreSQL Locally on WSL">
+    <meta property="og:description" content="Install PostgreSQL on Ubuntu in WSL 2, create an application role, configure SCRAM authentication, and connect from Linux or Windows.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://thedrowsywinger.github.io/blog/setting-up-postgresql-on-wsl.html">
-    <meta property="og:image" content="../img/profile_picture.jpg">
-    <meta property="article:published_time" content="2024-06-10">
+    <meta property="og:image" content="https://thedrowsywinger.github.io/img/profile_picture.jpg">
+    <meta property="article:published_time" content="2024-07-01">
+    <meta property="article:modified_time" content="2026-10-15">
     <meta property="article:author" content="Abdullah Md. Sarwar">
-    <meta property="article:section" content="Database">
-    <meta property="article:tag" content="PostgreSQL">
-    <meta property="article:tag" content="WSL">
-    <meta property="article:tag" content="Linux">
-    <meta property="article:tag" content="DevOps">
-    <title>Setting Up PostgreSQL Locally on WSL: A Practical Guide - Abdullah Md. Sarwar</title>
-    <link rel="icon" type="image/x-icon" href="img/profile_picture.jpg">
+    <meta property="article:section" content="Development setup">
+    <title>Setting Up PostgreSQL Locally on WSL - Abdullah Md. Sarwar</title>
+    <link rel="canonical" href="https://thedrowsywinger.github.io/blog/setting-up-postgresql-on-wsl.html">
+    <link rel="icon" type="image/jpeg" href="../img/profile_picture.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,400,900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/blog-article.css">
 </head>
-<body>
+<body class="technical-article-page">
+    <a class="skip-nav" href="#article">Skip to article</a>
     <header>
         <button class="nav-toggle" aria-label="Toggle navigation">
             <span class="hamburger"></span>
         </button>
-        <nav class="nav">
+        <nav class="nav" aria-label="Main navigation">
             <ul class="nav__list">
                 <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
                 <li class="nav__item"><a href="../portfolio.html" class="nav__link">Portfolio</a></li>
-                <li class="nav__item"><a href="./index.html" class="nav__link">My Blog</a></li>
-                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications & Reports</a></li>
+                <li class="nav__item"><a href="./" class="nav__link">My Blog</a></li>
+                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications &amp; Reports</a></li>
                 <li class="nav__item">
                     <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon" data-fa-transform="shrink-2" aria-hidden="true"></i>
+                        <i class="fas fa-moon" aria-hidden="true"></i>
                     </button>
                 </li>
             </ul>
         </nav>
     </header>
-    <main class="blog-content">
+
+    <main class="blog-content technical-article" id="article">
+        <a class="article-back" href="./index.html">&larr; All blog posts</a>
         <article>
             <header>
-                <h1>Setting Up PostgreSQL Locally on WSL: A Practical Guide</h1>
+                <p class="article-kicker">Development setup</p>
+                <h1>Setting Up PostgreSQL Locally on WSL</h1>
                 <div class="blog-post__meta">
-                    <time datetime="2024-06-10">July 1, 2024</time>
+                    <time datetime="2024-07-01">July 1, 2024</time>
+                    <span>Updated <time datetime="2026-10-15">October 15, 2026</time></span>
                     <span class="blog-post__tags">
                         <a href="index.html#postgresql" class="tag">PostgreSQL</a>
                         <a href="index.html#wsl" class="tag">WSL</a>
                         <a href="index.html#linux" class="tag">Linux</a>
-                        <a href="index.html#devops" class="tag">DevOps</a>
                     </span>
                 </div>
             </header>
-            <section class="my-services" id="services">
-                <h2 class="section__title section__title--services" style="font-weight: 100;">Setting Up PostgreSQL Locally on WSL: A Practical Guide</h2>
-            </section>
-            <section class="blog-post__content">
-                <div class="about-me__body">
-                    <p>When you're starting a brand-new project or want to quickly prototype an idea, the easiest way to move fast is by setting up your database locally. Before committing to a cloud-hosted PostgreSQL service or containerizing your environment, getting PostgreSQL running on your local machine can help unblock early development.</p>
-                    <p>Setting this up is straightforward in most Linux environments. Personally, I use <strong>Windows Subsystem for Linux (WSL)</strong> to combine the flexibility of Linux with the convenience of Windows. In this guide, I’ll walk through the exact steps to get <strong>PostgreSQL</strong> running on WSL (Ubuntu), so you can test, build, and iterate without external dependencies.</p>
-                    <h3>Step 1: Update Your WSL Ubuntu Packages</h3>
-                    <p>Before installing anything, make sure your system is up to date.</p>
-                    <pre><code class="language-bash">sudo apt update
-sudo apt upgrade -y</code></pre>
-                    <p>This ensures that your package manager is aware of the latest available versions.</p>
-                    <h3>Step 2: Install PostgreSQL</h3>
-                    <p>To install PostgreSQL and the standard utilities:</p>
-                    <pre><code class="language-bash">sudo apt install postgresql postgresql-contrib -y</code></pre>
-                    <p>This installs the PostgreSQL server and commonly used extensions like <code>pg_stat_statements</code>, <code>pg_trgm</code>, etc.</p>
-                    <h3>Step 3: Start PostgreSQL and Access the CLI</h3>
-                    <p>Start the PostgreSQL service:</p>
-                    <pre><code class="language-bash">sudo service postgresql start</code></pre>
-                    <p>Switch to the <code>postgres</code> user (PostgreSQL runs under this user by default):</p>
-                    <pre><code class="language-bash">sudo -i -u postgres</code></pre>
-                    <p>Enter the PostgreSQL interactive shell:</p>
-                    <pre><code class="language-bash">psql</code></pre>
-                    <p>Once inside, you’ll see a prompt like <code>postgres=#</code>.</p>
-                    <h3>Step 4: Create a New User and Database</h3>
-                    <p>You can now create a user and database for your project.</p>
-                    <pre><code class="language-sql">CREATE USER myuser WITH PASSWORD 'mypassword';
-CREATE DATABASE mydb OWNER myuser;
-GRANT ALL PRIVILEGES ON DATABASE mydb TO myuser;
-\q
-exit</code></pre>
-                    <p>Now you’ve created a development user and database, without touching the default <code>postgres</code> role or database.</p>
-                    <h3>Step 5: Connect Using psql Locally</h3>
-                    <p>To test that everything works:</p>
-                    <pre><code class="language-bash">psql -U myuser -d mydb -h localhost</code></pre>
-                    <p>If authentication is successful, you’ll get a prompt like <code>mydb=&gt;</code>.</p>
-                    <p>If you get an error about authentication, see the next section on <code>pg_hba.conf</code>.</p>
-                    <h3>Step 6 (Optional): Configure for Password Authentication</h3>
-                    <p>By default, PostgreSQL on Ubuntu uses <code>peer</code> authentication locally (i.e., it expects the system user to match the PostgreSQL user). To enable password-based logins, do the following:</p>
-                    <ol>
-                        <li>Open the <code>pg_hba.conf</code> file:
-                            <pre><code class="language-bash">sudo nano /etc/postgresql/*/main/pg_hba.conf</code></pre>
-                        </li>
-                        <li>Find this line:
-                            <pre><code>local   all             all                                     peer</code></pre>
-                            Change it to:
-                            <pre><code>local   all             all                                     md5</code></pre>
-                        </li>
-                        <li>Restart PostgreSQL:
-                            <pre><code class="language-bash">sudo service postgresql restart</code></pre>
-                        </li>
-                    </ol>
-                    <p>Now you can use password authentication even for local CLI access.</p>
-                    <h3>Step 7 (Optional): Enable GUI Access from Windows (pgAdmin, DBeaver, etc.)</h3>
-                    <ol>
-                        <li>Edit <code>postgresql.conf</code>:
-                            <pre><code class="language-bash">sudo nano /etc/postgresql/*/main/postgresql.conf</code></pre>
-                            Find and change:
-                            <pre><code>listen_addresses = 'localhost'</code></pre>
-                        </li>
-                        <li>Ensure <code>pg_hba.conf</code> has this line (or add it if missing):
-                            <pre><code>host    all             all             127.0.0.1/32            md5</code></pre>
-                        </li>
-                        <li>Restart the service:
-                            <pre><code class="language-bash">sudo service postgresql restart</code></pre>
-                        </li>
-                        <li>In your GUI tool:
-                            <ul>
-                                <li>Host: <code>127.0.0.1</code></li>
-                                <li>Port: <code>5432</code></li>
-                                <li>Username: <code>myuser</code></li>
-                                <li>Password: <code>mypassword</code></li>
-                                <li>Database: <code>mydb</code></li>
-                            </ul>
-                        </li>
-                    </ol>
-                    <p>Make sure your WSL version (WSL2 or newer) supports localhost forwarding, which it should by default.</p>
-                    <h3>Optional: Start PostgreSQL Automatically When Opening WSL</h3>
-                    <p>To avoid having to manually start PostgreSQL every time you open a terminal, you can add this line to your <code>.bashrc</code> or <code>.zshrc</code>:</p>
-                    <pre><code class="language-bash">sudo service postgresql start > /dev/null</code></pre>
-                    <p>Or use a shell alias:</p>
-                    <pre><code class="language-bash">alias startdb='sudo service postgresql start'</code></pre>
-                    <p>This way, you can just run <code>startdb</code> to bring up the service.</p>
-                    <h3>Common Troubleshooting Tips</h3>
-                    <table>
-                        <thead>
-                            <tr><th>Issue</th><th>Solution</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><code>psql: could not connect to server</code></td><td>Make sure PostgreSQL is running: <code>sudo service postgresql start</code></td></tr>
-                            <tr><td>Authentication error</td><td>Make sure you've set up password authentication in <code>pg_hba.conf</code></td></tr>
-                            <tr><td>GUI client can't connect</td><td>Ensure <code>listen_addresses</code> is set to <code>localhost</code>, and PostgreSQL is listening on port 5432</td></tr>
-                        </tbody>
-                    </table>
-                    <h3>Conclusion</h3>
-                    <p>Running PostgreSQL locally on WSL is a quick and reliable way to bootstrap your backend development. It behaves just like any Linux installation, but gives you the flexibility to develop from within your preferred Windows tools. This setup is ideal for rapid prototyping, local testing, or even CI-like workflows.</p>
-                    <p>While this article focused on Ubuntu under WSL, the same general approach works across most Debian-based Linux environments. With a working local PostgreSQL instance, you're now free to iterate, debug, and explore without worrying about cloud latency or credentials.</p>
-                    <h4>References</h4>
-                    <ul>
-                        <li><a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">PostgreSQL Official Documentation</a></li>
-                        <li><a href="https://help.ubuntu.com/community/PostgreSQL" target="_blank" rel="noopener">Ubuntu PostgreSQL Installation Guide</a></li>
-                        <li><a href="https://learn.microsoft.com/en-us/windows/wsl/" target="_blank" rel="noopener">WSL Documentation - Microsoft</a></li>
-                        <li><a href="https://www.postgresql.org/docs/current/auth-pg-hba-conf.html" target="_blank" rel="noopener">PostgreSQL Authentication Configuration (pg_hba.conf)</a></li>
-                        <li><a href="https://www.postgresql.org/docs/current/runtime-config.html" target="_blank" rel="noopener">PostgreSQL Configuration File Reference (postgresql.conf)</a></li>
-                        <li><a href="https://dbeaver.io/docs/wiki/Connect-to-PostgreSQL/" target="_blank" rel="noopener">DBeaver PostgreSQL Setup Guide</a></li>
-                    </ul>
-                </div>
-            </section>
-            <div class="share-buttons">
-                <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20guide%20to%20setting%20up%20PostgreSQL%20on%20WSL&url=https://thedrowsywinger.github.io/blog/setting-up-postgresql-on-wsl.html" class="share-button share-twitter" target="_blank" rel="noopener">
-                    <i class="fab fa-twitter"></i>Share on Twitter
-                </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/setting-up-postgresql-on-wsl.html" class="share-button share-linkedin" target="_blank" rel="noopener">
-                    <i class="fab fa-linkedin"></i>Share on LinkedIn
-                </a>
+            <div class="blog-post__content">
+<p class="article-lead">A local PostgreSQL instance gives a project a database without depending on a remote development service.</p>
+                <p>This guide installs PostgreSQL from Ubuntu's repositories inside WSL 2.
+                    It creates a separate application role and database, then connects through the local network interface.</p>
+                <p>Start with a working Ubuntu distribution. The <a href="./setting-up-wsl-on-windows.html">WSL setup guide</a> covers that part.
+                    Package versions vary with the Ubuntu release; the commands below show how to inspect your installation.</p>
+
+                <h2>1. Install PostgreSQL</h2>
+                <p>Inside Ubuntu, update the package lists and install the server and contributed modules:</p>
+                <pre tabindex="0"><code class="language-bash">sudo apt update
+sudo apt install postgresql postgresql-contrib</code></pre>
+                <p>Installing extension files does not enable every extension in every database.
+                    Individual extensions can require <code>CREATE EXTENSION</code> and additional server configuration.</p>
+
+                <h2>2. Start the service</h2>
+                <p>Check which process manages the Linux environment:</p>
+                <pre tabindex="0"><code class="language-bash">ps -p 1 -o comm=</code></pre>
+                <p>If it reports <code>systemd</code>, start PostgreSQL and enable it when the distribution starts:</p>
+                <pre tabindex="0"><code class="language-bash">sudo systemctl enable --now postgresql</code></pre>
+                <p>For an environment without systemd, start it manually:</p>
+                <pre tabindex="0"><code class="language-bash">sudo service postgresql start</code></pre>
+                <p>Microsoft documents <a href="https://learn.microsoft.com/en-us/windows/wsl/systemd">systemd support in WSL</a>.
+                    Service management belongs there; a privileged startup command in each shell configuration is unnecessary.</p>
+                <p>Check the client and server versions:</p>
+                <pre tabindex="0"><code class="language-bash">psql --version
+sudo -u postgres psql -c 'SHOW server_version;'</code></pre>
+
+                <h2>3. Create an application role and database</h2>
+                <p>Open the PostgreSQL command-line client as the administrative role:</p>
+                <pre tabindex="0"><code class="language-bash">sudo -u postgres psql</code></pre>
+                <p>Run these commands inside <code>psql</code>. The password command prompts without putting the password in the SQL text.</p>
+                <pre tabindex="0"><code class="language-sql">SET password_encryption = 'scram-sha-256';
+CREATE ROLE app_user LOGIN;
+\password app_user
+CREATE DATABASE app_db OWNER app_user;
+\q</code></pre>
+                <p>The <a href="https://www.postgresql.org/docs/current/sql-createrole.html">application role</a> can log in and owns its database.
+                    It does not need superuser privileges.</p>
+                <p>The session setting chooses SCRAM when the password is set.
+                    Existing passwords need to be reset when migrating from an older password format.</p>
+
+                <h2>4. Test a local TCP connection</h2>
+                <p>From the Ubuntu shell, connect using the application role:</p>
+                <pre tabindex="0"><code class="language-bash">psql -h 127.0.0.1 -U app_user -d app_db -W</code></pre>
+                <p>Check the connected role and database:</p>
+                <pre tabindex="0"><code class="language-sql">SELECT current_user, current_database();
+\q</code></pre>
+                <p>Using <code>-h 127.0.0.1</code> selects a TCP connection.
+                    A connection without a host normally uses a Unix socket instead.
+                    PostgreSQL matches these against different authentication rules.</p>
+
+                <h2>5. Inspect authentication rules if the connection fails</h2>
+                <p>Ask the running server for its configuration paths:</p>
+                <pre tabindex="0"><code class="language-bash">sudo -u postgres psql -c 'SHOW hba_file;'
+sudo -u postgres psql -c 'SHOW config_file;'</code></pre>
+                <p>Open the reported <code>pg_hba.conf</code> file.
+                    A rule for this application's loopback connection can use:</p>
+                <pre tabindex="0"><code>host    app_db    app_user    127.0.0.1/32    scram-sha-256</code></pre>
+                <p>Rules are checked in order. Place the intended rule before a broader matching rule.
+                    Keep administrative socket rules, such as <code>local all postgres peer</code>, separate.</p>
+                <p><code>host</code> rules cover TCP connections. <code>local</code> rules cover Unix sockets.
+                    Changing a <code>local</code> rule will not change the authentication method for the TCP command above.
+                    See the <a href="https://www.postgresql.org/docs/current/auth-pg-hba-conf.html">authentication file reference</a>.</p>
+                <p>Use <code>scram-sha-256</code> for this example.
+                    PostgreSQL now deprecates MD5-encrypted passwords; its
+                    <a href="https://www.postgresql.org/docs/current/auth-password.html">password documentation</a> explains migration and client compatibility.</p>
+                <p>Reload the authentication configuration, then retry the connection:</p>
+                <pre tabindex="0"><code class="language-bash">sudo -u postgres psql -c 'SELECT pg_reload_conf();'</code></pre>
+
+                <h2>6. Connect from a Windows database client</h2>
+                <p>First confirm the Ubuntu connection works.
+                    Then try these settings in your Windows database client:</p>
+                <ol>
+                    <li>Host: <code>127.0.0.1</code></li>
+                    <li>Port: <code>5432</code>, unless your installation uses another port.</li>
+                    <li>Database: <code>app_db</code></li>
+                    <li>User: <code>app_user</code></li>
+                    <li>Password: the password set through <code>\password</code>.</li>
+                </ol>
+                <p>WSL supports access to Linux network applications from Windows through localhost.
+                    If that fails, check the <a href="https://learn.microsoft.com/en-us/windows/wsl/networking">WSL networking configuration</a> and the server's listener:</p>
+                <pre tabindex="0"><code class="language-bash">sudo -u postgres psql -c 'SHOW listen_addresses;'
+sudo -u postgres psql -c 'SHOW port;'</code></pre>
+                <p>A local setup can keep <code>listen_addresses = 'localhost'</code>.
+                    Changing that setting requires a server restart, rather than an authentication reload.</p>
+
+                <h2>Keep the setup reproducible</h2>
+                <p>Record the Ubuntu, WSL, and PostgreSQL versions alongside your project's setup notes.
+                    Use schema migrations to reproduce the application database, rather than relying on manual changes.</p>
+                <p>This guide covers local development. It does not configure a database for remote clients.</p>
             </div>
-            <footer>
-                <div class="blog-post__meta">
-                    <p>Written by <a href="../">Abdullah Md. Sarwar</a></p>
-                    <p>Have questions or feedback? Feel free to <a href="mailto:abdullah.md.sarwar@gmail.com">contact me</a>.</p>
-                </div>
+            <footer class="article-footer">
+                <p>Written by <a href="../">Abdullah Md. Sarwar</a></p>
+                <a href="./index.html">&larr; Back to the blog</a>
             </footer>
         </article>
     </main>
-    <section class="my-work" id="work">
-        <p class="section__subtitle section__subtitle--work">You can find my Resume here!</p>
-        <a href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" class="btn">My Resume</a>
-    </section>
+
     <footer class="footer">
-       <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
+        <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
         <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/thedrowsywinger">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://www.instagram.com/thedrowsywinger/">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://twitter.com/thedrowsywinger">
-                    <i class="fab fa-twitter"></i>
-                </a>
-            </li>
+            <li class="social-list__item"><a class="social-list__link" href="https://github.com/thedrowsywinger" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a></li>
+            <li class="social-list__item"><a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
+            <li class="social-list__item"><a class="social-list__link" href="https://twitter.com/thedrowsywinger" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
         </ul>
     </footer>
     <script src="../js/index.js"></script>
 </body>
+
 </html>

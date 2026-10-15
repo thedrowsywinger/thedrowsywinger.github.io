@@ -1,0 +1,310 @@
+.technical-article,
+.blog-post {
+    --article-link: #08735d;
+    --article-muted: #54645c;
+    --article-panel: #f3f8f5;
+    --article-line: #cddbd3;
+    --article-danger: #a53830;
+    --article-danger-bg: #fff2ef;
+}
+
+.technical-article-page > .skip-nav {
+    top: 0;
+    transform: translateY(-120%);
+}
+
+.technical-article-page > .skip-nav:focus {
+    transform: translateY(0);
+}
+
+[data-theme="dark"] .technical-article,
+[data-theme="dark"] .blog-post {
+    --article-link: #16e0bd;
+    --article-muted: #bdcbc3;
+    --article-panel: #26352e;
+    --article-line: #506258;
+    --article-danger: #ffb3a9;
+    --article-danger-bg: #422d2a;
+}
+
+.blog-post > header,
+.technical-article article > header {
+    display: block;
+    padding: 0;
+}
+
+.blog-post .blog-post__title {
+    font-size: clamp(1.7rem, 4vw, 2.7rem);
+    line-height: 1.2;
+}
+
+.blog-post .blog-post__meta,
+.technical-article .blog-post__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    color: var(--article-muted);
+    font-size: 1rem;
+}
+
+.blog-post .blog-post__tags,
+.technical-article .blog-post__tags,
+.technical-article .reading-time {
+    margin-left: 0;
+}
+
+.technical-article {
+    max-width: 960px;
+    padding: 2rem clamp(1rem, 5vw, 3rem) 4rem;
+    overflow-wrap: break-word;
+}
+
+.technical-article .article-back,
+.technical-article .blog-post__content a,
+.technical-article .article-footer a {
+    color: var(--article-link);
+    text-underline-offset: 0.2em;
+}
+
+.technical-article .article-back {
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.technical-article .article-kicker {
+    margin: 0 0 0.75rem;
+    color: var(--article-muted);
+    font-family: var(--ff-secondary);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.technical-article h1 {
+    margin: 0;
+    color: var(--clr-text);
+    font-size: clamp(2.1rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    max-width: 19ch;
+}
+
+.technical-article .blog-post__content {
+    margin: 2rem 0 0;
+    padding: 0;
+}
+
+.technical-article .article-lead {
+    font-size: 1.2em;
+}
+
+.technical-article .blog-post__content h2 {
+    margin: 2.5rem 0 1rem;
+    color: var(--clr-text);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.25;
+    scroll-margin-top: 1rem;
+}
+
+.technical-article .blog-post__content h3 {
+    color: var(--clr-text);
+    font-size: 1.15rem;
+    line-height: 1.4;
+}
+
+.technical-article .blog-post__content a {
+    text-decoration: underline;
+}
+
+.technical-article .article-note {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--article-link);
+    background: var(--article-panel);
+}
+
+.technical-article .article-note p {
+    margin: 0;
+}
+
+.technical-article .blog-post__content pre {
+    max-width: 100%;
+    padding: 1.25rem;
+    box-shadow: none;
+    border: 1px solid var(--article-line);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.technical-article .blog-post__content pre code {
+    display: block;
+    padding: 0;
+    background: none;
+    color: var(--clr-text);
+    font-size: inherit;
+}
+
+.technical-article .code-caption,
+.technical-article .figure-note {
+    color: var(--article-muted);
+    font-size: 0.9rem;
+}
+
+.technical-article .article-figure {
+    margin: 2rem 0;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border: 1px solid var(--article-line);
+    border-radius: 0.5rem;
+    background: var(--article-panel);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.technical-article .figure-label {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--article-link);
+    font-family: var(--ff-secondary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.technical-article .figure-panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.technical-article .figure-panel {
+    min-width: 0;
+    padding: 1rem;
+    background: var(--clr-bg);
+    border: 1px solid var(--article-line);
+    border-radius: 0.25rem;
+}
+
+.technical-article .figure-panel p {
+    margin: 0 0 0.8rem;
+}
+
+.technical-article .chunk-stack {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.technical-article .chunk-box {
+    padding: 0.5rem;
+    border: 1px solid var(--article-line);
+    border-radius: 0.2rem;
+    text-align: center;
+    font-family: var(--ff-secondary);
+    font-size: 0.85rem;
+}
+
+.technical-article .chunk-box--early {
+    border-color: var(--article-link);
+    background: var(--article-panel);
+}
+
+.technical-article .chunk-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
+}
+
+.technical-article .figure-arrow {
+    color: var(--article-muted);
+    text-align: center;
+}
+
+.technical-article .figure-panel .figure-result {
+    margin: 1rem 0 0;
+    font-weight: 700;
+}
+
+.technical-article .article-figure figcaption {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--article-line);
+    color: var(--article-muted);
+    font-size: 0.9rem;
+}
+
+.technical-article .chunk-bars {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+}
+
+.technical-article .chunk-bar-row {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr) 2.2rem;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.technical-article .chunk-bar-row dt {
+    font-size: 0.85rem;
+}
+
+.technical-article .chunk-bar-row dd {
+    margin: 0;
+    font-family: var(--ff-secondary);
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.technical-article .chunk-bar-track {
+    height: 1.15rem;
+    border-radius: 0.15rem;
+    background: var(--clr-bg);
+}
+
+.technical-article .chunk-bar-fill {
+    display: block;
+    height: 100%;
+    width: var(--chunk-share);
+    border-radius: inherit;
+    background: var(--article-link);
+}
+
+.technical-article .figure-panel ol {
+    margin: 0;
+    padding-left: 1.3rem;
+}
+
+.technical-article .figure-panel li {
+    margin-bottom: 0.65rem;
+}
+
+.technical-article .figure-panel--stale {
+    border-color: var(--article-danger);
+    background: var(--article-danger-bg);
+}
+
+.technical-article .figure-panel--stale .figure-result {
+    color: var(--article-danger);
+}
+
+.technical-article .article-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--article-line);
+}
+
+.technical-article .share-buttons {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+    .technical-article .figure-panels {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .technical-article .blog-post__content ol {
+        padding-left: 1.4rem;
+    }
+}

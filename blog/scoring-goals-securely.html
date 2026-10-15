@@ -1,66 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Learn about implementing JWT authentication in web applications through a practical example of FindYourTurf, a sports facility booking platform">
-    <meta name="keywords" content="JWT, Authentication, Security, Web Development, Node.js, Token Management, Authorization">
+    <meta name="description" content="A hypothetical football booking app explains JWT validation, cookie storage, CSRF protection, refresh token rotation, and the limits of logout.">
     <meta name="author" content="Abdullah Md. Sarwar">
-    <link rel="icon" type="image/x-icon" href="img/profile_picture.jpg">
-
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Scoring Goals Securely: The JWT Playbook in 'FindYourTurf'">
-    <meta property="og:description" content="A comprehensive guide to implementing JWT authentication in web applications, using a sports facility booking platform as an example">
+    <meta property="og:title" content="JWT Authentication for a Football Booking App: Login, Refresh, and Logout">
+    <meta property="og:description" content="A hypothetical football booking app explains JWT validation, cookie storage, CSRF protection, refresh token rotation, and the limits of logout.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://thedrowsywinger.github.io/blog/scoring-goals-securely.html">
-    <meta property="og:image" content="../img/profile_picture.jpg">
+    <meta property="og:image" content="https://thedrowsywinger.github.io/img/profile_picture.jpg">
     <meta property="article:published_time" content="2024-04-10">
+    <meta property="article:modified_time" content="2026-10-15">
     <meta property="article:author" content="Abdullah Md. Sarwar">
-    <meta property="article:section" content="Security">
-    <meta property="article:tag" content="JWT">
-    <meta property="article:tag" content="Authentication">
-    <meta property="article:tag" content="Web Security">
-
-    <title>Scoring Goals Securely: The JWT Playbook - Abdullah Md. Sarwar</title>
+    <meta property="article:section" content="Authentication">
+    <title>JWT Authentication for a Football Booking App: Login, Refresh, and Logout - Abdullah Md. Sarwar</title>
+    <link rel="canonical" href="https://thedrowsywinger.github.io/blog/scoring-goals-securely.html">
+    <link rel="icon" type="image/jpeg" href="../img/profile_picture.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
-
-    <!-- Update these with your own fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,900&display=swap"
-        rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,400,900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-
+    <link rel="stylesheet" href="../css/blog-article.css">
 </head>
-
-<body>
+<body class="technical-article-page">
+    <a class="skip-nav" href="#article">Skip to article</a>
     <header>
         <button class="nav-toggle" aria-label="Toggle navigation">
             <span class="hamburger"></span>
         </button>
-        <nav class="nav">
+        <nav class="nav" aria-label="Main navigation">
             <ul class="nav__list">
                 <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
                 <li class="nav__item"><a href="../portfolio.html" class="nav__link">Portfolio</a></li>
-                <li class="nav__item"><a href="./index.html" class="nav__link">My Blog</a></li>
-                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications & Reports</a></li>
+                <li class="nav__item"><a href="./" class="nav__link">My Blog</a></li>
+                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications &amp; Reports</a></li>
                 <li class="nav__item">
                     <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon" data-fa-transform="shrink-2" aria-hidden="true"></i>
+                        <i class="fas fa-moon" aria-hidden="true"></i>
                     </button>
                 </li>
             </ul>
         </nav>
     </header>
 
-    <main class="blog-content">
+    <main class="blog-content technical-article" id="article">
+        <a class="article-back" href="./index.html">&larr; All blog posts</a>
         <article>
             <header>
-                <h1>Scoring Goals Securely: The JWT Playbook in "FindYourTurf"</h1>
+                <p class="article-kicker">Authentication</p>
+                <h1>JWT Authentication for a Football Booking App: Login, Refresh, and Logout</h1>
                 <div class="blog-post__meta">
                     <time datetime="2024-04-10">April 10, 2024</time>
+                    <span>Updated <time datetime="2026-10-15">October 15, 2026</time></span>
                     <span class="blog-post__tags">
                         <a href="index.html#security" class="tag">Security</a>
                         <a href="index.html#jwt" class="tag">JWT</a>
@@ -68,298 +60,116 @@
                     </span>
                 </div>
             </header>
+            <div class="blog-post__content">
+<p class="article-lead">JWT authentication needs a complete login, renewal, and logout design.
+                    Signing a token covers only one part of that flow.</p>
+                <p>FindYourTurf is a hypothetical football booking app I would like to build.
+                    I use Rooney, a player looking for a pitch, to walk through an example design.</p>
+                <p>This example uses a browser app and API on the same origin.
+                    Tokens travel in cookies. It describes a design, rather than a deployed implementation.</p>
 
-            <section class="my-services" id="services">
-                <h2 class="section__title section__title--services" style="font-weight: 100;">Scoring Goals Securely: The JWT
-                    Playbook in "FindYourTurf"</h2>
-            </section>
+                <h2>1. Understand what the token proves</h2>
+                <p>A JSON Web Token, or JWT, carries claims about a user or request context.
+                    A signed JWT lets the API check that those claims came from a trusted signer.</p>
+                <p>Signing does not hide the payload. Keep passwords and other secrets out of a signed token.
+                    The <a href="https://www.rfc-editor.org/rfc/rfc7519.html">JWT specification</a> defines its structure and claims.</p>
+                <p>For this example, an access JWT would contain:</p>
+                <ol>
+                    <li><code>sub</code>: Rooney's stable user ID.</li>
+                    <li><code>iss</code>: the expected token issuer.</li>
+                    <li><code>aud</code>: the API allowed to accept it.</li>
+                    <li><code>iat</code> and <code>exp</code>: issue and expiry times.</li>
+                    <li><code>jti</code>: a token identifier, if the revocation design uses one.</li>
+                </ol>
 
-            <section class="blog-post__content">
-                <div class="about-me__body">
+                <h2>2. Issue tokens after login</h2>
+                <p>Rooney submits his credentials over HTTPS. The server checks the password against its stored password hash.</p>
+                <p>After successful authentication, the server issues two credentials:</p>
+                <ol>
+                    <li>A short-lived access JWT for API requests.</li>
+                    <li>A refresh token that allows renewal without another password entry.</li>
+                </ol>
+                <p>The refresh token in this design is an opaque random value.
+                    The server stores its hash, user association, expiry, and revocation state.
+                    The browser holds the token itself.</p>
+                <p>A JWT does not remove that server-side state.
+                    A conventional server-side session is also a valid choice for this browser app.</p>
 
-                    <p class="has-line-data" data-line-start="2" data-line-end="3">Let's embark on a journey into the heart of
-                        JWT
-                        authentication, guided by a vivid real-life example set in the realm of a web application known as
-                        "FindYourTurf." In this narrative, we'll witness how JWTs empower user authentication, ensuring secure
-                        and
-                        personalized experiences for our protagonist, Rooney.</p>
-                    <h3 class="code-line" data-line-start="4" data-line-end="5"><a
-                            id="Rooneys_Quest_User_Authentication_on_FindYourTurf_4"></a>Rooney's Quest: User Authentication on
-                        "FindYourTurf"</h3>
-                    <p class="has-line-data" data-line-start="6" data-line-end="7">In the world of "FindYourTurf", users like
-                        Rooney
-                        engage in discovering and finding local football fields to play with friends. This application, designed
-                        to
-                        provide a personalized experience, employs JWTs as the key to unlocking the gates of user
-                        authentication.</p>
-                    <h4 class="code-line" data-line-start="8" data-line-end="9"><a
-                            id="1_Rooneys_Journey_Begins_Registration_and_Login_8"></a>1. <strong>Rooney's Journey Begins:
-                            Registration
-                            and Login</strong></h4>
-                    <ul>
-                        <li class="has-line-data" data-line-start="10" data-line-end="12">
-                            <p class="has-line-data" data-line-start="10" data-line-end="11">Rooney, our enthusiastic user,
-                                registers on
-                                "FindYourTurf" by providing his email and a secure password.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="12" data-line-end="14">
-                            <p class="has-line-data" data-line-start="12" data-line-end="13">Upon successful registration, the
-                                server
-                                crafts a JWT as Rooney's digital passport. This token encapsulates essential user information:
-                                the User
-                                ID (<code>sub</code>), email (<code>email</code>), and the time of issuance (<code>iat</code>).
-                                The JWT
-                                is securely signed using a secret key.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="14" data-line-end="16">
-                            <p class="has-line-data" data-line-start="14" data-line-end="15">Rooney's browser receives this JWT
-                                as part
-                                of the registration response, marking the commencement of his journey.</p>
-                        </li>
-                    </ul>
-                    <h4 class="code-line" data-line-start="16" data-line-end="17"><a
-                            id="2_Secure_Storage_and_Usage_of_the_JWT_16"></a>2. <strong>Secure Storage and Usage of the
-                            JWT</strong>
-                    </h4>
-                    <ul>
-                        <li class="has-line-data" data-line-start="18" data-line-end="20">
-                            <p class="has-line-data" data-line-start="18" data-line-end="19">Rooney's browser, acting as the
-                                guardian of
-                                his digital identity, securely stores the JWT, often safeguarding it in a secure cookie or local
-                                storage.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="20" data-line-end="22">
-                            <p class="has-line-data" data-line-start="20" data-line-end="21">Whenever Rooney yearns to explore
-                                his
-                                virtual football realm, he presents his stored JWT to the server. This is done through the HTTP
-                                header
-                                in the format: <code>Authorization: Bearer &lt;token&gt;</code>.</p>
-                        </li>
-                    </ul>
-                    <h4 class="code-line" data-line-start="22" data-line-end="23"><a
-                            id="3_Validation_at_the_Gates_ServerSide_Authentication_22"></a>3. <strong>Validation at the Gates:
-                            Server-Side Authentication</strong></h4>
-                    <ul>
-                        <li class="has-line-data" data-line-start="24" data-line-end="26">
-                            <p class="has-line-data" data-line-start="24" data-line-end="25">The "FindYourTurf" server receives
-                                Rooney's
-                                JWT, presented in the Authorization header.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="26" data-line-end="28">
-                            <p class="has-line-data" data-line-start="26" data-line-end="27">With the vigilance of a gatekeeper,
-                                the
-                                server validates the JWT's signature using its secret key, ensuring it hasn't been tampered
-                                with.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="28" data-line-end="30">
-                            <p class="has-line-data" data-line-start="28" data-line-end="29">The server scrutinizes the claims
-                                within
-                                the JWT, confirming its freshness (<code>exp</code>) and validating Rooney's user ID.</p>
-                        </li>
-                    </ul>
-                    <h4 class="code-line" data-line-start="30" data-line-end="31"><a
-                            id="4_Accessing_the_Football_Fields_Protected_Resources_Revealed_30"></a>4. <strong>Accessing the
-                            Football
-                            Fields: Protected Resources Revealed</strong></h4>
-                    <ul>
-                        <li class="has-line-data" data-line-start="32" data-line-end="34">
-                            <p class="has-line-data" data-line-start="32" data-line-end="33">When the JWT proves valid, the
-                                gates swing
-                                open, granting Rooney access to his personalized football field feed.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="34" data-line-end="36">
-                            <p class="has-line-data" data-line-start="34" data-line-end="35">Rooney can now explore and find
-                                nearby
-                                fields, facilitating lively football gatherings with friends.</p>
-                        </li>
-                    </ul>
-                    <h4 class="code-line" data-line-start="36" data-line-end="37"><a
-                            id="5_Seamless_Experience_Token_Refreshment_36"></a>5. <strong>Seamless Experience: Token
-                            Refreshment</strong></h4>
-                    <ul>
-                        <li class="has-line-data" data-line-start="38" data-line-end="40">
-                            <p class="has-line-data" data-line-start="38" data-line-end="39">To maintain a seamless user
-                                experience,
-                                "FindYourTurf" issues refresh tokens alongside access tokens.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="40" data-line-end="42">
-                            <p class="has-line-data" data-line-start="40" data-line-end="41">As the access token nears
-                                expiration,
-                                Rooney's browser gracefully employs the refresh token, seamlessly obtaining a new access token
-                                without
-                                re-entering credentials.</p>
-                        </li>
-                    </ul>
-                    <h4 class="code-line" data-line-start="42" data-line-end="43"><a
-                            id="6_Parting_Ways_Logging_Out_with_Grace_42"></a>6. <strong>Parting Ways: Logging Out with
-                            Grace</strong>
-                    </h4>
-                    <ul>
-                        <li class="has-line-data" data-line-start="44" data-line-end="46">
-                            <p class="has-line-data" data-line-start="44" data-line-end="45">Should Rooney choose to bid
-                                farewell to
-                                "FindYourTurf", the server can invalidate the refresh token on its side.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="46" data-line-end="48">
-                            <p class="has-line-data" data-line-start="46" data-line-end="47">This strategic move renders
-                                existing JWTs
-                                useless for any further authentication attempts, ensuring Rooney's exit is both secure and
-                                definitive.
-                            </p>
-                        </li>
-                    </ul>
-                    <h3 class="code-line" data-line-start="48" data-line-end="49"><a
-                            id="Conclusion_A_Chapter_Closes_Knowledge_Flourishes_48"></a>Conclusion: A Chapter Closes, Knowledge
-                        Flourishes</h3>
-                    <p class="has-line-data" data-line-start="50" data-line-end="51">In the realm of "FindYourTurf", the story
-                        of JWT
-                        authentication unfolds, showcasing its prowess in securing user interactions. As developers,
-                        understanding the
-                        intricacies of JWTs opens doors to crafting secure, seamless, and personalized experiences for users
-                        like
-                        Rooney. Let this narrative serve as a beacon, guiding you on the path to harnessing JWTs for robust user
-                        authentication.</p>
-                    <h6 class="code-line" data-line-start="52" data-line-end="53"><a
-                            id="NB_FindYourTurf_is_a_dream_of_mine_not_a_reality_perhaps_one_day_ill_be_motivated_enough_to_create_such_a_platform_52"></a>N.B:
-                        FindYourTurf is a dream of mine, not a reality, perhaps one day i'll be motivated enough to create such
-                        a
-                        platform.</h6>
-                    <h4 class="code-line" data-line-start="54" data-line-end="55"><a
-                            id="Summarizing_the_Magic_of_JWTs_54"></a><strong>Summarizing the Magic of JWTs</strong></h4>
-                    <p class="has-line-data" data-line-start="56" data-line-end="57">JSON Web Tokens (JWTs) serve as digital
-                        passports,
-                        enabling secure communication between a user's browser and a server. These tokens signify a user's
-                        identity and
-                        permissions. Let's delve into some best practices for their secure deployment:</p>
-                    <ul>
-                        <li class="has-line-data" data-line-start="58" data-line-end="60">
-                            <p class="has-line-data" data-line-start="58" data-line-end="59"><strong>Use HTTPS
-                                    Guardianship:</strong>
-                                Encrypt the transmission of JWTs over HTTPS to thwart unauthorized interception and ensure
-                                secure
-                                communication.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="60" data-line-end="62">
-                            <p class="has-line-data" data-line-start="60" data-line-end="61"><strong>Temporal Wisdom:</strong>
-                                Set a
-                                concise expiration time for JWTs to mitigate the risk of token misuse, prompting users to
-                                refresh and
-                                renew their tokens regularly, mitigating potential risks. Setting a short expiration time on
-                                access
-                                tokens enhances security by minimizing the window of opportunity for malicious actors in case of
-                                token
-                                leakage.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="62" data-line-end="64">
-                            <p class="has-line-data" data-line-start="62" data-line-end="63"><strong>Refresh Token
-                                    Resilience:</strong>
-                                Leverage refresh tokens to acquire new access tokens without necessitating user
-                                re-authentication. These
-                                long-lived tokens, stored securely on the server, enable users to obtain new access tokens
-                                without
-                                requiring frequent logins, striking a balance between security and usability in the dynamic
-                                landscape of
-                                web applications.</p>
-                        </li>
-                        <li class="has-line-data" data-line-start="64" data-line-end="66">
-                            <p class="has-line-data" data-line-start="64" data-line-end="65"><strong>Key Selection
-                                    Sagacity:</strong>
-                                Opt for secure algorithms and keys, such as RS256, to fortify the JWT fortress and ensure robust
-                                protection against tampering.</p>
-                        </li>
-                    </ul>
-                    <p class="has-line-data" data-line-start="66" data-line-end="67"><strong>References:</strong></p>
-                    <ul>
-                        <li class="has-line-data" data-line-start="67" data-line-end="68"><a
-                                href="https://jwt.io/introduction/">JWT.io
-                                Introduction</a></li>
-                        <li class="has-line-data" data-line-start="68" data-line-end="69"><a
-                                href="https://blog.logrocket.com/jwt-authentication-best-practices/">JWT Authentication Best
-                                Practices</a></li>
-                        <li class="has-line-data" data-line-start="69" data-line-end="70"><a
-                                href="https://www.baeldung.com/cs/access-refresh-tokens/">Access and Refresh Tokens</a></li>
-                        <li class="has-line-data" data-line-start="70" data-line-end="71"><a
-                                href="https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/">Refresh Tokens
-                                -
-                                Auth0</a></li>
-                        <li class="has-line-data" data-line-start="71" data-line-end="72"><a
-                                href="https://portswigger.net/web-security/jwt">JWT Attacks - PortSwigger</a></li>
-                        <li class="has-line-data" data-line-start="72" data-line-end="73"><a
-                                href="https://owasp.org/www-chapter-vancouver/assets/presentations/2020-01_Attacking_and_Securing_JWT.pdf">Attacking
-                                and Securing JWT - OWASP Foundation</a></li>
-                        <li class="has-line-data" data-line-start="73" data-line-end="74"><a
-                                href="https://www.hivepro.com/json-web-tokens-attack-and-defense/">JSON Web Tokens: Attack and
-                                Defense -
-                                Hive Pro</a></li>
-                        <li class="has-line-data" data-line-start="74" data-line-end="75"><a
-                                href="https://blog.qualys.com/qualys-insights/2022/10/11/json-web-token-jwt-weaknesses">JWT
-                                Weaknesses -
-                                Qualys Security Blog</a></li>
-                        <li class="has-line-data" data-line-start="75" data-line-end="76"><a
-                                href="https://www.makeuseof.com/jwts-what-how-work/">What Are JWTs and How Do They Work? -
-                                MUO</a></li>
-                    </ul>
-                </div>
-            </section>
+                <h2>3. Choose one browser storage design</h2>
+                <p>For this same-origin example, both credentials use <code>HttpOnly</code>, <code>Secure</code> cookies with an explicit <code>SameSite</code> setting.</p>
+                <pre tabindex="0"><code class="language-http">Set-Cookie: __Host-access=&lt;jwt&gt;; Path=/; Secure; HttpOnly; SameSite=Lax
+Set-Cookie: __Host-refresh=&lt;refresh-token&gt;; Path=/; Secure; HttpOnly; SameSite=Lax</code></pre>
+                <p><code>HttpOnly</code> prevents JavaScript from reading the cookie.
+                    <code>Secure</code> restricts transmission to HTTPS.
+                    The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie#cookie_prefixes"><code>__Host-</code> prefix</a>
+                    requires a root path and no <code>Domain</code> attribute.</p>
+                <p>These cookies use the API's cookie authentication path, rather than a JavaScript-generated bearer header.
+                    Token expiry and cookie lifetime must be set consistently.</p>
+                <p>Tokens in local storage can be read by JavaScript, including malicious scripts running in the app.
+                    Cookies also cannot stop malicious scripts from making requests while running in the app.</p>
+                <p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html">OWASP's session guidance</a>
+                    explains cookie protections and their limits.</p>
 
-            <div class="share-buttons">
-                <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20article%20about%20JWT%20Authentication&url=https://thedrowsywinger.github.io/blog/scoring-goals-securely.html" class="share-button share-twitter" target="_blank" rel="noopener">
-                    <i class="fab fa-twitter"></i>Share on Twitter
-                </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/scoring-goals-securely.html" class="share-button share-linkedin" target="_blank" rel="noopener">
-                    <i class="fab fa-linkedin"></i>Share on LinkedIn
-                </a>
+                <h2>4. Protect cookie-authenticated requests</h2>
+                <p>Browsers attach eligible cookies automatically.
+                    Another site can try to trigger an authenticated action; this is cross-site request forgery, or CSRF.</p>
+                <p>Use POST or another appropriate non-GET method for state changes.
+                    Validate request origins and require a CSRF token bound to the session.</p>
+                <p>Apply these checks to booking changes, refresh, and logout.
+                    <code>SameSite</code> adds protection, but it is not a replacement for the complete CSRF design.
+                    See <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">OWASP's CSRF guidance</a>.</p>
+
+                <h2>5. Validate identity and permission separately</h2>
+                <p>The API uses an established JWT library to verify the signature and required claims.
+                    The accepted algorithm and trusted keys come from server configuration.</p>
+                <p>Check the issuer, audience, and expiry. Validate any additional claims required by the chosen token profile.
+                    Decoding a token alone does not verify it.</p>
+                <p>A valid JWT identifies Rooney for this example. It does not give him access to every booking.</p>
+                <p>For a booking request, the API must also check ownership or another explicit permission.
+                    Changing a booking ID in the URL must not grant access to another player's booking.</p>
+                <p><a href="https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html#jwt">OWASP's API guidance</a>
+                    covers token validation and access control.</p>
+
+                <h2>6. Renew through the refresh endpoint</h2>
+                <p>When the access token expires, the browser sends a protected refresh request.
+                    The server checks the refresh token's stored record and expiry.</p>
+                <p>On successful renewal, rotate the refresh token: invalidate the old value and issue a new one.
+                    Update the stored state atomically so the old token cannot be accepted twice.</p>
+                <p>Keep related refresh tokens linked so reuse can trigger revocation of that renewal chain.
+                    The client should coordinate refresh requests to avoid accidental concurrent renewals.</p>
+                <p><a href="https://www.rfc-editor.org/rfc/rfc9700.html#section-4.14">OAuth security guidance</a>
+                    describes refresh token rotation and replay protection. Those controls also inform this example's renewal design.</p>
+
+                <h2>7. Define what logout guarantees</h2>
+                <p>On logout, revoke the refresh record and expire both browser cookies using their original names and paths.</p>
+                <p>This stops renewal and removes those credentials from that browser.
+                    It does not automatically invalidate an access JWT that someone already copied.</p>
+                <p>With signature-only validation, that JWT can remain usable until its expiry.
+                    Immediate revocation requires another check, such as a token denylist or server-side session state.</p>
+                <p>That check introduces server-side work on requests.
+                    Choose the required logout guarantee explicitly and implement the API checks that enforce it.</p>
+
+                <h2>Keep the example's boundaries clear</h2>
+                <p>The football scenario makes the flow easier to follow, but the security decisions are specific.
+                    Cookie storage, CSRF checks, refresh state, and access-token revocation must work together.</p>
+                <p>For FindYourTurf, I would choose between this design and a server-side session based on the actual API and client requirements.</p>
             </div>
-
-            <footer>
-                <div class="blog-post__meta">
-                    <p>Written by <a href="../">Abdullah Md. Sarwar</a></p>
-                    <p>Have questions or feedback? Feel free to <a href="mailto:abdullah.md.sarwar@gmail.com">contact me</a>.</p>
-                </div>
+            <footer class="article-footer">
+                <p>Written by <a href="../">Abdullah Md. Sarwar</a></p>
+                <a href="./index.html">&larr; Back to the blog</a>
             </footer>
         </article>
     </main>
 
-    <!-- My Work -->
-    <section class="my-work" id="work">
-        <!-- <h2 class="section__title section__title--work">My work</h2> -->
-        <p class="section__subtitle section__subtitle--work">You can find my Resume here!</p>
-
-        <a href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" class="btn">My Resume</a>
-    </section>
-
-
-    <!-- Footer -->
     <footer class="footer">
-       <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
+        <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
         <ul class="social-list">
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://github.com/thedrowsywinger">
-                    <i class="fab fa-github"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://www.instagram.com/thedrowsywinger/">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </li>
-            <li class="social-list__item">
-                <a class="social-list__link" href="https://twitter.com/thedrowsywinger">
-                    <i class="fab fa-twitter"></i>
-                </a>
-            </li>
-
+            <li class="social-list__item"><a class="social-list__link" href="https://github.com/thedrowsywinger" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a></li>
+            <li class="social-list__item"><a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
+            <li class="social-list__item"><a class="social-list__link" href="https://twitter.com/thedrowsywinger" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
         </ul>
     </footer>
-
-
     <script src="../js/index.js"></script>
-
 </body>
 
 </html>

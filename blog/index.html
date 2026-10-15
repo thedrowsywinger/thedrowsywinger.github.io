@@ -16,7 +16,7 @@
     <meta property="og:image" content="../img/profile_picture.jpg">
 
     <title>Blog</title>
-    <link rel="icon" type="image/x-icon" href="img/profile_picture.jpg">
+    <link rel="icon" type="image/jpeg" href="../img/profile_picture.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
         integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
@@ -26,6 +26,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/blog-article.css">
 
 </head>
 
@@ -54,15 +55,42 @@
     </section>
 
     <main class="blog-posts" id="posts">
+        <article class="blog-post blog-post--hotel-search">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./optimizing-hotel-search-performance.html">
+                        Speeding Up Hotel Search with Concurrent Chunks
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2025-11-26">November 26, 2025</time>
+                    <span class="blog-post__tags">
+                        <a href="#performance" class="tag">Performance</a>
+                        <a href="#concurrency" class="tag">Concurrency</a>
+                        <a href="#mongodb" class="tag">MongoDB</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    Generalized examples of concurrent hotel search, progressive chunk sizing,
+                    and atomic counters. Includes three illustrative figures.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./optimizing-hotel-search-performance.html" class="btn">Read More</a>
+            </footer>
+        </article>
+
         <article class="blog-post">
             <header>
                 <h2 class="blog-post__title">
                     <a href="./setting-up-postgresql-on-wsl.html">
-                        Setting Up PostgreSQL Locally on WSL: A Practical Guide
+                        Setting Up PostgreSQL Locally on WSL
                     </a>
                 </h2>
                 <div class="blog-post__meta">
-                    <time datetime="2024-06-10">June 10, 2024</time>
+                    <time datetime="2024-07-01">July 1, 2024</time>
                     <span class="blog-post__tags">
                         <a href="#postgresql" class="tag">PostgreSQL</a>
                         <a href="#wsl" class="tag">WSL</a>
@@ -73,7 +101,7 @@
             </header>
             <div class="blog-post__excerpt">
                 <p>
-                    Learn how to quickly set up PostgreSQL on WSL (Windows Subsystem for Linux) for local development. This guide covers installation, configuration, password authentication, GUI access, and troubleshooting for a seamless developer experience.
+                    Install PostgreSQL in WSL, create an application role, and connect through SCRAM authentication. Includes service management and Windows client setup.
                 </p>
             </div>
             <footer class="blog-post__footer">
@@ -85,7 +113,7 @@
             <header>
                 <h2 class="blog-post__title">
                     <a href="./setting-up-wsl-on-windows.html">
-                        Setting Up WSL on Windows: A Practical Guide for Software Engineers
+                        Setting Up WSL on Windows: A Practical Guide
                     </a>
                 </h2>
                 <div class="blog-post__meta">
@@ -100,7 +128,7 @@
             </header>
             <div class="blog-post__excerpt">
                 <p>
-                    A practical, step-by-step guide for software engineers to set up WSL 2 (Windows Subsystem for Linux) on Windows. Covers installation, configuration, troubleshooting, and best practices for a seamless development workflow that bridges Windows and Linux.
+                    My move from dual boot to WSL, followed by Ubuntu setup, Linux project storage, VS Code access, and optional resource limits.
                 </p>
             </div>
             <footer class="blog-post__footer">
@@ -112,7 +140,7 @@
             <header>
                 <h2 class="blog-post__title">
                     <a href="./scoring-goals-securely.html">
-                        Scoring Goals Securely: The JWT Playbook in "FindYourTurf"
+                        JWT Authentication for a Football Booking App: Login, Refresh, and Logout
                     </a>
                 </h2>
                 <div class="blog-post__meta">
@@ -126,11 +154,7 @@
             </header>
             <div class="blog-post__excerpt">
                 <p>
-                    Here I attempt to explore the use of JSON Web Tokens (JWTs) in the context of user authentication on a
-                    web application named "FindYourTurf." The narrative follows Rooney's journey through registration,
-                    login, secure storage, server-side authentication, accessing protected resources, token refreshment, and
-                    logging out. It emphasizes the role of JWTs as digital passports, facilitating secure and personalized
-                    user experiences.
+                    A hypothetical FindYourTurf design covering token validation, cookie storage, CSRF protection, refresh rotation, and what logout can guarantee.
                 </p>
             </div>
             <footer class="blog-post__footer">
@@ -138,33 +162,7 @@
             </footer>
         </article>
 
-        <article class="blog-post">
-            <header>
-                <h2 class="blog-post__title">
-                    <a href="./why-db-optimization-is-not-always-the-best-solution.html">
-                        Why Database Optimization Is Not Always the Best Solution
-                    </a>
-                </h2>
-                <div class="blog-post__meta">
-                    <time datetime="2024-03-15">March 15, 2024</time>
-                    <span class="blog-post__tags">
-                        <a href="#database" class="tag">Database</a>
-                        <a href="#optimization" class="tag">Optimization</a>
-                        <a href="#performance" class="tag">Performance</a>
-                    </span>
-                </div>
-            </header>
-            <div class="blog-post__excerpt">
-                <p>
-                    Database optimization is often seen as the go-to solution for performance issues, but it's not always the best approach.
-                    This article explores when database optimization might be overkill and what alternatives you should consider. Through real-world examples
-                    and practical scenarios, we'll examine the trade-offs and help you make better decisions about optimization strategies.
-                </p>
-            </div>
-            <footer class="blog-post__footer">
-                <a href="./why-db-optimization-is-not-always-the-best-solution.html" class="btn">Read More</a>
-            </footer>
-        </article>
+
     </main>
 
     <!-- My Work -->
