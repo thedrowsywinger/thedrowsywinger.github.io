@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Number 7 on a ticket stub">
+  <rect x="4" y="12" width="56" height="40" rx="7" fill="#DA291C"/>
+  <path d="M45 12h8a7 7 0 0 1 7 7v26a7 7 0 0 1-7 7h-8z" fill="#E6D38A"/>
+  <path d="M45 15v34" stroke="#151311" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <path d="M15 23h17L21 43" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

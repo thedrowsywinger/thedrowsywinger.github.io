@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abdullah Sarwar · Senior Software Engineer</title>
+  <meta name="description" content="Abdullah Md. Sarwar is a Senior Software Engineer in Dhaka who leads the Public API team at ShareTrip.">
+  <script>
+    try { var m = new URLSearchParams(location.search).get('mode') || localStorage.getItem('mode'); if (m === 'match') document.documentElement.dataset.mode = 'match'; if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="page">
+    <svg class="chalk" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+      <circle cx="400" cy="0" r="150"/>
+      <circle cx="400" cy="0" r="6"/>
+      <line x1="250" y1="0" x2="250" y2="400"/>
+    </svg>
+
+    <header class="masthead">
+      <div class="masthead__top">
+        <div class="ident">
+          <figure class="portrait">
+            <img class="portrait__img portrait__img--work" src="img/portrait-work.jpg" alt="Abdullah Sarwar in a suit" width="480" height="600">
+            <img class="portrait__img portrait__img--match" src="img/portrait-match.jpg" alt="Abdullah Sarwar in a Manchester United shirt" width="480" height="600" aria-hidden="true">
+          </figure>
+          <h1 class="name">Abdullah Sarwar</h1>
+          <p class="role">
+            <span class="flap" id="flap" aria-label="Senior Software Engineer" data-text="SENIOR SOFTWARE ENGINEER"></span>
+            <span class="role__place">Dhaka</span>
+          </p>
+        </div>
+
+        <div class="controls">
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+          <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+          <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+        </button>
+        <button class="switch" id="mode-switch" type="button" role="switch" aria-checked="false" aria-label="Show the personal Matchday view">
+          <span class="switch__word switch__word--work">Workday</span>
+          <span class="switch__track" aria-hidden="true"><span class="switch__ball"></span></span>
+          <span class="switch__word switch__word--match">Matchday</span>
+        </button>
+        </div>
+      </div>
+
+      <!-- Workday hero: paper plane -->
+      <div class="hero hero--work" aria-hidden="true">
+        <svg class="plane-route" viewBox="0 0 640 70" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <mask id="trail-mask"><path class="trail-mask" d="M24 56 C150 4 330 70 616 16"/></mask>
+          </defs>
+          <path class="trail" d="M24 56 C150 4 330 70 616 16" mask="url(#trail-mask)"/>
+          <text x="10" y="68">DAC</text>
+          <text x="590" y="10">Anywhere</text>
+          <g class="plane">
+            <path d="M-11 0 L11 -9 L4 9 L0 1 Z" fill="#fff" stroke="#2A2623" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M11 -9 L0 1" stroke="#2A2623" stroke-width="1.2"/>
+            <animateMotion id="plane-motion" dur="3.2s" begin="indefinite" fill="freeze" rotate="auto" calcMode="spline" keyTimes="0;1" keySplines="0.45 0 0.25 1" path="M24 56 C150 4 330 70 616 16"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Matchday hero: the No. 7 goes down the wing, beats two, crosses, and the 9 heads it in.
+           Full pitch, top-down, with a side-view close-up of the 7's cross. -->
+      <div class="hero hero--match">
+        <div class="move move--mixed" id="move">
+          <p class="mv-board-clock" aria-hidden="true"><span class="mv-score">1–0</span><span class="mv-clock">90+3′</span></p>
+          <button class="mv-next" type="button" tabindex="-1">↻ Play the left wing</button>
+          <svg viewBox="0 0 360 246" width="360" height="246" aria-hidden="true">
+            <defs>
+              <mask id="mv-run-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--run" pathLength="100" d="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/></mask>
+              <mask id="mv-cross-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--cross" pathLength="100" d="M331 220 Q340 168 318 124"/></mask>
+              <mask id="mv-run-mask-l" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--run-l" pathLength="100" d="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/></mask>
+              <mask id="mv-shot-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--shot" pathLength="100" d="M295 174 Q310 118 348 115"/></mask>
+              <mask id="cu-shot-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask cu-mask-shot" pathLength="100" d="M112 238 C182 228 262 198 292 147"/></mask>
+              <mask id="cu-trail-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask cu-mask" pathLength="100" d="M247 201 C303 168 333 88 303 38"/></mask>
+            </defs>
+            <g class="mv-board">
+            <g class="mv-field">
+              <g class="mv-lines">
+                <rect x="12" y="14" width="336" height="218"/>
+                <path d="M180 14 V232"/>
+                <circle cx="180" cy="123" r="29.3"/>
+                <path d="M348 58.5 H295.2 V187.5 H348 M348 93.7 H330.4 V152.3 H348"/>
+                <path d="M295.2 99.6 A29.3 29.3 0 0 0 295.2 146.4"/>
+                <path d="M12 58.5 H64.8 V187.5 H12 M12 93.7 H29.6 V152.3 H12"/>
+                <path d="M64.8 99.6 A29.3 29.3 0 0 1 64.8 146.4"/>
+                <circle class="mv-spot" cx="180" cy="123" r="1.4"/>
+                <circle class="mv-spot" cx="312.8" cy="123" r="1.4"/>
+                <circle class="mv-spot" cx="47.2" cy="123" r="1.4"/>
+                <rect class="mv-goal-far" x="6" y="111.3" width="6" height="23.4" rx="1"/>
+              </g>
+              <rect class="mv-net" x="348" y="111.3" width="6" height="23.4" rx="1"/>
+              <g data-wing="right">
+                <path class="mv-trail" mask="url(#mv-run-mask)" d="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/>
+                <path class="mv-trail mv-trail--cross" mask="url(#mv-cross-mask)" d="M331 220 Q340 168 318 124"/>
+              </g>
+              <g data-wing="left">
+                <path class="mv-trail" mask="url(#mv-run-mask-l)" d="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/>
+                <path class="mv-trail mv-trail--cross" mask="url(#mv-shot-mask)" d="M295 174 Q310 118 348 115"/>
+              </g>
+              <g class="mv-us">
+                <circle cx="38" cy="123" r="4.5"/>
+                <circle cx="118" cy="62" r="4.5"/><circle cx="112" cy="104" r="4.5"/><circle cx="112" cy="142" r="4.5"/><circle cx="124" cy="186" r="4.5"/>
+                <circle cx="196" cy="48" r="4.5"/><circle cx="186" cy="104" r="4.5"/><circle cx="192" cy="146" r="4.5"/>
+                <circle cx="262" cy="72" r="4.5"/>
+              </g>
+              <g class="mv-them">
+                <circle cx="168" cy="86" r="5"/><circle cx="160" cy="132" r="5"/>
+                <circle cx="252" cy="52" r="5"/><circle cx="246" cy="92" r="5"/><circle cx="244" cy="134" r="5"/>
+                <circle cx="302" cy="70" r="5"/><circle cx="296" cy="98" r="5"/>
+              </g>
+              <circle class="mv-opp mv-d1" cx="213" cy="213" r="5"/>
+              <circle class="mv-opp mv-d2" cx="274" cy="228" r="5"/>
+              <circle class="mv-opp mv-cb" cx="300" cy="146" r="5"/>
+              <circle class="mv-opp mv-gk" cx="338" cy="123" r="5"/>
+              <g data-wing="right">
+              <g class="mv-s9">
+                <animateMotion data-at="0" dur="4.7s" keyTimes="0;0.6;1" fill="freeze" begin="indefinite" calcMode="spline" keyPoints="0;0;1" keySplines="0 0 1 1;0.3 0 0.4 1" path="M250 104 C276 104 300 118 318 124"/>
+                <circle r="6.5" class="mv-mate"/><text class="mv-num mv-num--mate" y="3">9</text>
+              </g>
+              <g class="mv-w7">
+                <animateMotion data-at="0" dur="2.4s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/>
+                <circle r="7" class="mv-me"/><text class="mv-num" y="3.2">7</text>
+              </g>
+              <g class="mv-ball">
+                <animateMotion data-at="0" dur="2.4s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/>
+                <animateMotion data-at="3.95" dur="0.75s" fill="freeze" begin="indefinite" path="M322 222 Q331 170 309 126"/>
+                <animateMotion data-at="4.7" dur="0.3s" fill="freeze" begin="indefinite" path="M309 126 L343 121"/>
+                <circle cx="9" cy="-2" r="2.8"/>
+              </g>
+              </g>
+              <g data-wing="left">
+                <g class="mv-s9">
+                  <animateMotion data-at="0" dur="2.4s" fill="freeze" begin="indefinite" calcMode="spline" keyPoints="0;0;1" keyTimes="0;0.3;1" keySplines="0 0 1 1;0.3 0 0.4 1" path="M250 104 C270 106 294 116 312 122"/>
+                  <circle r="6.5" class="mv-mate"/><text class="mv-num mv-num--mate" y="3">9</text>
+                </g>
+                <g class="mv-w7">
+                  <animateMotion data-at="0" dur="2.2s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/>
+                  <circle r="7" class="mv-me"/><text class="mv-num" y="3.2">7</text>
+                </g>
+                <g class="mv-ball">
+                  <animateMotion data-at="0" dur="2.2s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/>
+                  <animateMotion data-at="3.9" dur="0.3s" fill="freeze" begin="indefinite" path="M286 176 Q301 120 339 117"/>
+                  <circle cx="9" cy="-2" r="2.8"/>
+                </g>
+              </g>
+            </g>
+            </g>
+            <!-- Close-ups: right wing = side view of the cross; left wing = behind-the-shooter view of the top-corner finish -->
+            <g class="mv-close">
+              <g data-wing="right">
+              <path class="cu-ground" d="M0 206 H360"/>
+              <path class="cu-byline" d="M334 206 L360 214"/>
+              <g class="cu-flag"><path class="cu-pole" d="M334 206 V168"/><path class="cu-pennant" d="M334 168 L350 174 L334 180 Z"/></g>
+              <path class="cu-trail" mask="url(#cu-trail-mask)" d="M247 201 C303 168 333 88 303 38"/>
+              <g class="cu7">
+                <!-- Torso turned a little toward the camera, so the name and number on the back read. -->
+                <g transform="translate(196 206) scale(1.25) translate(-196 -206)">
+                  <path class="cu-limb" d="M190 134 L176 150 M218 133 L234 124 M194 176 L191 192 L196 206"/>
+                  <path class="cu-shirt" d="M188 128 L220 131 L215 166 L190 163 Z"/>
+                  <path class="cu-shorts" d="M190 163 L215 166 L214 178 L189 175 Z"/>
+                  <text class="cu-name" x="203.5" y="141">ABDULLAH</text>
+                  <text class="cu-num" x="203" y="160">7</text>
+                  <circle class="cu-head" cx="204" cy="116" r="9"/>
+                  <g class="cu7-leg"><path class="cu-limb" d="M209 176 L219 191 L229 202 L237 199"/></g>
+                </g>
+              </g>
+              <g class="cu-ball-run">
+                <g class="cu-ball">
+                  <animateMotion data-at="3.22" dur="0.6s" fill="freeze" begin="indefinite" path="M0 0 C56 -33 86 -113 56 -163"/>
+                  <circle cx="247" cy="201" r="5"/>
+                </g>
+              </g>
+              </g>
+              <g data-wing="left">
+                <path class="cu-ground" d="M0 200 H360"/>
+                <g class="cu-goal">
+                  <path class="cu-mesh" d="M110 140 L122 148 H288 L300 140 M122 148 V200 M288 148 V200 M129 140 V200 M148 140 V200 M167 140 V200 M186 140 V200 M205 140 V200 M224 140 V200 M243 140 V200 M262 140 V200 M281 140 V200 M110 155 H300 M110 170 H300 M110 185 H300"/>
+                </g>
+                <path class="cu-frame" d="M110 200 V140 H300 V200"/>
+                <g class="cu-keeper">
+                  <path class="cu-limb cu-limb--gk" d="M201 182 L197 200 M209 182 L213 200 M200 162 L188 150 M210 162 L222 150"/>
+                  <path class="cu-gk-body" d="M199 159 H211 L212 183 H198 Z"/>
+                  <circle class="cu-gk-head" cx="205" cy="152" r="5"/>
+                </g>
+                <path class="cu-trail" mask="url(#cu-shot-mask)" d="M112 238 C182 228 262 198 292 147"/>
+                <g class="cu-shot-ball">
+                  <animateMotion data-at="2.8" dur="0.6s" fill="freeze" begin="indefinite" calcMode="spline" keyTimes="0;1" keySplines="0.2 0 0.6 1" path="M0 0 C70 -10 150 -40 180 -91"/>
+                  <circle cx="112" cy="238" r="7"/>
+                </g>
+                <g class="cu-shooter">
+                  <path class="cu-limb cu-limb--big" d="M50 172 L28 196 M92 172 L114 188 M58 236 L56 252"/>
+                  <g class="cu-shooter-leg"><path class="cu-limb cu-limb--big" d="M86 234 L108 244"/></g>
+                  <path class="cu-shirt" d="M48 166 L94 166 L98 222 L44 222 Z"/>
+                  <path class="cu-shorts" d="M46 222 H96 L96 238 H46 Z"/>
+                  <text class="cu-name cu-name--big" x="71" y="184">ABDULLAH</text>
+                  <text class="cu-num cu-num--big" x="71" y="211">7</text>
+                  <circle class="cu-head" cx="71" cy="150" r="13"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+          <p class="mv-foot" aria-hidden="true"><span class="mv-wing">Right wing</span><span class="mv-cap">Fergie-time winner · Assist: <b>Abdullah</b></span></p>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="row row--about" aria-labelledby="about-h">
+        <h2 class="label" id="about-h" data-work="About" data-match="Player profile">About</h2>
+        <div class="content">
+          <div class="about">
+            <div class="about__text">
+              <p class="lead" data-work="I'm a Senior Software Engineer at ShareTrip in Dhaka, where I lead the Public API team. We build and maintain the gateways and the business logic behind flights, hotels, the e-commerce shop, mobile recharge and utility bill payments, as well as visa and holidays. That covers the supplier integrations and the pricing behind every booking: markups, discounts, coupons and add-ons, so each customer is charged the right amount." data-match="Leads the Public API team at a travel company in Dhaka, across gateways, flights, hotels, e-commerce, mobile recharge, bill payments, visa and holidays. Manchester United supporter.">I'm a Senior Software Engineer at ShareTrip in Dhaka, where I lead the Public API team. We build and maintain the gateways and the business logic behind flights, hotels, the e-commerce shop, mobile recharge and utility bill payments, as well as visa and holidays. That covers the supplier integrations and the pricing behind every booking: markups, discounts, coupons and add-ons, so each customer is charged the right amount.</p>
+              <p class="lead work-only">As team lead, I plan the team's work, review its code and take changes from staging to production. I keep these flows fast and safe: I profile slow queries to remove wasted database calls, and I roll out security patches and runtime upgrades across our services.</p>
+              <ul class="links links--inline about__links work-only">
+                <li><a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></li>
+                <li><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a></li>
+                <li><a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a></li>
+                <li><a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a></li>
+              </ul>
+            </div>
+            <figure class="photo-slot">
+              <img class="photo--work" src="img/about-workdesk.jpg" alt="Abdullah at his desk at ShareTrip, turned toward the camera, with three monitors behind him" width="1080" height="720" loading="lazy">
+              <img class="photo--match" src="img/about-matchday.jpg" alt="Abdullah seen from behind on a floodlit pitch at night, in a No. 7 shirt with his name, holding a trophy and his boots" width="720" height="900" loading="lazy">
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" aria-labelledby="route-h">
+        <h2 class="label" id="route-h" data-work="Route" data-match="Seasons">Route</h2>
+        <div class="content">
+          <a class="tk tk--role" href="https://sharetrip.net/" target="_blank" rel="noopener" aria-label="ShareTrip, Senior Software Engineer, leads the Public API team, since November 2022">
+            <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+            <span class="tk__main">
+              <span class="tk__top"><span data-work="Boarding · since Nov 2022" data-match="Season · 2022 – present">Boarding · since Nov 2022</span><span>Current</span></span>
+              <span class="tk__title">ShareTrip</span>
+              <span class="tk__fields">
+                <span class="f"><small data-work="Seat" data-match="Position">Seat</small><span>Senior Software Engineer · Public API lead</span></span>
+                <span class="f"><small data-work="Routes" data-match="Plays in">Routes</small><span>Gateways · Flights · Hotels · E-commerce · Mobile recharge · Bill payments · Visa · Holidays</span></span>
+              </span>
+            </span>
+            <span class="tk__stub"><span class="tk__action">Now</span><span class="tk__no">SINCE<br>2022</span></span>
+          </a>
+
+          <div class="booking scene-observe" aria-hidden="true">
+            <div class="booking__scene">
+              <svg viewBox="0 0 320 160" width="320" height="160">
+                <line x1="0" y1="136" x2="320" y2="136" stroke="#D8D2C9" stroke-width="1.5"/>
+                <rect x="188" y="44" width="104" height="92" rx="3" fill="#fff" stroke="#2A2623" stroke-width="2"/>
+                <rect x="214" y="30" width="52" height="16" rx="3" fill="#1E5B45"/>
+                <text x="240" y="42" text-anchor="middle" class="hotel-sign">HOTEL</text>
+                <rect class="win" x="200" y="58" width="18" height="13" rx="1.5"/>
+                <rect class="win" x="231" y="58" width="18" height="13" rx="1.5" style="animation-delay:.12s"/>
+                <rect class="win" x="262" y="58" width="18" height="13" rx="1.5" style="animation-delay:.24s"/>
+                <rect class="win" x="200" y="82" width="18" height="13" rx="1.5" style="animation-delay:.36s"/>
+                <rect class="win" x="231" y="82" width="18" height="13" rx="1.5" style="animation-delay:.48s"/>
+                <rect class="win" x="262" y="82" width="18" height="13" rx="1.5" style="animation-delay:.6s"/>
+                <rect x="229" y="108" width="22" height="28" fill="#F5CF5B" class="glow"/>
+                <rect x="229" y="108" width="22" height="28" fill="#1E5B45" class="door"/>
+                <g class="suit">
+                  <path d="M7 112 v-5 a3 3 0 0 1 3-3 h6 a3 3 0 0 1 3 3 v5" fill="none" stroke="#2A2623" stroke-width="2"/>
+                  <rect x="2" y="112" width="22" height="18" rx="3" fill="#F3E3A0" stroke="#2A2623" stroke-width="2"/>
+                  <line x1="9" y1="112" x2="9" y2="130" stroke="#2A2623" stroke-width="1.2"/>
+                  <line x1="17" y1="112" x2="17" y2="130" stroke="#2A2623" stroke-width="1.2"/>
+                  <g class="wheel"><circle cx="7" cy="133" r="3" fill="#2A2623"/><line x1="5" y1="133" x2="9" y2="133" stroke="#fff" stroke-width=".8"/></g>
+                  <g class="wheel"><circle cx="19" cy="133" r="3" fill="#2A2623"/><line x1="17" y1="133" x2="21" y2="133" stroke="#fff" stroke-width=".8"/></g>
+                </g>
+              </svg>
+              <div class="mini-ticket">
+                <div class="mini-ticket__main"><small>BOOKING · 1 ROOM</small>
+                  <span class="state state--1">Searching…</span>
+                  <span class="state state--2">Room held</span>
+                  <span class="stamp">CONFIRMED ✓</span>
+                </div>
+                <div class="mini-ticket__stub"></div>
+              </div>
+            </div>
+          </div>
+
+          <ol class="list">
+            <!-- Talvette hidden for now (2026-11-07, at Abdullah's request):
+            <li><span class="list__main">Talvette <span class="muted">· Consultant Backend Engineer, part-time</span></span><span class="list__meta">May – Dec 2024</span></li>
+            -->
+            <li><span class="list__main">mPower Social Enterprise <span class="muted">· Software Engineer</span></span><span class="list__meta">May 2021 – Oct 2022</span></li>
+            <li><span class="list__main">Early Advantage Bangladesh <span class="muted">· Software Engineer</span></span><span class="list__meta">Jul 2020 – Apr 2021</span></li>
+            <li><span class="list__main">Alter F4 <span class="muted">· Software Engineer</span></span><span class="list__meta">Jan – Jul 2020</span></li>
+            <li><span class="list__main">North South University <span class="muted">· BSc, Computer Science and Engineering</span></span><span class="list__meta">Education</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="row" aria-labelledby="honours-h">
+        <h2 class="label" id="honours-h" data-work="Recognition" data-match="Honours">Recognition</h2>
+        <div class="content honours">
+          <div class="honours__photos">
+            <figure class="photo">
+              <img src="img/hackathon.jpg" alt="Abdullah Sarwar holding the Champion board at the Banglalink SDG Hackathon: Code for a Cause 2.0" width="600" height="800" loading="lazy">
+            </figure>
+            <figure class="photo honours__extra">
+              <img src="img/award.jpg" alt="Abdullah receiving an award from the CEO of ShareTrip in the office trophy room" width="900" height="1200" loading="lazy">
+            </figure>
+          </div>
+          <div class="honours__text">
+            <p class="honours__kicker" data-work="Hackathon" data-match="Silverware">Hackathon</p>
+            <p class="honours__title">Champion, Banglalink SDG Hackathon: Code for a Cause 2.0</p>
+            <p class="muted">A 36-hour hackathon, won with Team QuirkyBits.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="row row--build" aria-labelledby="build-h">
+        <h2 class="label" id="build-h" data-work="How we build" data-match="Tactics">How we build</h2>
+        <div class="content">
+          <div class="cards">
+            <article class="card scene-observe">
+              <div class="card__stage card__stage--dark" aria-hidden="true">
+                <div class="queue">
+                  <span class="queue__box" style="left:0">api</span>
+                  <span class="queue__box" style="left:80px;width:44px">queue</span>
+                  <span class="queue__box" style="right:0">worker</span>
+                  <span class="queue__msg"></span><span class="queue__msg" style="animation-delay:.7s"></span><span class="queue__msg" style="animation-delay:1.4s"></span>
+                  <span class="queue__ack">✓</span>
+                </div>
+              </div>
+              <h3>Messaging</h3>
+              <p>Services talk through RabbitMQ, with clear routing contracts and acknowledgements.</p>
+            </article>
+            <article class="card scene-observe">
+              <div class="card__stage" aria-hidden="true">
+                <div class="idem">
+                  <span class="idem__dot" style="top:6px;--dy:18px"></span>
+                  <span class="idem__dot" style="top:25px;--dy:0px;animation-delay:.15s"></span>
+                  <span class="idem__dot" style="top:44px;--dy:-18px;animation-delay:.3s"></span>
+                  <span class="idem__lbl">retry ×3</span>
+                  <span class="idem__card">1 booking ✓</span>
+                </div>
+              </div>
+              <h3>Safe retries</h3>
+              <p>A retried request finds the same booking instead of creating a second one.</p>
+            </article>
+            <article class="card scene-observe">
+              <div class="card__stage" aria-hidden="true">
+                <div class="trace">
+                  <div>search<i style="width:100%"></i></div>
+                  <div>supplier<i style="width:70%;margin-left:12%;animation-delay:.2s"></i></div>
+                  <div>price<i style="width:30%;margin-left:55%;animation-delay:.4s"></i></div>
+                  <div>save<i style="width:18%;margin-left:82%;animation-delay:.6s"></i></div>
+                </div>
+              </div>
+              <h3>Tracing</h3>
+              <p>Follow one request across services with Grafana and Loki, from first call to saved result.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="row row--kit" aria-labelledby="kit-h">
+        <h2 class="label" id="kit-h" data-work="Toolkit" data-match="Team sheet">Toolkit</h2>
+        <div class="content">
+          <div class="kit kit--work">
+            <p><strong>Data</strong> PostgreSQL · MySQL · MongoDB · Redis</p>
+            <p><strong>Queries</strong> Raw SQL first, TypeORM where it helps</p>
+            <p><strong>Services</strong> NestJS · Node.js · Express, with Python as well</p>
+            <p><strong>Language</strong> TypeScript</p>
+            <p><strong>Messaging</strong> RabbitMQ · scheduled jobs (cron)</p>
+            <p><strong>Search</strong> Typesense</p>
+            <p><strong>AI integration</strong> MCP</p>
+            <p><strong>Observability</strong> Grafana · Loki</p>
+            <p><strong>AI tools</strong> Claude Code · Codex · T3 Code, with every change reviewed by a person</p>
+          </div>
+
+          <div class="kit kit--match">
+            <div class="sheet">
+              <div class="pitch" role="img" aria-label="Team sheet in a 4-4-1-1. Goalkeeper Grafana. Defence, left to right: MongoDB, PostgreSQL, MySQL, Redis. Midfield RabbitMQ, Loki, Raw SQL, Cron jobs. AI agents as false 9, NestJS up front. Home ground Node.js, away ground Python. Substitutes TypeScript, TypeORM, Typesense, MCP and Express.">
+                <span class="pitch__box pitch__box--l"></span><span class="pitch__box pitch__box--r"></span>
+                <span class="pl" style="left:6%;top:50%">Grafana</span>
+                <span class="pl" style="left:20%;top:15%">MongoDB</span><span class="pl" style="left:20%;top:38%">Postgres</span><span class="pl" style="left:20%;top:62%">MySQL</span><span class="pl" style="left:20%;top:85%">Redis</span>
+                <span class="pl" style="left:40%;top:15%">RabbitMQ</span><span class="pl" style="left:37%;top:38%">Loki</span><span class="pl" style="left:37%;top:62%">Raw SQL</span><span class="pl" style="left:40%;top:85%">Cron jobs</span>
+                <span class="pl" style="left:64%;top:50%">AI agents</span>
+                <span class="pl" style="left:82%;top:50%">NestJS</span>
+              </div>
+              <div class="dugout">
+                <div><small>Manager</small><p class="manager"><i aria-hidden="true"></i>Abdullah Sarwar</p></div>
+                <span class="dugout__sep" aria-hidden="true"></span>
+                <div><small>Home ground</small><p class="ground">Node.js</p></div>
+                <span class="dugout__sep" aria-hidden="true"></span>
+                <div><small>Away ground</small><p class="ground">Python</p></div>
+              </div>
+              <div class="bench">
+                <small>Substitutes</small>
+                <ul class="staff staff--subs"><li>TypeScript</li><li>TypeORM</li><li>Typesense</li><li>MCP</li><li>Express</li></ul>
+              </div>
+            </div>
+            <p class="caption">4-4-1-1: data at the back, the plumbing in midfield, NestJS up front. AI agents (Claude Code, Codex, T3 Code) play false 9: they drop deep and set up the finish. The manager picks the team and owns the result.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="row" aria-labelledby="writing-h">
+        <h2 class="label" id="writing-h" data-work="Departures" data-match="Match reports">Departures</h2>
+        <div class="content">
+          <div class="tickets">
+            <a class="tk" href="blog/making-booking-retries-safe.html" aria-label="Read: Making Booking Retries Safe">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 005" data-match="Match report · No. 005">Essay · No. 005</span><time datetime="2026-10-21">21 Oct 2026</time></span>
+                <span class="tk__title">Making Booking Retries Safe</span>
+                <span class="tk__fields tk__fields--work">
+                  <span class="f"><small>From</small><span>Retry</span></span>
+                  <span class="f"><small>To</small><span>Same booking</span></span>
+                  <span class="f"><small>Topic</small><span>Idempotency</span></span>
+                </span>
+                <span class="tk__vs">Retry <b>vs</b> Duplicates</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/making-booking-retries-safe</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            <a class="tk" href="blog/optimizing-hotel-search-performance.html" aria-label="Read: Speeding Up Hotel Search with Concurrent Chunks">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 004" data-match="Match report · No. 004">Essay · No. 004</span><time datetime="2025-11-26">26 Nov 2025</time></span>
+                <span class="tk__title">Speeding Up Hotel Search with Concurrent Chunks</span>
+                <span class="tk__fields tk__fields--work">
+                  <span class="f"><small>From</small><span>Chunk by chunk</span></span>
+                  <span class="f"><small>To</small><span>Bounded overlap</span></span>
+                  <span class="f"><small>Topic</small><span>Concurrency</span></span>
+                </span>
+                <span class="tk__vs">Overlap <b>vs</b> Waiting</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/optimizing-hotel-search-performance</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+          </div>
+
+          <p class="more"><a class="link" href="blog/index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></p>
+        </div>
+      </section>
+
+      <section class="row" aria-labelledby="research-h">
+        <h2 class="label" id="research-h" data-work="Research" data-match="Programme archive">Research</h2>
+        <div class="content">
+          <ol class="list">
+            <li><a class="link" href="https://doi.org/10.1080/24751839.2020.1833136" target="_blank" rel="noopener">Deep Learning Based Question Answering System in Bengali</a><span class="list__meta">DOI</span></li>
+            <li><a class="link" href="https://doi.org/10.1007/978-3-030-63119-2_4" target="_blank" rel="noopener">Soil Analysis and Unconfined Compression Test Study Using Data Mining Techniques</a><span class="list__meta">DOI</span></li>
+            <li><a class="link" href="https://doi.org/10.1109/IS48319.2020.9199941" target="_blank" rel="noopener">Analysis of Soil and Various Geo-technical Properties using Data Mining Techniques</a><span class="list__meta">DOI</span></li>
+          </ol>
+          <p class="more"><a class="link" href="publications.html">Publications and reports <span class="arrow" aria-hidden="true">→</span></a></p>
+        </div>
+      </section>
+
+      <section class="row" aria-labelledby="contact-h">
+        <h2 class="label" id="contact-h" data-work="Check-in" data-match="Transfer enquiries">Check-in</h2>
+        <div class="content">
+        <p class="contact__note" data-work="Based in Dhaka (UTC+6). Open to remote roles and relocation." data-match="Based in Dhaka. Open to a transfer: remote or abroad.">Based in Dhaka (UTC+6). Open to remote roles and relocation.</p>
+        <div class="contact">
+          <div class="tag-wrap">
+            <span class="tag-string" aria-hidden="true"></span>
+            <a class="tag" href="mailto:abdullah.md.sarwar@gmail.com">
+              <span class="tag__label" data-work="Say hello" data-match="Contact the club">Say hello</span>
+              <span class="tag__email">abdullah.md.sarwar@gmail.com</span>
+            </a>
+          </div>
+          <ul class="links">
+            <li><a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></li>
+          </ul>
+        </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p><a class="link" href="blog/index.html">Writing</a> · <a class="link" href="portfolio.html">Work</a> · <a class="link" href="publications.html">Research</a></p>
+      <p>© 2026 Abdullah Md. Sarwar</p>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

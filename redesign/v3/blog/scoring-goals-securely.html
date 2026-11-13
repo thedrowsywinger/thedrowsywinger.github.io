@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A hypothetical football booking app explains JWT validation, cookie storage, CSRF protection, refresh token rotation, and the limits of logout.">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="JWT Authentication for a Football Booking App: Login, Refresh, and Logout">
+  <meta property="og:description" content="A hypothetical football booking app explains JWT validation, cookie storage, CSRF protection, refresh token rotation, and the limits of logout.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/scoring-goals-securely.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/scoring-goals-securely.png">
+  <meta property="article:published_time" content="2024-04-10">
+  <meta property="article:modified_time" content="2026-10-15">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Authentication">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>JWT Authentication for a Football Booking App: Login, Refresh, and Logout · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/scoring-goals-securely.html">
+  <link rel="icon" type="image/svg+xml" href="../img/logo.svg">
+  <script>
+    document.documentElement.classList.add('js'); try { if ((new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme')) === 'light') document.documentElement.dataset.theme = 'light'; if (localStorage.getItem('calm') === '1' || (localStorage.getItem('calm') === null && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.documentElement.classList.add('calm'); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../v3.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 001" data-match="Match report · No. 001">Essay · No. 001</span><span class="post__sep">·</span><time datetime="2024-04-10">10 Apr 2024</time><span class="post__sep">·</span><span>4 min read</span><span class="post__sep">·</span><span>Updated <time datetime="2026-10-15">15 Oct 2026</time></span></p>
+          <p class="post__kicker">Authentication</p>
+          <h1 class="post__title">JWT Authentication for a Football Booking App: Login, Refresh, and Logout</h1>
+          <ul class="post__tags" aria-label="Topics"><li>Security</li><li>JWT</li><li>Authentication</li></ul>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-understand-what-the-token-proves">1. Understand what the token proves</a></li><li><a href="#2-issue-tokens-after-login">2. Issue tokens after login</a></li><li><a href="#3-choose-one-browser-storage-design">3. Choose one browser storage design</a></li><li><a href="#4-protect-cookie-authenticated-requests">4. Protect cookie-authenticated requests</a></li><li><a href="#5-validate-identity-and-permission-separately">5. Validate identity and permission separately</a></li><li><a href="#6-renew-through-the-refresh-endpoint">6. Renew through the refresh endpoint</a></li><li><a href="#7-define-what-logout-guarantees">7. Define what logout guarantees</a></li><li><a href="#keep-the-example-s-boundaries-clear">Keep the example&#x27;s boundaries clear</a></li></ol><p class="toc__meta"><span>4 min read</span><span class="toc__left" data-minutes="4"></span><span>Published 10 Apr 2024</span><span>Updated 15 Oct 2026</span></p></details>
+          <div class="post__body">
+
+
+<p class="article-lead">JWT authentication needs a complete login, renewal, and logout design.
+                    Signing a token covers only one part of that flow.</p>
+                <p>FindYourTurf is a hypothetical football booking app I would like to build.
+                    I use Rooney, a player looking for a pitch, to walk through an example design.</p>
+                <p>This example uses a browser app and API on the same origin.
+                    Tokens travel in cookies. It describes a design, rather than a deployed implementation.</p>
+
+                <h2 id="1-understand-what-the-token-proves">1. Understand what the token proves</h2>
+                <p>A JSON Web Token, or JWT, carries claims about a user or request context.
+                    A signed JWT lets the API check that those claims came from a trusted signer.</p>
+                <p>Signing does not hide the payload. Keep passwords and other secrets out of a signed token.
+                    The <a href="https://www.rfc-editor.org/rfc/rfc7519.html">JWT specification</a> defines its structure and claims.</p>
+                <p>For this example, an access JWT would contain:</p>
+                <ol>
+                    <li><code>sub</code>: Rooney's stable user ID.</li>
+                    <li><code>iss</code>: the expected token issuer.</li>
+                    <li><code>aud</code>: the API allowed to accept it.</li>
+                    <li><code>iat</code> and <code>exp</code>: issue and expiry times.</li>
+                    <li><code>jti</code>: a token identifier, if the revocation design uses one.</li>
+                </ol>
+
+                <h2 id="2-issue-tokens-after-login">2. Issue tokens after login</h2>
+                <p>Rooney submits his credentials over HTTPS. The server checks the password against its stored password hash.</p>
+                <p>After successful authentication, the server issues two credentials:</p>
+                <ol>
+                    <li>A short-lived access JWT for API requests.</li>
+                    <li>A refresh token that allows renewal without another password entry.</li>
+                </ol>
+                <p>The refresh token in this design is an opaque random value.
+                    The server stores its hash, user association, expiry, and revocation state.
+                    The browser holds the token itself.</p>
+                <p>A JWT does not remove that server-side state.
+                    A conventional server-side session is also a valid choice for this browser app.</p>
+
+                <h2 id="3-choose-one-browser-storage-design">3. Choose one browser storage design</h2>
+                <p>For this same-origin example, both credentials use <code>HttpOnly</code>, <code>Secure</code> cookies with an explicit <code>SameSite</code> setting.</p>
+                <pre tabindex="0"><code class="language-http">Set-Cookie: __Host-access=&lt;jwt&gt;; Path=/; Secure; HttpOnly; SameSite=Lax
+Set-Cookie: __Host-refresh=&lt;refresh-token&gt;; Path=/; Secure; HttpOnly; SameSite=Lax</code></pre>
+                <p><code>HttpOnly</code> prevents JavaScript from reading the cookie.
+                    <code>Secure</code> restricts transmission to HTTPS.
+                    The <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie#cookie_prefixes"><code>__Host-</code> prefix</a>
+                    requires a root path and no <code>Domain</code> attribute.</p>
+                <p>These cookies use the API's cookie authentication path, rather than a JavaScript-generated bearer header.
+                    Token expiry and cookie lifetime must be set consistently.</p>
+                <p>Tokens in local storage can be read by JavaScript, including malicious scripts running in the app.
+                    Cookies also cannot stop malicious scripts from making requests while running in the app.</p>
+                <p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html">OWASP's session guidance</a>
+                    explains cookie protections and their limits.</p>
+
+                <h2 id="4-protect-cookie-authenticated-requests">4. Protect cookie-authenticated requests</h2>
+                <p>Browsers attach eligible cookies automatically.
+                    Another site can try to trigger an authenticated action; this is cross-site request forgery, or CSRF.</p>
+                <p>Use POST or another appropriate non-GET method for state changes.
+                    Validate request origins and require a CSRF token bound to the session.</p>
+                <p>Apply these checks to booking changes, refresh, and logout.
+                    <code>SameSite</code> adds protection, but it is not a replacement for the complete CSRF design.
+                    See <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">OWASP's CSRF guidance</a>.</p>
+
+                <h2 id="5-validate-identity-and-permission-separately">5. Validate identity and permission separately</h2>
+                <p>The API uses an established JWT library to verify the signature and required claims.
+                    The accepted algorithm and trusted keys come from server configuration.</p>
+                <p>Check the issuer, audience, and expiry. Validate any additional claims required by the chosen token profile.
+                    Decoding a token alone does not verify it.</p>
+                <p>A valid JWT identifies Rooney for this example. It does not give him access to every booking.</p>
+                <p>For a booking request, the API must also check ownership or another explicit permission.
+                    Changing a booking ID in the URL must not grant access to another player's booking.</p>
+                <p><a href="https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html#jwt">OWASP's API guidance</a>
+                    covers token validation and access control.</p>
+
+                <h2 id="6-renew-through-the-refresh-endpoint">6. Renew through the refresh endpoint</h2>
+                <p>When the access token expires, the browser sends a protected refresh request.
+                    The server checks the refresh token's stored record and expiry.</p>
+                <p>On successful renewal, rotate the refresh token: invalidate the old value and issue a new one.
+                    Update the stored state atomically so the old token cannot be accepted twice.</p>
+                <p>Keep related refresh tokens linked so reuse can trigger revocation of that renewal chain.
+                    The client should coordinate refresh requests to avoid accidental concurrent renewals.</p>
+                <p><a href="https://www.rfc-editor.org/rfc/rfc9700.html#section-4.14">OAuth security guidance</a>
+                    describes refresh token rotation and replay protection. Those controls also inform this example's renewal design.</p>
+
+                <h2 id="7-define-what-logout-guarantees">7. Define what logout guarantees</h2>
+                <p>On logout, revoke the refresh record and expire both browser cookies using their original names and paths.</p>
+                <p>This stops renewal and removes those credentials from that browser.
+                    It does not automatically invalidate an access JWT that someone already copied.</p>
+                <p>With signature-only validation, that JWT can remain usable until its expiry.
+                    Immediate revocation requires another check, such as a token denylist or server-side session state.</p>
+                <p>That check introduces server-side work on requests.
+                    Choose the required logout guarantee explicitly and implement the API checks that enforce it.</p>
+
+                <h2 id="keep-the-example-s-boundaries-clear">Keep the example's boundaries clear</h2>
+                <p>The football scenario makes the flow easier to follow, but the security decisions are specific.
+                    Cookie storage, CSRF checks, refresh state, and access-token revocation must work together.</p>
+                <p>For FindYourTurf, I would choose between this design and a server-side session based on the actual API and client requirements.</p>
+
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next essay" data-match="Next essay">Next essay</h2>
+            <div class="content">
+            <a class="tk" href="making-booking-retries-safe.html" aria-label="Read: Making Booking Retries Safe">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 005" data-match="Match report · No. 005">Essay · No. 005</span><time datetime="2026-10-21">21 Oct 2026</time></span>
+                <span class="tk__title">Making Booking Retries Safe</span>
+                <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Retry</span></span><span class="f"><small>To</small><span>Same booking</span></span><span class="f"><small>Topic</small><span>Idempotency</span></span></span>
+                <span class="tk__vs">Retry <b>vs</b> Duplicates</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/making-booking-retries-safe</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            </div>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/scoring-goals-securely.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=JWT%20Authentication%20for%20a%20Football%20Booking%20App:%20Login,%20Refresh,%20and%20Logout&amp;url=https://thedrowsywinger.github.io/blog/scoring-goals-securely.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="foot foot--site">
+      <p class="foot__nav"><a class="link" href="../index.html">Home</a> · <a class="link" href="../portfolio.html">Work</a> · <a class="link" href="../blog/index.html">Writing</a> · <a class="link" href="../publications.html">Research</a> · <a class="link" href="../agents.html">AI agents</a> · <a class="link" href="../uses.html">Uses</a></p>
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p class="foot__end"><a class="link" href="../index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="../img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
+    </footer>
+    <a class="peek" href="../blog/making-booking-retries-safe.html" aria-label="Next page: Making Booking Retries Safe">
+      <span class="peek__hint">Next page · keep scrolling, or tap</span>
+      <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
+      <span class="peek__title">Making Booking Retries Safe</span>
+      <i class="peek__fill" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <script src="../main.js"></script>
+  <script src="../v3.js"></script>
+</body>
+</html>
