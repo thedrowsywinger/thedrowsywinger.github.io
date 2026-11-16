@@ -1,7 +1,7 @@
 /* The approved four scenes, scoped to this one journey. */
 .booking-journey { --journey-ink:#2a2623; --journey-green:#1e5b45; --journey-green-light:#7cc4a0; --journey-yellow:#f5cf5b; --journey-sand:#f3e3a0; margin:18px 0; max-width:680px; min-width:0; }
 .journey-viewport { position:relative; aspect-ratio:2; overflow:hidden; border:1px solid var(--line-2); border-radius:10px; background:#ece6da; }
-.journey-scene { position:absolute; inset:0; visibility:hidden; opacity:0; transition:opacity .4s; background:#ece6da; }
+.journey-scene { position:absolute; inset:0; visibility:hidden; opacity:0; transition:opacity var(--t-panel) var(--ease-out); background:#ece6da; }
 .journey-scene--night { background:#17202b; }
 .journey-scene.is-active { visibility:visible; opacity:1; }
 .journey-scene svg { display:block; width:100%; height:auto; }

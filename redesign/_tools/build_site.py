@@ -18,7 +18,7 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-SRC_BLOG = ROOT / "blog"
+SRC_BLOG = ROOT / "legacy" / "blog"   # the old site keeps the source text of each post
 OUT = ROOT / "redesign"
 DATA = Path(__file__).resolve().parent
 
@@ -293,7 +293,7 @@ def build_blog_index(parsed):
     years = {}
     for p in listed:
         years.setdefault(parsed[p["slug"]]["published"][:4], []).append(p)
-    rows = [row("Departures", "Fixtures", f"""          <p class="lead">Notes on backend engineering: keeping bookings safe under retries, running work concurrently, authentication, and local development setup.</p>
+    rows = [row("Departures", "Fixtures", f"""          <p class="lead">Notes on backend engineering: keeping bookings safe under retries, running work concurrently, routing messages between services, authentication, and local development setup.</p>
           <div class="tickets tickets--spaced">
             {featured}
           </div>""", "writing-h", first=True, heading="h1")]

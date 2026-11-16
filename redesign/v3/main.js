@@ -73,6 +73,7 @@
   function playMove() {
     var move = document.getElementById('move');
     if (!move) return;
+    clearTimeout(loopTimer); loopDue = false;
     // SVG motion does not start before the page loads; CSS would. Wait, so both stay in step.
     if (document.readyState !== 'complete') {
       if (!playMove.waiting) {
@@ -122,6 +123,7 @@
     function scored() {
       clock.textContent = '90+3′'; score.textContent = '1–0'; move.classList.add('scored');
       if (next) next.tabIndex = 0;
+      if (goalAt) loopMove();
     }
     if (next) next.tabIndex = -1;
     move.classList.remove('scored');
@@ -139,6 +141,22 @@
 
   var moveEl = document.getElementById('move');
   if (moveEl) moveEl.addEventListener('click', playMove);
+
+  // The move runs on a loop: after each goal the other wing plays. It waits while the scene is off the
+  // screen, the tab is hidden or Workday is showing, and it continues when the scene can be seen again.
+  var loopTimer = 0, loopDue = false, moveSeen = true;
+  function canLoop() { return moveSeen && !document.hidden && root.dataset.mode === 'match'; }
+  function loopMove() {
+    clearTimeout(loopTimer);
+    loopDue = false;
+    if (reduce || root.classList.contains('calm')) return;
+    loopTimer = setTimeout(function () { if (canLoop()) playMove(); else loopDue = true; }, 2600);
+  }
+  function resumeLoop() { if (loopDue && canLoop()) { loopDue = false; playMove(); } }
+  if (moveEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) { moveSeen = entries[entries.length - 1].isIntersecting; resumeLoop(); }, { threshold: 0.3 }).observe(moveEl);
+  }
+  document.addEventListener('visibilitychange', resumeLoop);
 
   function playMatch() {
     // A scene that waits for scrolling (v2) is played by the observer instead.
@@ -177,9 +195,8 @@
   if (toggle) {
     toggle.addEventListener('click', function () {
       var change = function () { setMode(root.dataset.mode === 'match' ? 'work' : 'match', true); };
-      // Inside a view transition, the plane on the Workday bar morphs into the ball on the Matchday bar.
-      if (document.startViewTransition && !reduce && !root.classList.contains('calm')) document.startViewTransition(change);
-      else change();
+      // No view transition here: it cannot be interrupted. v3.js moves the page in, and a second press redirects it.
+      change();
     });
   }
 

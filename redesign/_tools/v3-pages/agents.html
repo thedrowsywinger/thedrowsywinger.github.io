@@ -2,7 +2,7 @@
       <section class="row reveal row--top" aria-labelledby="agents-h">
         <h1 class="label" id="agents-h">AI agents</h1>
         <div class="content">
-          <p class="lead">AI agents write many of my first drafts. I stay responsible for every line that ships. This page shows the method I use, at ShareTrip and on side projects.</p>
+          <p class="lead">I use AI agents inside a strict process. I own the plan, the review and every line that ships. This page shows that process, at ShareTrip and on side projects.</p>
         </div>
       </section>
 
@@ -25,15 +25,12 @@
         <h2 class="label" id="rules-h">The rules</h2>
         <div class="content">
           <ol class="rules">
-            <li><b>One agent for small work.</b> I split a task only when its parts are independent.</li>
-            <li><b>No worker starts before I approve a plan.</b> The plan states the machine load, the task weight, the number of workers, and the model for each one.</li>
-            <li><b>The cheapest model that can finish without rework.</b> The strongest model is for unclear requirements and risky changes.</li>
-            <li><b>Each writer gets its own worktree.</b> Two agents never edit the same checkout.</li>
+            <li><b>No agent starts before I approve a plan.</b> The plan says how to split the work and which model does each part.</li>
+            <li><b>Each agent works alone.</b> It gets its own worktree, so two agents never edit the same code.</li>
             <li><b>A different provider reviews the code.</b> An agent that wrote a change tends to agree with it.</li>
-            <li><b>One review round, one fix round.</b> A second round is only for a serious finding that is still open.</li>
-            <li><b>Agents never merge.</b> They do not push to shared branches. I integrate the work.</li>
             <li><b>Checks must really run.</b> A report lists what passed, what failed, and what was skipped.</li>
-            <li><b>Agents never load production secrets.</b> They inspect a live system only with my approval.</li>
+            <li><b>Agents never merge.</b> They do not push to shared branches. I integrate the work.</li>
+            <li><b>Agents never touch production secrets.</b> They inspect a live system only with my approval.</li>
           </ol>
         </div>
       </section>
@@ -57,10 +54,9 @@
             <li><b>Investigate</b><span>Explain the code, the logs or the bug first. An investigation is not permission to fix.</span></li>
             <li><b>Inspect systems</b><span>Read databases, logs and storage safely: my approval first, careful credentials, careful data.</span></li>
             <li><b>Verify change</b><span>Choose checks that prove the change works when unit tests cannot.</span></li>
-            <li><b>Orchestrate</b><span>Plan delegated work: the split, the model for each worker, isolation, and recovery.</span></li>
+            <li><b>Orchestrate</b><span>Decide when work is worth splitting, which model does each part, and how the pieces come back together safely.</span></li>
             <li><b>Release</b><span>Promote changes across branches and repositories, then verify the deployment.</span></li>
             <li><b>Handoff</b><span>Pack the context of unfinished work so it continues in a new thread or on another machine.</span></li>
-            <li><b>Idea batch</b><span>Suggest numbered improvements for my setup, then build the ones I pick.</span></li>
           </ul>
         </div>
       </section>
@@ -85,7 +81,8 @@
             <p><strong>Agents</strong> Claude Code · Codex</p>
             <p><strong>Workspace</strong> T3 Code, with one thread and one worktree for each task</p>
             <p><strong>Rules</strong> One config repository, shared by every machine</p>
+            <p><strong>Secrets</strong> A password manager, and encrypted bundles between machines</p>
           </div>
-          <p class="more"><a class="link" href="uses.html">The rest of my setup <span class="arrow" aria-hidden="true">→</span></a></p>
+          <p class="more"><a class="link" href="index.html?mode=work#toolkit">Toolkit, on the home page <span class="arrow" aria-hidden="true">→</span></a></p>
         </div>
       </section>

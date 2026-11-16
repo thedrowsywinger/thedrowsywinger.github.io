@@ -222,7 +222,7 @@ Repeated cancel:    5 --&gt; 5   already-cancelled response</code></pre>
                 <p>The lock described here coordinates one booking identifier. Two different booking identifiers competing for the last room require separate inventory coordination. Calls to suppliers or payment services also need their own retry and reconciliation rules.</p>
 
                 <p>The design starts with an effect we want to preserve. A stable identifier recognizes the intention, the lock orders its operations, and the transaction groups the related writes. Cancellation follows the same boundary because it reverses that effect.</p>
-
+            
           </div>
         </div>
 

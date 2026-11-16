@@ -9,7 +9,7 @@ Inner pages have no Workday | Matchday switch: the switch lives on the homepage 
 inner pages always show the plain professional view. Rerun after build_site.py.
 
 Every page gets the same footer, link-preview tags and a "next page" link, so the site reads
-as one loop: Work -> Writing -> Research -> AI agents -> Uses -> Home.
+as one loop: Work -> Writing -> Research -> AI agents -> Home.
 """
 import html as htmllib
 import json
@@ -33,8 +33,7 @@ NEXT = {
     "portfolio.html": ("Writing", "blog/index.html"),
     "blog/index.html": ("Research", "publications.html"),
     "publications.html": ("How I work with AI agents", "agents.html"),
-    "agents.html": ("Uses", "uses.html"),
-    "uses.html": ("Home", "index.html"),
+    "agents.html": ("Home", "index.html"),
 }
 # essays that are also a case on the homepage
 CASE_BACK = {"making-booking-retries-safe.html", "optimizing-hotel-search-performance.html"}
@@ -43,7 +42,7 @@ CASE_BACK = {"making-booking-retries-safe.html", "optimizing-hotel-search-perfor
 def footer(base):
     """The one footer every v3 page uses. base is '' or '../'."""
     return f'''<footer class="foot foot--site">
-      <p class="foot__nav"><a class="link" href="{base}index.html">Home</a> · <a class="link" href="{base}portfolio.html">Work</a> · <a class="link" href="{base}blog/index.html">Writing</a> · <a class="link" href="{base}publications.html">Research</a> · <a class="link" href="{base}agents.html">AI agents</a> · <a class="link" href="{base}uses.html">Uses</a></p>
+      <p class="foot__nav"><a class="link" href="{base}index.html">Home</a> · <a class="link" href="{base}portfolio.html">Work</a> · <a class="link" href="{base}blog/index.html">Writing</a> · <a class="link" href="{base}publications.html">Research</a> · <a class="link" href="{base}agents.html">AI agents</a></p>
       <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
       <p class="foot__end"><a class="link" href="{base}index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="{base}img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
     </footer>'''
@@ -252,14 +251,14 @@ def search_index():
                 rows.append([text_of(heading), f"blog/{page.name}#{anchor}", "Heading", title])
     for i, (title, text, source, href) in enumerate(NOTES, 1):
         rows.append([title, f"blog/index.html#note-{i}", "Note", source])
-    for name, label in (("agents.html", "How I work with AI agents"), ("uses.html", "Uses"), ("portfolio.html", "Work"), ("publications.html", "Research")):
+    for name, label in (("agents.html", "How I work with AI agents"), ("portfolio.html", "Work"), ("publications.html", "Research")):
         html = (OUT / name).read_text()
         for anchor, heading in re.findall(r'<h2 class="label" id="([^"]+)"[^>]*>(.*?)</h2>', html, re.S):
             rows.append([text_of(heading), f"{name}#{anchor}", "Section", label])
     pages = {}
     for page in sorted(OUT.glob("*.html")) + sorted((OUT / "blog").glob("*.html")):
         path = page.relative_to(OUT).as_posix()
-        if path in ("404.html", "technical_reports.html", "demos.html"):
+        if path in ("404.html", "technical_reports.html"):
             continue
         html = page.read_text()
         desc = re.search(r'<meta name="description" content="(.*?)">', html)
@@ -513,10 +512,7 @@ PLANNED = [
     "Upgrading Node in a Service That Renders PDFs",
     "Building Safer Production Access for AI Coding Agents",
     "One Booking Code Across Several Services",
-    "Taking Over a Codebase on a Deadline",
     "Following One Request Through Logs with Grafana and Loki",
-    "A 403 That Proves Nothing",
-    "Tie-Breaks as Code",
 ]
 PUBLISHED = [   # newest first; the first row flips from its old status when the board is reached
     ("Designing RabbitMQ Routing for Multiple Markets", "designing-rabbitmq-routing-for-multiple-markets.html"),
@@ -525,20 +521,24 @@ PUBLISHED = [   # newest first; the first row flips from its old status when the
 ]
 
 
-def board(base, match):
-    """base is the path from the page to v3/blog/. Workday: Planned / Next / Published. Matchday: fixtures and results."""
+def board(base, match, planned_shown=None):
+    """base is the path from the page to v3/blog/. Workday: Planned / Next / Published. Matchday: fixtures and results.
+    planned_shown limits the planned rows; the note then links to the full board on the Writing page."""
     done, todo, was = ("Result", "Fixture", "Fixture") if match else ("Published", "Planned", "Next")
     rows = []
     for i, (title, href) in enumerate(PUBLISHED):
         flip = f' data-flip-from="{was}"' if i == 0 else ""
         rows.append(f'<li class="board__row is-done"><a class="link" href="{base}{href}">{title}</a><span class="board__status"{flip}>{done}</span></li>')
-    for title in PLANNED:
+    for title in PLANNED[:planned_shown]:
         rows.append(f'<li class="board__row"><span>{title}</span><span class="board__status">{todo}</span></li>')
     label = "Fixtures and results" if match else "In the works"
+    hidden = len(PLANNED[:planned_shown]) and len(PLANNED) - len(PLANNED[:planned_shown])
+    note = (f'{hidden} more planned · <a class="link" href="{base}index.html#board-h">See all</a> · Planned titles can change.'
+            if hidden else "Planned titles can change.")
     return (f'<div class="board{" board--match" if match else ""} flipboard scene-observe">\n'
             f'                  <p class="board__head"><span>{label}</span><span>Status</span></p>\n'
             f'                  <ol class="board__rows">\n                    ' + "\n                    ".join(rows) + "\n                  </ol>\n"
-            f'                  <p class="board__note">Planned titles can change.</p>\n                </div>')
+            f'                  <p class="board__note">{note}</p>\n                </div>')
 
 
 def board_row():
@@ -601,6 +601,8 @@ def main():
         html = essay(convert(page.read_text(), "../"), page.name)
         if page.name == "index.html":
             html = writing_index(html)
+        if page.name == "why-db-optimization-is-not-always-the-best-solution.html":   # archived: kept at its URL, not indexed
+            html = html.replace("<title>", '<meta name="robots" content="noindex">\n  <title>', 1)
         (OUT / "blog" / page.name).write_text(finish(html, "../", f"blog/{page.name}"))
 
     # Essays that exist only in v3, in the format of "Making Booking Retries Safe".
@@ -624,8 +626,6 @@ def main():
         html = re.sub(r'<meta name="description" content=".*?">', lambda m: f'<meta name="description" content="{description}">', html, count=1)
         html = re.sub(r'<link rel="canonical" href=".*?">', lambda m: f'<link rel="canonical" href="{SITE}{body_file.name}">', html, count=1)
         html = html.replace(' aria-current="page"', "")
-        if body_file.name == "demos.html":       # a holding page: not linked, not indexed
-            html = html.replace("<title>", '<meta name="robots" content="noindex">\n  <title>', 1)
         html, n = re.subn(r'(<main id="main">\n).*?(    </main>)', lambda m: m.group(1) + body[meta.end():] + m.group(2), html, count=1, flags=re.S)
         assert n == 1, "main not found"
         (OUT / body_file.name).write_text(finish(html, "", body_file.name))
@@ -636,7 +636,7 @@ def main():
     home_peek = peek("", "Work", "portfolio.html").replace('class="peek"', 'class="peek work-only"')
     html, n = re.subn(r'<footer class="foot[^"]*">.*?</footer>(\s*<a class="peek[^>]*>.*?</a>)?', lambda m: footer("") + "\n    " + home_peek, html, count=1, flags=re.S)
     assert n == 1, "homepage footer not found"
-    html, n = re.subn(r"<!-- board:match -->.*?<!-- /board:match -->", lambda m: "<!-- board:match -->" + board("blog/", True) + "<!-- /board:match -->", html, count=1, flags=re.S)
+    html, n = re.subn(r"<!-- board:match -->.*?<!-- /board:match -->", lambda m: "<!-- board:match -->" + board("blog/", True, planned_shown=3) + "<!-- /board:match -->", html, count=1, flags=re.S)
     assert n == 1, "homepage: board marker not found"
     home.write_text(html)
 

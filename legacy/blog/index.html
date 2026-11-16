@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blog posts by Abdullah Md. Sarwar on software engineering, backend development, database optimization, and security">
+    <meta name="keywords" content="Blog, Software Engineering, Backend Development, Database Optimization, Security, Node.js, Python">
+    <meta name="author" content="Abdullah Md. Sarwar">
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Blog - Abdullah Md. Sarwar">
+    <meta property="og:description" content="Technical articles and insights on software engineering, backend development, and more">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://thedrowsywinger.github.io/blog/index.html">
+    <meta property="og:image" content="../img/profile_picture.jpg">
+
+    <title>Blog</title>
+    <link rel="icon" type="image/jpeg" href="../img/profile_picture.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+        integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+
+    <!-- Update these with your own fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/blog-article.css">
+
+</head>
+
+<body>
+    <header>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span class="hamburger"></span>
+        </button>
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
+                <li class="nav__item"><a href="../portfolio.html" class="nav__link">Portfolio</a></li>
+                <li class="nav__item"><a href="./" class="nav__link">My Blog</a></li>
+                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications & Reports</a></li>
+                <li class="nav__item">
+                    <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon" data-fa-transform="shrink-2" aria-hidden="true"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="my-services" id="services">
+        <h1 class="section__title section__title--services" style="font-weight: 100;">My Technical Ramblings</h1>
+    </section>
+
+    <main class="blog-posts" id="posts">
+
+        <article class="blog-post">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./making-booking-retries-safe.html">Making Booking Retries Safe</a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2026-10-21">October 21, 2026</time>
+                    <span class="blog-post__tags">
+                        <span class="tag">MySQL</span>
+                        <span class="tag">Concurrency</span>
+                        <span class="tag">Idempotency</span>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>Coordinate repeated booking requests with stable identifiers, MySQL named locks, transactions, and cancellation rules. Includes synthetic examples and a concurrency verification checklist.</p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./making-booking-retries-safe.html" class="btn">Read More</a>
+            </footer>
+        </article>
+
+        <article class="blog-post blog-post--hotel-search">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./optimizing-hotel-search-performance.html">
+                        Speeding Up Hotel Search with Concurrent Chunks
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2025-11-26">November 26, 2025</time>
+                    <span class="blog-post__tags">
+                        <a href="#performance" class="tag">Performance</a>
+                        <a href="#concurrency" class="tag">Concurrency</a>
+                        <a href="#mongodb" class="tag">MongoDB</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    Generalized examples of concurrent hotel search, progressive chunk sizing,
+                    and atomic counters. Includes three illustrative figures.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./optimizing-hotel-search-performance.html" class="btn">Read More</a>
+            </footer>
+        </article>
+
+        <article class="blog-post">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./setting-up-postgresql-on-wsl.html">
+                        Setting Up PostgreSQL Locally on WSL
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2024-07-01">July 1, 2024</time>
+                    <span class="blog-post__tags">
+                        <a href="#postgresql" class="tag">PostgreSQL</a>
+                        <a href="#wsl" class="tag">WSL</a>
+                        <a href="#linux" class="tag">Linux</a>
+                        <a href="#devops" class="tag">DevOps</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    Install PostgreSQL in WSL, create an application role, and connect through SCRAM authentication. Includes service management and Windows client setup.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./setting-up-postgresql-on-wsl.html" class="btn">Read More</a>
+            </footer>
+        </article>
+
+        <article class="blog-post">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./setting-up-wsl-on-windows.html">
+                        Setting Up WSL on Windows: A Practical Guide
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2024-06-10">June 10, 2024</time>
+                    <span class="blog-post__tags">
+                        <a href="#wsl" class="tag">WSL</a>
+                        <a href="#windows" class="tag">Windows</a>
+                        <a href="#linux" class="tag">Linux</a>
+                        <a href="#devops" class="tag">DevOps</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    My move from dual boot to WSL, followed by Ubuntu setup, Linux project storage, VS Code access, and optional resource limits.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./setting-up-wsl-on-windows.html" class="btn">Read More</a>
+            </footer>
+        </article>
+
+        <article class="blog-post">
+            <header>
+                <h2 class="blog-post__title">
+                    <a href="./scoring-goals-securely.html">
+                        JWT Authentication for a Football Booking App: Login, Refresh, and Logout
+                    </a>
+                </h2>
+                <div class="blog-post__meta">
+                    <time datetime="2024-04-10">April 10, 2024</time>
+                    <span class="blog-post__tags">
+                        <a href="#security" class="tag">Security</a>
+                        <a href="#jwt" class="tag">JWT</a>
+                        <a href="#authentication" class="tag">Authentication</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__excerpt">
+                <p>
+                    A hypothetical FindYourTurf design covering token validation, cookie storage, CSRF protection, refresh rotation, and what logout can guarantee.
+                </p>
+            </div>
+            <footer class="blog-post__footer">
+                <a href="./scoring-goals-securely.html" class="btn">Read More</a>
+            </footer>
+        </article>
+
+
+    </main>
+
+    <!-- My Work -->
+    <section class="my-work" id="work">
+        <!-- <h2 class="section__title section__title--work">My work</h2> -->
+        <p class="section__subtitle section__subtitle--work">You can find my Resume here!</p>
+
+        <a href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" class="btn">My Resume</a>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+       <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
+        <ul class="social-list">
+            <li class="social-list__item">
+                <a class="social-list__link" href="https://github.com/thedrowsywinger">
+                    <i class="fab fa-github"></i>
+                </a>
+            </li>
+            <li class="social-list__item">
+                <a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </li>
+            <li class="social-list__item">
+                <a class="social-list__link" href="https://www.instagram.com/thedrowsywinger/">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </li>
+            <li class="social-list__item">
+                <a class="social-list__link" href="https://twitter.com/thedrowsywinger">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </li>
+        </ul>
+    </footer>
+
+
+    <script src="../js/index.js"></script>
+
+
+</body>
+
+</html>

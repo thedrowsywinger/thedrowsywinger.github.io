@@ -9,10 +9,75 @@ var siteBase = new URL('.', document.currentScript.src).href;
   var toggle = document.getElementById('mode-switch');
 
   // The mode-change motion (page slide, portrait turn) starts with the first use of the switch.
+  // The page arrives from the side the ball rolled to. A press during the movement does not restart it:
+  // the new movement starts from where the page is now.
+  var mainEl = document.querySelector('main');
+  var slide = null;
+  function slideIn() {
+    if (osReduce || root.classList.contains('calm') || !mainEl || !mainEl.animate) return;
+    var from = { opacity: 0, transform: 'translateX(' + (root.dataset.mode === 'match' ? 28 : -28) + 'px)' };
+    if (slide && slide.playState === 'running') {
+      var now = getComputedStyle(mainEl);
+      from = { opacity: now.opacity, transform: now.transform };
+      slide.cancel();
+    }
+    slide = mainEl.animate([from, { opacity: 1, transform: 'none' }], { duration: 400, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+  }
   if (toggle) toggle.addEventListener('click', function () {
     root.classList.add('switched');
+    slideIn();
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   });
+
+  // ---------- The switch can be dragged: the ball follows the finger and settles with the release speed ----------
+  if (toggle) (function () {
+    var ball = toggle.querySelector('.switch__ball');
+    if (!ball || !window.PointerEvent) return;
+    var TRAVEL = 22, drag = null, swallow = false, own = false, tidy = null;
+    function place(x) { ball.style.transform = 'translateX(' + x + 'px) rotate(' + (x / TRAVEL * 360) + 'deg)'; }
+    // A drag ends with a click from the browser. The drag has already decided, so that click is dropped.
+    document.addEventListener('click', function (e) {
+      if (swallow && !own && toggle.contains(e.target)) { e.stopImmediatePropagation(); e.preventDefault(); swallow = false; }
+    }, true);
+    toggle.addEventListener('pointerdown', function (e) {
+      if (e.button) return;
+      var base = toggle.getAttribute('aria-checked') === 'true' ? TRAVEL : 0;
+      drag = { id: e.pointerId, x0: e.clientX, base: base, x: base, moved: false, lastX: e.clientX, lastT: e.timeStamp, v: 0 };
+    });
+    toggle.addEventListener('pointermove', function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var d = e.clientX - drag.x0;
+      if (!drag.moved) {
+        if (Math.abs(d) < 4) return;
+        drag.moved = true;
+        clearTimeout(tidy);
+        try { toggle.setPointerCapture(e.pointerId); } catch (err) {}
+        ball.style.transition = 'none';
+      }
+      var raw = drag.base + d; // past either end the ball resists, like a soft edge
+      drag.x = raw < 0 ? raw * 0.25 : raw > TRAVEL ? TRAVEL + (raw - TRAVEL) * 0.25 : raw;
+      var dt = e.timeStamp - drag.lastT;
+      if (dt > 0) drag.v = 0.6 * drag.v + 0.4 * (e.clientX - drag.lastX) / dt;
+      drag.lastX = e.clientX; drag.lastT = e.timeStamp;
+      place(drag.x);
+    });
+    function release(e, cancelled) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var d = drag; drag = null;
+      if (!d.moved) return; // a plain tap: the click does the work
+      var target = cancelled ? d.base : (d.x + d.v * 120 > TRAVEL / 2 ? TRAVEL : 0); // the release speed carries the ball on
+      var ms = Math.round(Math.max(260, Math.min(600, 520 - Math.abs(d.v) * 160)));
+      ball.style.transition = 'transform ' + ms + 'ms var(--ease-spring)';
+      void ball.offsetWidth;
+      ball.style.transform = '';
+      swallow = true;
+      setTimeout(function () { swallow = false; }, 350);
+      if (target !== d.base) { own = true; toggle.click(); own = false; }
+      tidy = setTimeout(function () { ball.style.transition = ''; }, ms + 60);
+    }
+    toggle.addEventListener('pointerup', function (e) { release(e, false); });
+    toggle.addEventListener('pointercancel', function (e) { release(e, true); });
+  })();
 
   // In-page links use the same switch as the header, then return to the top.
   document.querySelectorAll('[data-swap]').forEach(function (btn) {
@@ -101,6 +166,24 @@ var siteBase = new URL('.', document.currentScript.src).href;
     players[players.length - 1].addEventListener('animationend', function (e) {
       if (e.animationName === 'walk-out') sheet.classList.add('walked');
     });
+  }
+
+  // The walk-out plays again each time the reader returns to the team sheet. It resets while it is off the screen.
+  if (sheet && players.length && !reduce && 'IntersectionObserver' in window) {
+    var sheetAway = false;
+    new IntersectionObserver(function (entries) {
+      var entry = entries[entries.length - 1];
+      if (!entry.isIntersecting) {
+        if (!sheet.classList.contains('play')) return; // the first run belongs to the scene observer
+        sheet.classList.remove('play', 'walked');
+        players.forEach(function (pl) { pl.classList.remove('pl--in'); });
+        sheetAway = true;
+      } else if (sheetAway && entry.intersectionRatio >= 0.35) {
+        sheetAway = false;
+        void sheet.offsetWidth;
+        sheet.classList.add('play');
+      }
+    }, { threshold: [0, 0.35] }).observe(sheet);
   }
 
   var board = document.querySelector('.subboard');
@@ -318,7 +401,7 @@ var siteBase = new URL('.', document.currentScript.src).href;
   // ---------- Jump menu: Ctrl+K, or the button in the header ----------
   var places = [
     ['Home', 'index.html', 'Page'], ['Work', 'portfolio.html', 'Page'], ['Writing', 'blog/index.html', 'Page'],
-    ['Research', 'publications.html', 'Page'], ['How I work with AI agents', 'agents.html', 'Page'], ['Uses', 'uses.html', 'Page'],
+    ['Research', 'publications.html', 'Page'], ['How I work with AI agents', 'agents.html', 'Page'],
     ['Workday', 'index.html?mode=work', 'Mode'], ['Matchday', 'index.html?mode=match', 'Mode'],
     ['Selected work', 'index.html?mode=work#work', 'Section'], ['Experience', 'index.html?mode=work#experience', 'Section'],
     ['Projects', 'index.html?mode=work#projects', 'Section'], ['Toolkit', 'index.html?mode=work#toolkit', 'Section'], ['Contact', 'index.html?mode=work#contact', 'Section'],
@@ -523,17 +606,15 @@ var siteBase = new URL('.', document.currentScript.src).href;
   // ---------- Toolkit: a tool shows where it was used ----------
   var usedIn = {
     'MySQL': [['Case: booking retries', 'index.html?mode=work#case-retries'], ['Essay: Making Booking Retries Safe', 'blog/making-booking-retries-safe.html']],
-    'PostgreSQL': [['Guide: PostgreSQL on WSL', 'blog/setting-up-postgresql-on-wsl.html'], ['My setup', 'uses.html']],
+    'PostgreSQL': [['Guide: PostgreSQL on WSL', 'blog/setting-up-postgresql-on-wsl.html']],
     'MongoDB': [['Case: hotel search', 'index.html?mode=work#case-search'], ['Essay: Speeding Up Hotel Search', 'blog/optimizing-hotel-search-performance.html#count-race']],
     'Node.js': [['Essay: Speeding Up Hotel Search', 'blog/optimizing-hotel-search-performance.html']],
     'RabbitMQ': [['Case: the Public API team', 'index.html?mode=work#case-team']],
-    'Grafana': [['Case: the Public API team', 'index.html?mode=work#case-team'], ['My setup', 'uses.html']],
-    'Loki': [['Case: the Public API team', 'index.html?mode=work#case-team'], ['My setup', 'uses.html']],
-    'Redis': [['My setup', 'uses.html']],
-    'NestJS': [['My setup', 'uses.html']],
-    'Claude Code': [['How I work with AI agents', 'agents.html'], ['My setup', 'uses.html']],
-    'Codex': [['How I work with AI agents', 'agents.html'], ['My setup', 'uses.html']],
-    'T3 Code': [['How I work with AI agents', 'agents.html'], ['My setup', 'uses.html']]
+    'Grafana': [['Case: the Public API team', 'index.html?mode=work#case-team']],
+    'Loki': [['Case: the Public API team', 'index.html?mode=work#case-team']],
+    'Claude Code': [['How I work with AI agents', 'agents.html']],
+    'Codex': [['How I work with AI agents', 'agents.html']],
+    'T3 Code': [['How I work with AI agents', 'agents.html']]
   };
   var kit = document.querySelector('.kit--work');
   var usedBox = document.getElementById('kit-used');
@@ -624,10 +705,22 @@ var siteBase = new URL('.', document.currentScript.src).href;
     lights.innerHTML = '<i></i><i></i>';
     document.body.appendChild(lights);
     var firstMode = true;
+    var lightsTimer = null;
     document.addEventListener('modechange', function () {
       if (firstMode || reduce) return;
+      var parts = [lights].concat(Array.prototype.slice.call(lights.children));
+      var busy = lights.getAnimations && lights.getAnimations({ subtree: true }).some(function (a) { return a.playState === 'running'; });
+      clearTimeout(lightsTimer);
+      if (busy) {
+        // A press while the light is on: it fades out from its present strength. It does not start again.
+        var now = parts.map(function (el) { return getComputedStyle(el).opacity; });
+        lights.classList.add('fade');
+        parts.forEach(function (el, i) { el.animate([{ opacity: now[i] }, { opacity: 0 }], { duration: 250, easing: 'ease-out' }); });
+        lightsTimer = setTimeout(function () { lights.classList.remove('night', 'day', 'fade'); }, 250);
+        return;
+      }
       var night = root.dataset.mode === 'match' && root.dataset.theme !== 'light';
-      lights.classList.remove('night', 'day');
+      lights.classList.remove('night', 'day', 'fade');
       void lights.offsetWidth;
       lights.classList.add(night ? 'night' : 'day');
     });
@@ -802,34 +895,6 @@ var siteBase = new URL('.', document.currentScript.src).href;
     ui.main.addEventListener('click', function () { if (at < 3) { at += 1; draw(); } });
     ui.reset.addEventListener('click', function () { at = 0; draw(); });
     draw();
-  });
-
-  // ---------- Demo: the same 403 for a good signature and a bad one ----------
-  document.querySelectorAll('[data-lamps-demo]').forEach(function (demo) {
-    var ui = demoParts(demo);
-    var key = demo.querySelector('input');
-    var lamps = {};
-    demo.querySelectorAll('[data-lamp]').forEach(function (lamp) { lamps[lamp.dataset.lamp] = lamp; });
-    var timers = [];
-    function set(name, cls, text) { var lamp = lamps[name]; lamp.className = 'lamp2 ' + cls; lamp.querySelector('em').textContent = text; }
-    function clear() { timers.forEach(clearTimeout); timers = []; set('good', '', '–'); set('bad', '', '–'); set('key', '', '–'); ui.main.disabled = false; }
-    ui.main.addEventListener('click', function () {
-      clear();
-      ui.main.disabled = true;
-      var ok = key.checked;
-      var wait = osReduce ? 0 : 500;
-      timers.push(setTimeout(function () { set('good', ok ? 'green' : 'red', ok ? '200' : '403'); }, wait));
-      timers.push(setTimeout(function () { set('bad', 'red', '403'); }, wait * 2));
-      timers.push(setTimeout(function () {
-        set('key', ok ? 'green' : 'red', ok ? 'yes' : 'no');
-        ui.main.disabled = false;
-        ui.log.textContent = ok
-          ? 'The key is accepted, so the signature is checked. Good gives 200 and bad gives 403. Now the test proves something.'
-          : 'Both requests give 403. The access key is rejected first, so the signature is never checked. This 403 proves nothing.';
-      }, wait * 3.4));
-    });
-    key.addEventListener('change', function () { clear(); ui.log.textContent = 'Send both requests again.'; });
-    ui.reset.addEventListener('click', function () { key.checked = false; clear(); ui.log.textContent = 'Send one request with a good signature and one with a bad signature.'; });
   });
 
   // ---------- Demo: a group table ranked by tie-break rules ----------
@@ -1160,12 +1225,15 @@ var siteBase = new URL('.', document.currentScript.src).href;
     }, { passive: true });
   }
 
-  // ---------- Phones: the section bar shrinks to a pill on the way down and returns on the way up ----------
+  // ---------- The section bar shrinks to a pill on the way down and opens on the way up ----------
   var bars = document.querySelectorAll('.matchnav');
   if (bars.length) {
     var lastY = window.scrollY;
+    // The keyboard reaches every link: focus opens the bar.
+    bars.forEach(function (bar) { bar.addEventListener('focusin', function () { bar.classList.remove('is-min'); }); });
     window.addEventListener('scroll', function () {
       var y = window.scrollY;
+      if (document.querySelector('.matchnav.is-scrub')) { lastY = y; return; } // a drag on the match clock keeps the bar open
       if (Math.abs(y - lastY) < 12) return;
       var down = y > lastY && y > 300;
       lastY = y;
@@ -1174,8 +1242,9 @@ var siteBase = new URL('.', document.currentScript.src).href;
   }
 
   // ---------- Section bars: the Matchday match clock and the Workday plane ----------
-  function sectionBar(nav, extent, onProgress) {
+  function sectionBar(nav, extent, onProgress, scrub) {
     if (!nav || !extent) return;
+    if (scrub) scrubBar(nav, extent);
     var fill = nav.querySelector('.matchnav__bar i');
     var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
     var parts = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
@@ -1206,11 +1275,82 @@ var siteBase = new URL('.', document.currentScript.src).href;
     update();
   }
 
+  // The match clock answers the pointer: a soft light follows it, and a drag along the line moves through the story.
+  function scrubBar(nav, extent) {
+    var line = nav.querySelector('.matchnav__bar');
+    if (!line || !window.PointerEvent) return;
+    var held = false;
+    function at(e) { var box = line.getBoundingClientRect(); return Math.min(1, Math.max(0, (e.clientX - box.left) / box.width)); }
+    function go(p) {
+      // The reverse of update() below, for a bar that is fixed to the top of the screen.
+      var box = extent.getBoundingClientRect();
+      var span = box.height - window.innerHeight * 0.5;
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      var top = p >= 1 ? max : p * span + box.top + window.scrollY - (nav.offsetHeight + 24);
+      window.scrollTo({ top: Math.min(max, Math.max(0, top)), behavior: 'instant' });
+    }
+    function light(e) { line.style.setProperty('--gx', at(e)); line.classList.add('lit'); }
+    line.addEventListener('pointerenter', light);
+    line.addEventListener('pointerdown', function (e) {
+      if (e.button) return;
+      held = true;
+      try { line.setPointerCapture(e.pointerId); } catch (err) {}
+      nav.classList.add('is-scrub');
+      light(e); go(at(e));
+      e.preventDefault();
+    });
+    line.addEventListener('pointermove', function (e) { light(e); if (held) go(at(e)); });
+    function drop(e) {
+      held = false;
+      nav.classList.remove('is-scrub');
+      if (e.pointerType !== 'mouse' || e.type === 'pointercancel') line.classList.remove('lit');
+    }
+    line.addEventListener('pointerup', drop);
+    line.addEventListener('pointercancel', drop);
+    line.addEventListener('pointerleave', function () { if (!held) line.classList.remove('lit'); });
+  }
+
   var matchNav = document.querySelector('.matchnav:not(.worknav)');
   var minute = matchNav && matchNav.querySelector('.matchnav__min');
   sectionBar(matchNav, document.querySelector('.story'), function (done) {
     matchNav.classList.toggle('late', done > 0.5);
     if (minute) minute.textContent = done >= 1 ? '90+3′' : Math.max(1, Math.round(done * 90)) + '′';
-  });
+  }, true);
   sectionBar(document.querySelector('.worknav'), document.getElementById('main'));
+})();
+
+// ---------- Photo viewer: a small photo opens large on click or tap ----------
+(function () {
+  var photos = document.querySelectorAll('img[data-zoom]');
+  if (!photos.length || typeof HTMLDialogElement !== 'function') return;
+  var box = document.createElement('dialog');
+  box.className = 'zoom-box';
+  box.setAttribute('aria-label', 'Photo');
+  box.innerHTML = '<button type="button" class="zoom-box__close" aria-label="Close photo">×</button><img alt=""><p></p>';
+  document.body.appendChild(box);
+  var big = box.querySelector('img');
+  var note = box.querySelector('p');
+  box.querySelector('.zoom-box__close').addEventListener('click', function () { box.close(); });
+  // A click on the dark area around the photo closes it.
+  box.addEventListener('click', function (e) { if (e.target === box) box.close(); });
+  box.addEventListener('close', function () { big.removeAttribute('src'); });
+
+  Array.prototype.forEach.call(photos, function (img) {
+    var figure = img.closest('figure');
+    var caption = figure && figure.querySelector('figcaption');
+    var text = caption ? caption.textContent.trim() : '';
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'zoom';
+    btn.setAttribute('aria-label', 'Enlarge photo: ' + img.alt);
+    img.parentNode.insertBefore(btn, img);
+    btn.appendChild(img);
+    btn.addEventListener('click', function () {
+      big.src = img.currentSrc || img.src;
+      big.alt = img.alt;
+      note.textContent = text;
+      note.hidden = !text;
+      box.showModal();
+    });
+  });
 })();

@@ -12,7 +12,7 @@ from urllib.parse import quote
 
 TOOLS = Path(__file__).resolve().parent
 OUT = TOOLS.parent / "v3"
-KICKER = {"index": "Portfolio", "portfolio": "Work", "publications": "Research", "agents": "How I work", "uses": "Setup", "404": "Not found"}
+KICKER = {"index": "Portfolio", "portfolio": "Work", "publications": "Research", "agents": "How I work", "404": "Not found"}
 
 
 def browser():

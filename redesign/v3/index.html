@@ -33,8 +33,10 @@
       <div class="masthead__top">
         <div class="ident">
           <figure class="portrait">
-            <img class="portrait__img portrait__img--work" src="img/portrait-work.jpg" alt="Abdullah Sarwar in a suit" width="480" height="600">
-            <img class="portrait__img portrait__img--match" src="img/portrait-match.jpg" alt="Abdullah Sarwar in a Manchester United shirt" width="480" height="600" aria-hidden="true">
+            <span class="portrait__card">
+              <img class="portrait__img portrait__img--work" src="img/portrait-work.jpg" alt="Abdullah Sarwar in a suit" width="480" height="600">
+              <img class="portrait__img portrait__img--match" src="img/portrait-match.jpg" alt="Abdullah Sarwar in a Manchester United shirt" width="480" height="600" aria-hidden="true">
+            </span>
           </figure>
           <h1 class="name">Abdullah Sarwar</h1>
           <p class="role">
@@ -273,8 +275,7 @@
                 <span class="gleam" aria-hidden="true"></span>
               </figure>
               <div class="off__text">
-                <p class="lead">I love football. I love playing it, and I love watching it. On the pitch I play on the wing, in the No. 7 shirt.</p>
-                <p class="lead">I support Manchester United. My favourite part is Fergie time: the late goal, when everyone else thinks the match is over. That is why the scoreboard at the top stops at 90+3′.</p>
+                <p class="lead">Away from the keyboard, my life is about three things: family, friends and football.</p>
                 <p class="theatre">THE THEATRE OF DREAMS</p>
               </div>
             </div>
@@ -325,7 +326,7 @@
             </div>
           </div>
           <p class="caption sheet__caption" data-a="4-4-1-1: data at the back, the plumbing in midfield, NestJS up front. AI agents (Claude Code, Codex, T3 Code) play false 9: they drop deep and set up the finish. The manager picks the team and owns the result." data-b="4-3-3: the same back four. Cron jobs and the AI agents (Claude Code, Codex, T3 Code) move to the wings, and NestJS stays up front. The manager picks the team and owns the result.">4-4-1-1: data at the back, the plumbing in midfield, NestJS up front. AI agents (Claude Code, Codex, T3 Code) play false 9: they drop deep and set up the finish. The manager picks the team and owns the result.</p>
-            <p class="more more--pair"><a class="link" href="agents.html">How I work with AI agents <span class="arrow" aria-hidden="true">→</span></a><a class="link" href="uses.html">My setup <span class="arrow" aria-hidden="true">→</span></a></p>
+            <p class="more"><a class="link" href="agents.html">How I work with AI agents <span class="arrow" aria-hidden="true">→</span></a></p>
           </div>
         </section>
 
@@ -334,7 +335,7 @@
           <div class="content">
             <div class="intro">
               <div class="intro__text">
-                <p class="lead">At work I lead a backend team at ShareTrip. The part I enjoy most is the careful part: finding why something is slow, and making it fast.</p>
+                <p class="lead">I lead the Public API team at ShareTrip. When something goes wrong, I go to the evidence first: query plans, logs and traces, until the real cause is clear.</p>
                 <div class="stages">
                   <div class="card__stage speed scene-observe" aria-hidden="true">
                     <div class="trace">
@@ -497,15 +498,10 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
           </figure>
             <div class="aside-photo">
               <figure class="photo">
-                <img src="img/award.jpg" alt="Abdullah with ShareTrip's CEO in the office" width="900" height="1200" loading="lazy">
+                <img data-zoom src="img/award.jpg" alt="Abdullah with ShareTrip's CEO in the office" width="900" height="1200" loading="lazy">
               </figure>
               <div>
     <p class="chapter__note">I write these problems up when I can.</p>
-                <ol class="list list--first">
-                  <li><a class="link" href="blog/making-booking-retries-safe.html">Making Booking Retries Safe</a><span class="list__meta">Essay</span></li>
-                  <li><a class="link" href="blog/optimizing-hotel-search-performance.html">Speeding Up Hotel Search with Concurrent Chunks</a><span class="list__meta">Essay</span></li>
-                  <li><a class="link" href="publications.html">Before backend work: research on question answering in Bengali</a><span class="list__meta">Research</span></li>
-                </ol>
                 <!-- board:match --><div class="board board--match flipboard scene-observe">
                   <p class="board__head"><span>Fixtures and results</span><span>Status</span></p>
                   <ol class="board__rows">
@@ -515,13 +511,8 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
                     <li class="board__row"><span>Query Profiling Found More Than Slow Queries</span><span class="board__status">Fixture</span></li>
                     <li class="board__row"><span>Upgrading Node in a Service That Renders PDFs</span><span class="board__status">Fixture</span></li>
                     <li class="board__row"><span>Building Safer Production Access for AI Coding Agents</span><span class="board__status">Fixture</span></li>
-                    <li class="board__row"><span>One Booking Code Across Several Services</span><span class="board__status">Fixture</span></li>
-                    <li class="board__row"><span>Taking Over a Codebase on a Deadline</span><span class="board__status">Fixture</span></li>
-                    <li class="board__row"><span>Following One Request Through Logs with Grafana and Loki</span><span class="board__status">Fixture</span></li>
-                    <li class="board__row"><span>A 403 That Proves Nothing</span><span class="board__status">Fixture</span></li>
-                    <li class="board__row"><span>Tie-Breaks as Code</span><span class="board__status">Fixture</span></li>
                   </ol>
-                  <p class="board__note">Planned titles can change.</p>
+                  <p class="board__note">2 more planned · <a class="link" href="blog/index.html#board-h">See all</a> · Planned titles can change.</p>
                 </div><!-- /board:match -->
               </div>
             </div>
@@ -534,7 +525,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
             <ul class="honour-list">
               <li class="honour">
                 <figure class="photo">
-                  <img src="img/hackathon.jpg" alt="Abdullah Sarwar holding the Champion board at the Banglalink SDG Hackathon: Code for a Cause 2.0" width="600" height="800" loading="lazy">
+                  <img data-zoom src="img/hackathon.jpg" alt="Abdullah Sarwar holding the Champion board at the Banglalink SDG Hackathon: Code for a Cause 2.0" width="600" height="800" loading="lazy">
                 </figure>
                 <div class="honours__text">
                   <p class="honours__kicker">Hackathon</p>
@@ -563,7 +554,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
           <div class="intro">
             <div class="intro__text">
               <p class="lead">I'm a senior software engineer in Dhaka. I lead the Public API team at ShareTrip and own the backend behind its bookings, payments and pricing.</p>
-              <p>Most of my work is the part a customer never sees: a retry that must not charge twice, a search that must answer before the traveller gives up, a price that must be the same on every screen.</p>
+              <p>In my work, search must be fast and efficient. Every level of markup and discount must match. Every booking and payment must be traceable.</p>
               <p>I write about the design choices behind that work, and what each one cost.</p>
               <ul class="links links--inline">
                 <li><a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></li>
@@ -628,48 +619,28 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
       <section class="row reveal work-only" id="work" aria-labelledby="work-h">
         <h2 class="label" id="work-h">Selected work</h2>
         <div class="content">
-          <article class="case" id="case-retries">
-            <div class="case__body">
-              <p class="case__kicker">ShareTrip · Bookings</p>
-              <h3 class="case__title">Making booking retries safe</h3>
-              <dl class="case__facts">
-                <dt>Problem</dt>
-                <dd data-cap="The same request arrives three times.">A booking request can arrive more than once, after a timeout or a repeated tap. A repeat must not take a second room.</dd>
-                <dt>The tempting answer</dt>
-                <dd class="tempt" data-state="wrong" data-cap="Without coordination, each repeat can create a booking."><s>Check whether the booking exists, then create it.</s> <span class="tempt__why">Two requests can both finish the check before either one creates the booking.</span></dd>
-                <dt>What we did</dt>
-                <dd data-cap="A lock orders the requests for one booking.">We use the booking identifier to recognise repeats. A MySQL named lock orders work on the same booking, and a transaction groups the database changes. Cancellation follows the same rules.</dd>
-                <dt>Result</dt>
-                <dd data-cap="Three requests, one booking.">A repeated request returns the existing booking, and inventory changes once.</dd>
-              </dl>
-              <p class="more"><a class="link" href="blog/making-booking-retries-safe.html">Read the write-up <span class="arrow" aria-hidden="true">→</span></a></p>
-            </div>
-            <div class="case__side">
-            <div class="card__stage case__stage scene-observe" aria-hidden="true" style="view-transition-name: cover-retries">
-              <div class="idem">
-                <span class="idem__dot" style="top:6px;--dy:18px"></span>
-                <span class="idem__dot" style="top:25px;--dy:0px;animation-delay:.15s"></span>
-                <span class="idem__dot" style="top:44px;--dy:-18px;animation-delay:.3s"></span>
-                <span class="idem__lbl">retry ×3</span>
-                <span class="idem__card">1 booking ✓</span>
+          <article class="case leadership" id="case-team">
+            <p class="case__kicker">ShareTrip · Public API team</p>
+            <h3 class="case__title">Leading the Public API team</h3>
+            <div class="leadership__layout">
+              <div class="leadership__text">
+                <h4>My part</h4>
+                <p>I lead the Public API team, from planning and design review to production releases. I review code and mentor the engineers. I also write code for changes that cross services: runtime upgrades, query performance and messaging.</p>
+                <h4>Scope</h4>
+                <p>The team owns the backend for flights, hotels, visa, holidays, e-commerce, mobile recharge and bill payments. It serves consumers, B2B and B2E. Under every product sit the same three problems: <button class="leadership__choice" type="button" id="demo-supplier" data-lead-demo="supplier" aria-controls="leadership-stage" aria-pressed="false">supplier integrations</button>, <button class="leadership__choice" type="button" id="demo-states" data-lead-demo="states" aria-controls="leadership-stage" aria-pressed="false">booking states</button>, and <button class="leadership__choice" type="button" id="demo-pricing" data-lead-demo="pricing" aria-controls="leadership-stage" aria-pressed="false">pricing</button>.</p>
+                <div class="leadership__slot" data-stage-slot="scope"></div>
+                <h4>How we work</h4>
+                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-ack" data-lead-demo="ack" aria-controls="leadership-stage" aria-pressed="false">Contract first</button>. Services talk through RabbitMQ. Before either side is written, we agree where each message goes and when it counts as handled. This makes the contract explicit before the services are connected.</p><div class="leadership__slot" data-stage-slot="ack"></div></div>
+                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-profile" data-lead-demo="profile" aria-controls="leadership-stage" aria-pressed="false">Measure first</button>. We profile a query before we change it.</p><p class="leadership__follow"><button class="leadership__choice" type="button" id="demo-trips" data-lead-demo="trips" aria-controls="leadership-stage" aria-pressed="false">Count the round trips</button></p><div class="leadership__slot" data-stage-slot="measure"></div></div>
+                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-trace" data-lead-demo="trace" aria-controls="leadership-stage" aria-pressed="false">One request, one trail</button>. One ID follows a request across services, and we read it in Grafana and Loki.</p><div class="leadership__slot" data-stage-slot="trace"></div></div>
+                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-gate" data-lead-demo="gate" aria-controls="leadership-stage" aria-pressed="false">Staging first</button>. Every change runs in staging before production.</p><div class="leadership__slot" data-stage-slot="gate"></div></div>
+                <p class="more"><a class="link" href="portfolio.html">More about this work <span class="arrow" aria-hidden="true">→</span></a></p>
+              </div>
+              <div class="leadership__rail">
+                <section class="lead-demo" id="leadership-stage" aria-labelledby="lead-demo-title" hidden></section>
               </div>
             </div>
-            <p class="case__cap" aria-hidden="true"></p>
-            <div class="demo" data-retry-demo hidden>
-              <p class="demo__head"><span class="demo__title">Try it</span><span class="demo__tag">Example values</span></p>
-              <div class="demo__stage">
-                <div class="demo__lane" aria-hidden="true"><span class="demo__node">client</span><span class="demo__node demo__gate">lock</span><span class="demo__node demo__store">bookings</span></div>
-                <dl class="demo__stats">
-                  <div><dt>Requests</dt><dd data-n="req">0</dd></div>
-                  <div><dt>Bookings</dt><dd data-n="book">0</dd></div>
-                  <div><dt>Rooms left</dt><dd data-n="rooms">5</dd></div>
-                </dl>
-              </div>
-              <p class="demo__opts"><label class="demo__opt"><input type="checkbox" checked> Recognise repeats</label></p>
-              <p class="demo__row"><button class="demo__btn" type="button">Send the booking request</button><button class="demo__reset" type="button">Reset</button></p>
-              <p class="demo__log" aria-live="polite">Press the button more than once.</p>
-            </div>
-            </div>
+            <noscript><p>Enable JavaScript to try the illustrative demos. The team description and proof links remain available.</p></noscript>
           </article>
 
           <article class="case" id="case-search">
@@ -716,6 +687,50 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
             </div>
           </article>
 
+          <article class="case" id="case-retries">
+            <div class="case__body">
+              <p class="case__kicker">ShareTrip · Bookings</p>
+              <h3 class="case__title">Making booking retries safe</h3>
+              <dl class="case__facts">
+                <dt>Problem</dt>
+                <dd data-cap="The same request arrives three times.">A booking request can arrive more than once, after a timeout or a repeated tap. A repeat must not take a second room.</dd>
+                <dt>The tempting answer</dt>
+                <dd class="tempt" data-state="wrong" data-cap="Without coordination, each repeat can create a booking."><s>Check whether the booking exists, then create it.</s> <span class="tempt__why">Two requests can both finish the check before either one creates the booking.</span></dd>
+                <dt>What we did</dt>
+                <dd data-cap="A lock orders the requests for one booking.">We use the booking identifier to recognise repeats. A MySQL named lock orders work on the same booking, and a transaction groups the database changes. Cancellation follows the same rules.</dd>
+                <dt>Result</dt>
+                <dd data-cap="Three requests, one booking.">A repeated request returns the existing booking, and inventory changes once.</dd>
+              </dl>
+              <p class="more"><a class="link" href="blog/making-booking-retries-safe.html">Read the write-up <span class="arrow" aria-hidden="true">→</span></a></p>
+            </div>
+            <div class="case__side">
+            <div class="card__stage case__stage scene-observe" aria-hidden="true" style="view-transition-name: cover-retries">
+              <div class="idem">
+                <span class="idem__dot" style="top:6px;--dy:18px"></span>
+                <span class="idem__dot" style="top:25px;--dy:0px;animation-delay:.15s"></span>
+                <span class="idem__dot" style="top:44px;--dy:-18px;animation-delay:.3s"></span>
+                <span class="idem__lbl">retry ×3</span>
+                <span class="idem__card">1 booking ✓</span>
+              </div>
+            </div>
+            <p class="case__cap" aria-hidden="true"></p>
+            <div class="demo" data-retry-demo hidden>
+              <p class="demo__head"><span class="demo__title">Try it</span><span class="demo__tag">Example values</span></p>
+              <div class="demo__stage">
+                <div class="demo__lane" aria-hidden="true"><span class="demo__node">client</span><span class="demo__node demo__gate">lock</span><span class="demo__node demo__store">bookings</span></div>
+                <dl class="demo__stats">
+                  <div><dt>Requests</dt><dd data-n="req">0</dd></div>
+                  <div><dt>Bookings</dt><dd data-n="book">0</dd></div>
+                  <div><dt>Rooms left</dt><dd data-n="rooms">5</dd></div>
+                </dl>
+              </div>
+              <p class="demo__opts"><label class="demo__opt"><input type="checkbox" checked> Recognise repeats</label></p>
+              <p class="demo__row"><button class="demo__btn" type="button">Send the booking request</button><button class="demo__reset" type="button">Reset</button></p>
+              <p class="demo__log" aria-live="polite">Press the button more than once.</p>
+            </div>
+            </div>
+          </article>
+
           <article class="case" id="case-limits">
             <div class="case__body">
               <p class="case__kicker">ShareTrip · Public gateway</p>
@@ -725,8 +740,10 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
                 <dd data-cap="One busy caller, three normal callers." data-state="shared">A public gateway must slow down abusive callers without slowing down everyone else. Many normal users can share one address, and a proxy can hide the real one.</dd>
                 <dt>The tempting answer</dt>
                 <dd class="tempt" data-state="shared" data-cap="One shared bucket: every caller bounces."><s>One shared limit for the whole platform.</s> <span class="tempt__why">It is simple, but one busy caller then uses up the allowance of every other caller.</span></dd>
-                <dt>The design</dt>
+                <dt>What we did</dt>
                 <dd data-state="own" data-cap="One bucket per caller: only the busy caller bounces.">Each caller gets its own bucket. The caller's address comes only from the forwarded header that the platform's own ingress sets. One wide platform limit stays as a last safety net.</dd>
+                <dt>Result</dt>
+                <dd data-state="own" data-cap="Only the busy caller slows down.">A busy caller now uses up only its own allowance. Every other caller keeps its normal speed.</dd>
               </dl>
             </div>
             <div class="case__side">
@@ -747,43 +764,12 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
             </div>
             </div>
           </article>
-
-          <article class="case leadership" id="case-team">
-            <p class="case__kicker">ShareTrip · Public API team</p>
-            <h3 class="case__title">Leading the Public API team</h3>
-            <div class="leadership__layout">
-              <div class="leadership__text">
-                <h4>Scope</h4>
-                <p>The team owns the backend for flights, hotels, visa, holidays, e-commerce, mobile recharge and bill payments. It serves consumers, B2B and B2E. Under every product sit the same three problems: <button class="leadership__choice" type="button" id="demo-supplier" data-lead-demo="supplier" aria-controls="leadership-stage" aria-pressed="false">supplier integrations</button>, <button class="leadership__choice" type="button" id="demo-states" data-lead-demo="states" aria-controls="leadership-stage" aria-pressed="false">booking states</button>, and <button class="leadership__choice" type="button" id="demo-pricing" data-lead-demo="pricing" aria-controls="leadership-stage" aria-pressed="false">pricing</button>.</p>
-                <div class="leadership__slot" data-stage-slot="scope"></div>
-                <h4>My part</h4>
-                <p>I plan the team's work and review its designs and code. I mentor the engineers on the team. I take changes from staging to production. I still write code, mostly the changes that cross many services: runtime upgrades, query performance and messaging.</p>
-                <h4>How we work</h4>
-                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-ack" data-lead-demo="ack" aria-controls="leadership-stage" aria-pressed="false">Contract first</button>. Services talk through RabbitMQ. Both sides agree the routing and the acknowledgement before either side is written.</p><div class="leadership__slot" data-stage-slot="ack"></div></div>
-                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-profile" data-lead-demo="profile" aria-controls="leadership-stage" aria-pressed="false">Measure first</button>. We profile a query before we change it.</p><p class="leadership__follow"><button class="leadership__choice" type="button" id="demo-trips" data-lead-demo="trips" aria-controls="leadership-stage" aria-pressed="false">Count the round trips</button></p><div class="leadership__slot" data-stage-slot="measure"></div></div>
-                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-trace" data-lead-demo="trace" aria-controls="leadership-stage" aria-pressed="false">One request, one trail</button>. One ID follows a request across services, and we read it in Grafana and Loki.</p><div class="leadership__slot" data-stage-slot="trace"></div></div>
-                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-gate" data-lead-demo="gate" aria-controls="leadership-stage" aria-pressed="false">Staging first</button>. Every change runs in staging before production.</p><div class="leadership__slot" data-stage-slot="gate"></div></div>
-                <p class="more"><a class="link" href="portfolio.html">More about this work <span class="arrow" aria-hidden="true">→</span></a></p>
-              </div>
-              <div class="leadership__rail">
-                <section class="lead-demo" id="leadership-stage" aria-labelledby="lead-demo-title" hidden></section>
-              </div>
-            </div>
-            <noscript><p>Enable JavaScript to try the illustrative demos. The team description and proof links remain available.</p></noscript>
-          </article>
         </div>
       </section>
 
       <section class="row reveal work-only" id="experience" aria-labelledby="xp-h">
         <h2 class="label" id="xp-h">Experience</h2>
         <div class="content">
-          <ol class="route scene-observe" aria-label="Career route, oldest first">
-            <li><b>Alter F4</b><span>2020</span></li>
-            <li><b>Early Advantage</b><span>2020</span></li>
-            <li><b>mPower</b><span>2021</span></li>
-            <li class="route__now"><b>ShareTrip</b><span>2022 – now</span></li>
-          </ol>
-
           <a class="tk tk--role scene-observe" href="https://sharetrip.net/" target="_blank" rel="noopener" aria-label="ShareTrip, Senior Software Engineer, leads the Public API team, since November 2022">
             <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
             <span class="tk__main">
@@ -791,19 +777,19 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
               <span class="tk__title">ShareTrip</span>
               <span class="tk__fields">
                 <span class="f"><small>Role</small><span>Senior Software Engineer</span></span>
-                <span class="f"><small>Team</small><span>Public API · team lead</span></span>
+                <span class="f"><small>Team</small><span>Public API · lead</span></span>
                 <span class="f"><small>Based in</small><span>Dhaka</span></span>
               </span>
             </span>
             <span class="tk__stub"><span class="tk__action">Now</span><span class="tk__no">SINCE<br>2022</span></span>
           </a>
 
-          <ol class="list">
-            <li><span class="list__main">mPower Social Enterprise <span class="muted">· Software Engineer</span></span><span class="list__meta">May 2021 – Oct 2022</span></li>
-            <li><span class="list__main">Early Advantage Bangladesh <span class="muted">· Software Engineer</span></span><span class="list__meta">Jul 2020 – Apr 2021</span></li>
-            <li><span class="list__main">Alter F4 <span class="muted">· Software Engineer</span></span><span class="list__meta">Jan – Jul 2020</span></li>
-            <li><span class="list__main">North South University <span class="muted">· BSc, Computer Science and Engineering</span></span><span class="list__meta">Education</span></li>
-          </ol>
+          <figure class="photo-slot cap xp-photo">
+            <img data-zoom src="img/sharetrip-anniversary.jpg" alt="Abdullah, on the right, with ShareTrip's CTO at the company's 4th anniversary event, in front of a large display of the ShareTrip app" width="1080" height="810" loading="lazy">
+            <figcaption>ShareTrip's 4th anniversary, with our CTO.</figcaption>
+          </figure>
+
+          <p class="more"><a class="link" href="portfolio.html#career-h">Full career, from 2020 <span class="arrow" aria-hidden="true">→</span></a></p>
         </div>
       </section>
 
@@ -823,7 +809,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
                 <dt>What I did</dt>
                 <dd data-cap="One fixed ladder decides every tie.">I designed and built the whole platform: the ranking engine, the tournament engine, the admin panel and the public site. I put every ranking constant in one config file, and the tests read that same file. Each player has a breakdown page that shows which results produced the points. The public table is served from precomputed snapshots. Tie-breaks follow one fixed ladder.</dd>
               </dl>
-              <p class="more more--pair"><a class="link" href="https://padelhubbd.com" target="_blank" rel="noopener">padelhubbd.com <span class="arrow" aria-hidden="true">→</span></a><a class="link" href="blog/index.html#board-h">Planned essay: Tie-Breaks as Code <span class="arrow" aria-hidden="true">→</span></a></p>
+              <p class="more"><a class="link" href="https://padelhubbd.com" target="_blank" rel="noopener">padelhubbd.com <span class="arrow" aria-hidden="true">→</span></a></p>
             </div>
             <div class="case__side">
               <ol class="rungs scene-observe" aria-label="The tie-break ladder, in order">
@@ -860,7 +846,6 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
             <div><h3>Observability</h3><p>Grafana and Loki. One ID follows each request.</p><a class="link" href="#demo-trace">One ID through four services <span aria-hidden="true">→</span></a></div>
             <div><h3>AI tools</h3><p>Claude Code, Codex and T3 Code. A person reviews every change.</p><a class="link" href="agents.html">How I work with AI agents <span aria-hidden="true">→</span></a></div>
           </div>
-          <p class="more"><a class="link" href="uses.html">My setup <span class="arrow" aria-hidden="true">→</span></a></p>
         </div>
       </section>
 
@@ -882,7 +867,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
           <ul class="honour-list">
             <li class="honour">
               <figure class="photo">
-                <img src="img/hackathon.jpg" alt="Abdullah Sarwar holding the Champion board at the Banglalink SDG Hackathon: Code for a Cause 2.0" width="600" height="800" loading="lazy">
+                <img data-zoom src="img/hackathon.jpg" alt="Abdullah Sarwar holding the Champion board at the Banglalink SDG Hackathon: Code for a Cause 2.0" width="600" height="800" loading="lazy">
               </figure>
               <div class="honours__text">
                 <p class="honours__kicker">Hackathon</p>
@@ -897,11 +882,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
       <section class="row reveal work-only" id="research" aria-labelledby="research-h">
         <h2 class="label" id="research-h">Research</h2>
         <div class="content">
-          <ol class="list list--first stack scene-observe">
-            <li><a class="link" href="https://doi.org/10.1080/24751839.2020.1833136" target="_blank" rel="noopener">Deep Learning Based Question Answering System in Bengali</a><span class="list__meta">DOI</span></li>
-            <li><a class="link" href="https://doi.org/10.1007/978-3-030-63119-2_4" target="_blank" rel="noopener">Soil Analysis and Unconfined Compression Test Study Using Data Mining Techniques</a><span class="list__meta">DOI</span></li>
-            <li><a class="link" href="https://doi.org/10.1109/IS48319.2020.9199941" target="_blank" rel="noopener">Analysis of Soil and Various Geo-technical Properties using Data Mining Techniques</a><span class="list__meta">DOI</span></li>
-          </ol>
+          <p>Before backend work, I published three peer-reviewed papers in natural language processing and data mining, including a question-answering system for Bengali.</p>
           <p class="more"><a class="link" href="publications.html">Publications and reports <span class="arrow" aria-hidden="true">→</span></a></p>
         </div>
       </section>
@@ -925,7 +906,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
       <section class="row reveal work-only" id="contact" aria-labelledby="contact-h">
         <h2 class="label" id="contact-h">Contact</h2>
         <div class="content">
-          <p class="contact__note">Based in Dhaka (UTC+6). Open to remote roles and relocation.</p>
+          <p class="contact__note">Based in Dhaka (UTC+6).</p>
           <div class="contact">
             <div class="tag-wrap">
               <span class="tag-string" aria-hidden="true"></span>
@@ -948,7 +929,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
     </main>
 
     <footer class="foot foot--site">
-      <p class="foot__nav"><a class="link" href="index.html">Home</a> · <a class="link" href="portfolio.html">Work</a> · <a class="link" href="blog/index.html">Writing</a> · <a class="link" href="publications.html">Research</a> · <a class="link" href="agents.html">AI agents</a> · <a class="link" href="uses.html">Uses</a></p>
+      <p class="foot__nav"><a class="link" href="index.html">Home</a> · <a class="link" href="portfolio.html">Work</a> · <a class="link" href="blog/index.html">Writing</a> · <a class="link" href="publications.html">Research</a> · <a class="link" href="agents.html">AI agents</a></p>
       <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
       <p class="foot__end"><a class="link" href="index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
     </footer>

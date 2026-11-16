@@ -42,7 +42,7 @@
 .lead-suppliers li { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; font-size: 11px; }
 .lead-suppliers b { font-size: 10px; }
 .lead-suppliers i { grid-column: 1 / -1; height: 5px; background: var(--line-2); }
-.lead-suppliers em, .lead-profile em { display: block; height: 100%; background: var(--accent); transition: width .25s; }
+.lead-suppliers em, .lead-profile em { display: block; height: 100%; background: var(--accent); transition: width var(--t-select) var(--ease-out); }
 .lead-suppliers .is-fail em { background: var(--stale-ink); }
 .lead-state { display: grid; gap: 3px; text-align: center; }
 .lead-state strong { font-size: 25px; }

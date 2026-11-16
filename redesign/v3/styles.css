@@ -3,6 +3,15 @@
 /* Dark is the default theme. The light theme overrides only the colour tokens. */
 :root {
   color-scheme: dark;
+  /* Motion: three durations and one curve family for the whole site. Long scenes keep their own timing. */
+  --t-press: 120ms;   /* a control answers a press */
+  --t-select: 250ms;  /* a choice, a hover, a colour change */
+  --t-panel: 400ms;   /* a panel or a part of the page moves */
+  --t-spring: 550ms;  /* a movement that settles with a small rebound */
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --ease-in: cubic-bezier(.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(.3, 1.4, .5, 1);
   --paper: #151311;
   --card: #1d1a17;
   --sunk: #24201c;
@@ -45,6 +54,10 @@
   --sans: "Manrope", system-ui, sans-serif;
   --mono: "DM Mono", ui-monospace, monospace;
   --cond: "Barlow Condensed", "Arial Narrow", sans-serif;
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root { --ease-spring: linear(0, 0.071, 0.238, 0.445, 0.65, 0.827, 0.963, 1.055, 1.107, 1.126, 1.121, 1.103, 1.077, 1.051, 1.027, 1.009, 0.996, 0.988, 0.984, 0.984, 0.986, 0.989, 0.993, 0.996, 0.998, 1, 1.001, 1.002, 1.002, 1.002, 1.001, 1.001, 1); }
 }
 
 [data-theme="light"] {
@@ -195,7 +208,7 @@ svg [fill="#F3E3A0"] { fill: var(--yellow); }
   height: 26px;
   border-radius: 99px;
   background: var(--green-soft);
-  transition: background .35s ease;
+  transition: background var(--t-panel) var(--ease-out);
 }
 .switch[aria-checked="true"] .switch__track { background: #2e6b4f; }
 .switch__ball {
@@ -207,7 +220,7 @@ svg [fill="#F3E3A0"] { fill: var(--yellow); }
   border-radius: 50%;
   background: var(--ball);
   border: 1.5px solid var(--dark-ink);
-  transition: transform .5s cubic-bezier(.3, 1.2, .5, 1);
+  transition: transform var(--t-spring) var(--ease-spring);
 }
 .switch__ball::after {
   content: "";
@@ -232,7 +245,7 @@ svg [fill="#F3E3A0"] { fill: var(--yellow); }
   background: none;
   color: var(--muted);
   cursor: pointer;
-  transition: color .2s ease, border-color .2s ease;
+  transition: color var(--t-select) var(--ease-out), border-color var(--t-select) var(--ease-out);
 }
 .theme-btn:hover { color: var(--ink); border-color: var(--line-2); }
 .theme-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -325,11 +338,11 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
 .link {
   text-decoration: none;
   background: linear-gradient(var(--accent), var(--accent)) left bottom / 0 1.5px no-repeat;
-  transition: background-size .3s ease;
+  transition: background-size var(--t-select) var(--ease-out);
   padding-bottom: 2px;
 }
 .link:hover, .link:focus-visible { background-size: 100% 1.5px; }
-.link .arrow { display: inline-block; transition: transform .3s ease; }
+.link .arrow { display: inline-block; transition: transform var(--t-select) var(--ease-out); }
 .link:hover .arrow { transform: translateX(4px); }
 
 .more { margin: 14px 0 0; font-size: 14px; font-weight: 600; }
@@ -387,7 +400,7 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
   background: var(--stub);
   color: var(--stub-ink);
   border-left: 1.5px dashed var(--tk-line);
-  transition: transform .3s cubic-bezier(.3, 1.4, .5, 1);
+  transition: transform var(--t-spring) var(--ease-spring);
 }
 .tk__action { writing-mode: vertical-rl; transform: rotate(180deg); font: 600 12px var(--mono); letter-spacing: .18em; text-transform: uppercase; }
 .tk__no { font: 10px/1.3 var(--mono); letter-spacing: .06em; text-align: center; }
@@ -743,7 +756,7 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
 .move.scored .mv-clock, .move.scored .mv-score { color: var(--gold); }
 
 /* Replay button: appears after the goal and names the wing that plays next. Tapping anywhere on the pitch works too. */
-.mv-next { position: absolute; right: 10px; top: 8px; z-index: 1; padding: 3px 10px; border: 1px solid rgba(243, 239, 228, .35); border-radius: 99px; background: rgba(0, 0, 0, .28); font: 600 12px var(--cond); letter-spacing: .1em; text-transform: uppercase; color: var(--chalk); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .4s ease-out, border-color .2s, color .2s; }
+.mv-next { position: absolute; right: 10px; top: 8px; z-index: 1; padding: 3px 10px; border: 1px solid rgba(243, 239, 228, .35); border-radius: 99px; background: rgba(0, 0, 0, .28); font: 600 12px var(--cond); letter-spacing: .1em; text-transform: uppercase; color: var(--chalk); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity var(--t-panel) var(--ease-out), border-color var(--t-select) var(--ease-out), color var(--t-select) var(--ease-out); }
 .move.scored .mv-next { opacity: 1; pointer-events: auto; transition-delay: .8s, 0s, 0s; }
 .mv-next:hover, .mv-next:focus-visible { border-color: var(--gold); color: var(--gold); }
 .mv-next:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
@@ -757,10 +770,10 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
 .move.play .mv-mask--cross { animation: mv-draw .75s linear 3.95s forwards; }
 .move.play .mv-d1 { animation: mv-beat-out .7s ease-out .8s forwards; }
 .move.play .mv-d2 { animation: mv-beat-in .7s ease-out 1.65s forwards; }
-.move.play .mv-cb { animation: mv-late .5s ease-out 4.4s forwards; }
-.move.play .mv-gk { animation: mv-dive .35s ease-out 4.75s forwards; }
+.move.play .mv-cb { animation: mv-late .5s var(--ease-out) 4.4s forwards; }
+.move.play .mv-gk { animation: mv-dive .35s var(--ease-out) 4.75s forwards; }
 .move.play .mv-net { animation: mv-net .9s ease-out 5s forwards; }
-.move.play .mv-cap { animation: mv-in .5s ease-out 5.1s forwards; }
+.move.play .mv-cap { animation: mv-in .5s var(--ease-out) 5.1s forwards; }
 
 @keyframes mv-draw { to { stroke-dashoffset: 0; } }
 /* Defenders lunge at the 7, miss, and are left behind (they fade a little). */
@@ -792,11 +805,11 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
 
 .move--mixed.play .mv-board { animation: mv-hop 1.9s ease-in-out 2.25s forwards; }
 .move--mixed.play .mv-close { animation: cu-show 1.6s linear 2.5s forwards; }
-.move--mixed.play .cu7 { animation: cu-runin .6s ease-out 2.6s both; }
-.move--mixed.play .cu-ball-run { animation: cu-dribble .6s ease-out 2.6s both; }
-.move--mixed.play .cu7-leg { animation: cu-kick .45s cubic-bezier(.3, 0, .2, 1) 3.0s both; }
+.move--mixed.play .cu7 { animation: cu-runin .6s var(--ease-out) 2.6s both; }
+.move--mixed.play .cu-ball-run { animation: cu-dribble .6s var(--ease-out) 2.6s both; }
+.move--mixed.play .cu7-leg { animation: cu-kick .45s var(--ease-in-out) 3.0s both; }
 .move--mixed.play .cu-mask { animation: mv-draw .6s linear 3.22s forwards; }
-.move--mixed.play .cu-ball circle { animation: cu-away .6s ease-in 3.22s forwards; }
+.move--mixed.play .cu-ball circle { animation: cu-away .6s var(--ease-in) 3.22s forwards; }
 @keyframes mv-hop { 0% { transform: none; opacity: 1; } 21% { transform: scale(2.6); opacity: 0; } 84% { transform: scale(1.5); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes cu-show { 0% { opacity: 0; } 12%, 84% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes cu-runin { from { transform: translate(-150px, 0); } }
@@ -828,11 +841,11 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
 .cu-num--big { font-size: 24px; }
 .cu-shooter-leg { transform-box: view-box; transform-origin: 86px 234px; }
 .cu-shot-ball circle { fill: #fff; stroke: var(--pitch); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; }
-.move--left.play .cu-shooter-leg { animation: cu-strike .4s cubic-bezier(.3, 0, .2, 1) 2.55s both; }
-.move--left.play .cu-shot-ball circle { animation: cu-away-far .6s ease-in 2.8s forwards; }
-.move--left.play .cu-mask-shot { animation: mv-draw .6s cubic-bezier(.2, 0, .6, 1) 2.8s forwards; }
-.move--left.play .cu-keeper { animation: cu-dive .45s ease-out 2.95s both; }
-.move--left.play .cu-goal { animation: cu-ripple .5s ease-out 3.4s; }
+.move--left.play .cu-shooter-leg { animation: cu-strike .4s var(--ease-in-out) 2.55s both; }
+.move--left.play .cu-shot-ball circle { animation: cu-away-far .6s var(--ease-in) 2.8s forwards; }
+.move--left.play .cu-mask-shot { animation: mv-draw .6s var(--ease-in-out) 2.8s forwards; }
+.move--left.play .cu-keeper { animation: cu-dive .45s var(--ease-out) 2.95s both; }
+.move--left.play .cu-goal { animation: cu-ripple .5s var(--ease-out) 3.4s; }
 @keyframes cu-strike { from { transform: rotate(45deg); } to { transform: rotate(-12deg); } }
 @keyframes cu-away-far { to { transform: scale(.4); } }
 @keyframes cu-dive { from { transform: none; } to { transform: translate(28px, -14px) rotate(62deg); } }
@@ -861,7 +874,7 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
   overflow: hidden;
   background: var(--sunk);
   box-shadow: 0 0 0 1px var(--line), 0 0 0 5px var(--paper), 0 0 0 6px var(--line);
-  transition: box-shadow .5s ease;
+  transition: box-shadow var(--t-panel) var(--ease-out);
 }
 [data-mode="match"] .portrait { box-shadow: 0 0 0 1px var(--line), 0 0 0 5px var(--paper), 0 0 0 7px var(--gold); }
 .portrait__img {
@@ -871,7 +884,7 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
   height: 100%;
   object-fit: cover;
   filter: saturate(.92) sepia(.06);
-  transition: opacity .6s ease;
+  transition: opacity var(--t-panel) var(--ease-out);
 }
 .portrait__img--match { opacity: 0; }
 [data-mode="match"] .portrait__img--work { opacity: 0; }
@@ -949,7 +962,7 @@ main { margin-top: 40px; display: flex; flex-direction: column; }
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 0 0 1px var(--line);
-  transition: box-shadow .5s ease;
+  transition: box-shadow var(--t-panel) var(--ease-out);
 }
 [data-mode="match"] .mini-portrait { box-shadow: 0 0 0 2px var(--gold); }
 .site-nav { display: flex; gap: 22px; font: 600 14px var(--sans); }
@@ -1138,7 +1151,7 @@ h1.label { font-size: 11.5px; }
 .lost__ref circle { fill: var(--paper); }
 .lost__pole { stroke-width: 2; }
 .lost__flag { fill: var(--sun); stroke: var(--dark-ink); stroke-width: 1.5; }
-.lost__arm { transform-origin: 150px 58px; transform: rotate(80deg); animation: flag-up .6s .4s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+.lost__arm { transform-origin: 150px 58px; transform: rotate(80deg); animation: flag-up .6s .4s var(--ease-spring) forwards; }
 @keyframes flag-up { to { transform: rotate(0); } }
 .lost__kicker { margin: 0 0 8px; font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 .lost__title { margin: 0 0 12px; font: 600 clamp(28px, 4vw, 38px)/1.15 var(--serif); }
