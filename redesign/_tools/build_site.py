@@ -18,9 +18,9 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-SRC_BLOG = ROOT / "legacy" / "blog"   # the old site keeps the source text of each post
-OUT = ROOT / "redesign"
 DATA = Path(__file__).resolve().parent
+SRC_BLOG = DATA / "posts"   # the source text of each post; edit posts here
+OUT = ROOT / "redesign"
 
 # Newest first. "no" is the public essay number; None means unlisted.
 POSTS = [

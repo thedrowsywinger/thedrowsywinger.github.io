@@ -7,8 +7,9 @@ redesign/v3/ stays the place to edit and build. Run this after the builders:
   python3 -I redesign/_tools/publish_v3.py
 
 The script also deletes files at the root that an earlier publish copied but v3 no longer has.
-It touches only the paths v3 owns, so legacy/, redesign/, design/ and the repo files stay.
-The previous production site is kept, unpublished, in legacy/ (see _config.yml).
+It touches only the paths v3 owns, so legacy/, redesign/, design/, .github/ and the repo files stay.
+The previous production site is kept, unpublished, in legacy/ (see _config.yml). No build reads
+from legacy/, so it can be deleted at any time.
 """
 from pathlib import Path
 import shutil
@@ -16,7 +17,8 @@ import shutil
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "redesign" / "v3"
 # Root entries that are not part of the published v3 site.
-NOT_SITE = {".git", ".gitignore", "LICENSE", "_config.yml", "legacy", "redesign", "design", ".DS_Store", "README.md", "CNAME", ".nojekyll"}
+NOT_SITE = {".git", ".github", ".gitignore", "LICENSE", "_config.yml", "legacy", "redesign", "design", ".DS_Store",
+            "README.md", "CNAME", ".nojekyll", "robots.txt"}
 SKIP = {".DS_Store"}
 
 

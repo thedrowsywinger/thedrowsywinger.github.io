@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Set up Ubuntu on WSL 2, keep Linux projects in the right filesystem, and inspect the versions and resource settings that affect development.">
+    <meta name="author" content="Abdullah Md. Sarwar">
+    <meta property="og:title" content="Setting Up WSL on Windows: A Practical Guide">
+    <meta property="og:description" content="Set up Ubuntu on WSL 2, keep Linux projects in the right filesystem, and inspect the versions and resource settings that affect development.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html">
+    <meta property="og:image" content="https://thedrowsywinger.github.io/img/profile_picture.jpg">
+    <meta property="article:published_time" content="2024-06-10">
+    <meta property="article:modified_time" content="2026-10-15">
+    <meta property="article:author" content="Abdullah Md. Sarwar">
+    <meta property="article:section" content="Development setup">
+    <title>Setting Up WSL on Windows: A Practical Guide - Abdullah Md. Sarwar</title>
+    <link rel="canonical" href="https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html">
+    <link rel="icon" type="image/jpeg" href="../img/profile_picture.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,400,900&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/blog-article.css">
+</head>
+<body class="technical-article-page">
+    <a class="skip-nav" href="#article">Skip to article</a>
+    <header>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span class="hamburger"></span>
+        </button>
+        <nav class="nav" aria-label="Main navigation">
+            <ul class="nav__list">
+                <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
+                <li class="nav__item"><a href="../portfolio.html" class="nav__link">Portfolio</a></li>
+                <li class="nav__item"><a href="./" class="nav__link">My Blog</a></li>
+                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications &amp; Reports</a></li>
+                <li class="nav__item">
+                    <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon" aria-hidden="true"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="blog-content technical-article" id="article">
+        <a class="article-back" href="./index.html">&larr; All blog posts</a>
+        <article>
+            <header>
+                <p class="article-kicker">Development setup</p>
+                <h1>Setting Up WSL on Windows: A Practical Guide</h1>
+                <div class="blog-post__meta">
+                    <time datetime="2024-06-10">June 10, 2024</time>
+                    <span>Updated <time datetime="2026-10-15">October 15, 2026</time></span>
+                    <span class="blog-post__tags">
+                        <a href="index.html#wsl" class="tag">WSL</a>
+                        <a href="index.html#windows" class="tag">Windows</a>
+                        <a href="index.html#linux" class="tag">Linux</a>
+                    </span>
+                </div>
+            </header>
+            <div class="blog-post__content">
+<p class="article-lead">WSL let me keep a Linux development environment without leaving Windows for everyday applications.</p>
+                <p>During university, I moved to Linux because Windows setup often differed from the programming tutorials I followed.
+                    I later used a dual-boot setup: Linux for development and Windows for other software.</p>
+                <p>Switching systems became inconvenient when meetings and other Windows applications were part of my day.
+                    WSL 2 gave me another option: keep the Linux tools and use Windows applications alongside them.</p>
+                <p>This guide uses Ubuntu on WSL 2. Run Windows commands in PowerShell and Linux commands inside Ubuntu.
+                    Distribution names and package versions depend on your installation.</p>
+
+                <h2>1. Install WSL and Ubuntu</h2>
+                <p>Open PowerShell as Administrator and run:</p>
+                <pre tabindex="0"><code class="language-powershell">wsl --install -d Ubuntu</code></pre>
+                <p>Restart Windows when prompted. Launch Ubuntu and create your Linux username and password.</p>
+                <p>The one-command method covers Windows 11 and eligible Windows 10 builds.
+                    Use Microsoft's <a href="https://learn.microsoft.com/en-us/windows/wsl/install">installation guide</a> for prerequisites and the manual fallback.</p>
+                <p>If WSL is already installed, list available distributions before installing another:</p>
+                <pre tabindex="0"><code class="language-powershell">wsl --list --online</code></pre>
+
+                <h2>2. Check the installed versions</h2>
+                <p>In PowerShell, inspect WSL and its distributions:</p>
+                <pre tabindex="0"><code class="language-powershell">wsl --version
+wsl --list --verbose</code></pre>
+                <p>The second command reports whether each distribution uses WSL 1 or WSL 2.
+                    For an existing WSL 1 installation, follow Microsoft's <a href="https://learn.microsoft.com/en-us/windows/wsl/basic-commands">conversion instructions</a>.</p>
+                <p>Inside Ubuntu, check the distribution release:</p>
+                <pre tabindex="0"><code class="language-bash">cat /etc/os-release</code></pre>
+                <p>Record these versions when reporting a setup problem. “Ubuntu on WSL” alone leaves several variables unknown.</p>
+
+                <h2>3. Install the development tools</h2>
+                <p>Inside Ubuntu, refresh the package lists and review available upgrades:</p>
+                <pre tabindex="0"><code class="language-bash">sudo apt update
+sudo apt upgrade</code></pre>
+                <p>Install the basic compiler tools, Git, curl, and unzip:</p>
+                <pre tabindex="0"><code class="language-bash">sudo apt install build-essential git curl unzip</code></pre>
+                <p>Add project-specific runtimes separately. This keeps the base setup small and makes required versions explicit.</p>
+
+                <h2>4. Keep Linux projects in the Linux filesystem</h2>
+                <p>Create a workspace inside your Linux home directory:</p>
+                <pre tabindex="0"><code class="language-bash">mkdir -p ~/projects
+cd ~/projects</code></pre>
+                <p>The important distinction is the filesystem boundary, rather than the Windows drive letter.
+                    Linux tools generally perform better with files in the WSL filesystem than with files under mounted Windows paths such as <code>/mnt/c</code>.</p>
+                <p>Microsoft documents this in its <a href="https://learn.microsoft.com/en-us/windows/wsl/filesystems">filesystem guidance</a>.
+                    It applies to mounted D: and E: drives too. C: has no special performance guarantee.</p>
+                <p>From a Linux project directory, open Windows File Explorer with:</p>
+                <pre tabindex="0"><code class="language-bash">explorer.exe .</code></pre>
+
+                <h2>5. Open the project in VS Code</h2>
+                <p>Install VS Code on Windows and add Microsoft's
+                    <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl">WSL extension</a>.</p>
+                <p>From your project directory inside Ubuntu, run:</p>
+                <pre tabindex="0"><code class="language-bash">code .</code></pre>
+                <p>Check that VS Code shows a WSL connection before installing project dependencies.
+                    Its integrated terminal should open in the Linux environment.</p>
+
+                <h2>6. Set resource limits only when needed</h2>
+                <p>WSL 2 supports resource settings in <code>%UserProfile%.wslconfig</code> on Windows.
+                    For example:</p>
+                <pre tabindex="0"><code class="language-ini">[wsl2]
+memory=4GB
+processors=2
+swap=2GB</code></pre>
+                <p>These are example limits, not requirements. Choose values that fit your machine and workload.
+                    See the <a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config">configuration reference</a> for supported options.</p>
+                <p>Save your Linux work before applying the settings. This PowerShell command stops running distributions:</p>
+                <pre tabindex="0"><code class="language-powershell">wsl --shutdown</code></pre>
+                <p>Launch Ubuntu again after the shutdown.</p>
+
+                <h2>Where to go next</h2>
+                <p>The useful result is a Linux workspace that fits your Windows workflow.
+                    Keep source files in Linux, record tool versions, and add only the services your project needs.</p>
+                <p>For a local database, continue with <a href="./setting-up-postgresql-on-wsl.html">PostgreSQL on WSL</a>.</p>
+            </div>
+            <footer class="article-footer">
+                <p>Written by <a href="../">Abdullah Md. Sarwar</a></p>
+                <a href="./index.html">&larr; Back to the blog</a>
+            </footer>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
+        <ul class="social-list">
+            <li class="social-list__item"><a class="social-list__link" href="https://github.com/thedrowsywinger" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a></li>
+            <li class="social-list__item"><a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
+            <li class="social-list__item"><a class="social-list__link" href="https://twitter.com/thedrowsywinger" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+        </ul>
+    </footer>
+    <script src="../js/index.js"></script>
+</body>
+
+</html>
