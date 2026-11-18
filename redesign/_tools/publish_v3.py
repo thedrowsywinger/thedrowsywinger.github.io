@@ -7,12 +7,14 @@ redesign/v3/ stays the place to edit and build. Run this after the builders:
   python3 -I redesign/_tools/publish_v3.py
 
 The script also deletes files at the root that an earlier publish copied but v3 no longer has.
-It touches only the paths v3 owns, so legacy/, redesign/, design/, .github/ and the repo files stay.
+It deletes only files that git tracks, so ignored and untracked files (such as .redesign/ drafts) are
+never touched. legacy/, redesign/, design/, .github/ and the repo files also stay.
 The previous production site is kept, unpublished, in legacy/ (see _config.yml). No build reads
 from legacy/, so it can be deleted at any time.
 """
 from pathlib import Path
 import shutil
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "redesign" / "v3"
@@ -27,6 +29,14 @@ def site_files(base):
             if p.is_file() and p.name not in SKIP and p.relative_to(base).parts[0] not in NOT_SITE}
 
 
+def tracked_site_files():
+    """Root files that git tracks and that belong to the site. Ignored and untracked files never appear here."""
+    out = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z"],
+                         capture_output=True, check=True).stdout.decode()
+    return {Path(p) for p in out.split("\0")
+            if p and Path(p).parts[0] not in NOT_SITE and Path(p).name not in SKIP}
+
+
 def main():
     assert (SRC / "index.html").exists(), f"{SRC} has no index.html; build v3 first"
     wanted = site_files(SRC)
@@ -38,9 +48,9 @@ def main():
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
         copied += 1
-    stale = sorted(site_files(ROOT) - wanted)
+    stale = sorted(tracked_site_files() - wanted)
     for rel in stale:
-        (ROOT / rel).unlink()
+        (ROOT / rel).unlink(missing_ok=True)
     for d in sorted({(ROOT / r).parent for r in stale}, reverse=True):
         if d != ROOT and d.exists() and not any(d.iterdir()):
             d.rmdir()
