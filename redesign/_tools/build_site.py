@@ -436,10 +436,10 @@ def build_work():
           </div>"""
     main = "\n\n".join([
         row("Work", "The club",
-            '          <p class="lead">I joined ShareTrip in Dhaka in November 2022, and I lead its Public API team. The work is as much business logic as engineering: clear booking states, careful supplier integrations, and prices that come out right. As team lead, I plan the team\'s work, review its code and take changes from staging to production.</p>',
+            '          <p class="lead">I joined ShareTrip in Dhaka in November 2022, and I lead its Public API team. The work is as much business logic as engineering: clear booking states, careful supplier integrations, and prices that come out right. I plan the team\'s work, review its code and take changes from staging to production.</p>',
             "work-h", first=True, heading="h1"),
         row("Public API team", "The squad",
-            f'          <ul class="domains">{domain_html}</ul>\n          <p class="caption">The services my team builds and maintains.</p>', "team-h"),
+            f'          <ul class="domains">{domain_html}</ul>\n          <p class="caption">The services the team builds and maintains.</p>', "team-h"),
         row("Also at ShareTrip", "Set pieces", f'          <ul class="plain-list">{also_html}</ul>', "also-h"),
         row("Earlier", "Past seasons", f'          <ol class="entries">{role_html}\n          </ol>', "earlier-h"),
         row("Toolkit", "Team sheet", team_sheet, "kit-h"),

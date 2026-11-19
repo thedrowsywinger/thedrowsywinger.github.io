@@ -1211,18 +1211,31 @@ var siteBase = new URL('.', document.currentScript.src).href;
   // ---------- The next page peeks under the footer: scroll on, or tap, to open it ----------
   var peek = document.querySelector('.peek');
   if (peek) {
-    var pull = 0, pullTimer = null, leaving = false;
+    var pull = 0, pullTimer = null, leaving = false, touchY = null;
     var fill = peek.querySelector('.peek__fill');
-    window.addEventListener('wheel', function (e) {
-      if (leaving || !peek.offsetParent) return;
-      var atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
-      if (!atBottom || e.deltaY <= 0) { pull = 0; fill.style.transform = 'scaleX(0)'; return; }
-      pull += e.deltaY;
+    function atBottom() { return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2; }
+    function reset() { pull = 0; fill.style.transform = 'scaleX(0)'; peek.classList.remove('is-pulling'); }
+    // Each push past the bottom fills the bar. A full bar opens the next page; a pause empties it.
+    function push(dy) {
+      if (leaving || !peek.offsetParent || !dy) return;
+      if (!atBottom() || dy < 0) { reset(); return; }
+      pull += dy;
+      peek.classList.add('is-pulling');
       fill.style.transform = 'scaleX(' + Math.min(1, pull / 900) + ')';
       clearTimeout(pullTimer);
-      pullTimer = setTimeout(function () { pull = 0; fill.style.transform = 'scaleX(0)'; }, 700);
+      pullTimer = setTimeout(reset, 700);
       if (pull >= 900) { leaving = true; location.href = peek.href; }
+    }
+    window.addEventListener('wheel', function (e) { push(e.deltaY); }, { passive: true });
+    // On touch screens, a swipe up at the bottom of the page counts as scrolling on.
+    window.addEventListener('touchstart', function (e) { touchY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (touchY === null) return;
+      var y = e.touches[0].clientY;
+      push((touchY - y) * 3);
+      touchY = y;
     }, { passive: true });
+    window.addEventListener('touchend', function () { touchY = null; }, { passive: true });
   }
 
   // ---------- The section bar shrinks to a pill on the way down and opens on the way up ----------

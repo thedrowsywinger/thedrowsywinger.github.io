@@ -147,7 +147,7 @@ def career_timeline(html):
     roles = re.findall(r'<p class="entry__title">(.*?) <span class="muted">· (.*?)</span></p>\s*<p class="entry__meta">(.*?)</p>\s*<p class="entry__text">(.*?)</p>', section.group(0), re.S)
     assert len(roles) == 3, len(roles)
     roles = roles[::-1] + [("ShareTrip", "Senior Software Engineer · Public API lead", "Nov 2022 – now",
-                            "I lead the Public API team. We build and maintain the public gateways, flights, hotels, visa, holidays, e-commerce, mobile recharge, bill payments, B2B and B2E.")]
+                            "Backend for the public gateways and every product above, for consumers, B2B and B2E.")]
     stops, panels = [], []
     for i, (org, role, dates, text) in enumerate(roles):
         now = org == "ShareTrip"
@@ -555,7 +555,7 @@ def board_row():
 def peek(base, label, target):
     """The next page shows its header under the footer. A tap opens it, and so does scrolling on (v3.js)."""
     return f'''<a class="peek" href="{base}{target}" aria-label="Next page: {label}">
-      <span class="peek__hint">Next page · keep scrolling, or tap</span>
+      <span class="peek__hint"><span class="peek__arrow" aria-hidden="true">↓</span><span class="peek__say">Keep scrolling for the next page</span><span class="peek__go">Keep scrolling…</span></span>
       <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="{base}img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
       <span class="peek__title">{label}</span>
       <i class="peek__fill" aria-hidden="true"></i>
