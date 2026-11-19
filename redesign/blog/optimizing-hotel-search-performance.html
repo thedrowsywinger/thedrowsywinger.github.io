@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A generalized hotel search case study covering concurrent chunks, illustrative sizing, atomic counters, and meaningful performance measurements.">
+  <meta name="keywords" content="Hotel Search, Backend Development, Concurrency, Node.js, MongoDB, Performance">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="Speeding Up Hotel Search with Concurrent Chunks">
+  <meta property="og:description" content="Generalized examples explain concurrent hotel search, progressive chunk sizing, and atomic count updates.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/optimizing-hotel-search-performance.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/profile_picture.jpg">
+  <meta property="article:published_time" content="2025-11-26">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Backend Development">
+  <meta property="article:tag" content="Performance">
+  <meta property="article:tag" content="Concurrency">
+  <meta property="article:tag" content="MongoDB">
+  <title>Speeding Up Hotel Search with Concurrent Chunks · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/optimizing-hotel-search-performance.html">
+  <link rel="icon" type="image/jpeg" href="../../img/profile_picture.jpg">
+  <script>
+    try { var m = new URLSearchParams(location.search).get('mode') || localStorage.getItem('mode'); if (m === 'match') document.documentElement.dataset.mode = 'match'; if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+          <img class="portrait__img portrait__img--match" src="../img/portrait-match.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      <button class="switch" id="mode-switch" type="button" role="switch" aria-checked="false" aria-label="Show the personal Matchday view">
+        <span class="switch__word switch__word--work">Workday</span>
+        <span class="switch__track" aria-hidden="true"><span class="switch__ball"></span></span>
+        <span class="switch__word switch__word--match">Matchday</span>
+      </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 004" data-match="Match report · No. 004">Essay · No. 004</span><span class="post__sep">·</span><time datetime="2025-11-26">26 Nov 2025</time><span class="post__sep">·</span><span>5 min read</span></p>
+          <p class="post__kicker">Backend engineering · A generalized case study</p>
+          <h1 class="post__title">Speeding Up Hotel Search with Concurrent Chunks</h1>
+          <ul class="post__tags" aria-label="Topics"><li>Performance</li><li>Concurrency</li><li>MongoDB</li></ul>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#existing-flow">1. Separate the response from the search work</a></li><li><a href="#scheduling">2. Bound the work that runs together</a></li><li><a href="#chunk-sizing">3. Use smaller early chunks when they help</a></li><li><a href="#count-race">4. Update shared counts atomically</a></li><li><a href="#post-processing">5. Preserve dependencies during enrichment</a></li><li><a href="#failure-handling">6. Decide what happens when a task fails</a></li><li><a href="#measurement">7. Compare equivalent work</a></li><li><a href="#result">The design choices belong together</a></li><li><a href="#references">References</a></li></ol></details>
+          <div class="post__body">
+
+
+                <p class="article-lead">Independent search requests can overlap, but their results still need consistent handling.
+                    Faster scheduling and correct shared state belong in the same design.</p>
+                <p>This article draws on my experience with hotel search.
+                    The examples generalize the techniques and omit company-specific configuration, supplier behavior, and internal names.</p>
+                <aside class="article-note" aria-label="Example scope">
+                    <p><strong>All numbers and diagrams below are illustrative.</strong>
+                        They explain the design and do not reproduce production settings or measured results.</p>
+                </aside>
+                <p>The original benchmark logs are no longer available.
+                    This article focuses on the approach rather than a numeric performance claim.</p>
+
+                <h2 id="existing-flow">1. Separate the response from the search work</h2>
+                <p>A hotel search can return a session ID while availability is fetched in the background.
+                    The client then polls that session for results.</p>
+                <p>A <strong>chunk</strong> is a group of hotel IDs processed together.
+                    Processing a chunk can include availability requests, enrichment, price calculations, and saving results.</p>
+                <p>Calls to independent providers can run concurrently:</p>
+                <pre tabindex="0" aria-label="Illustrative concurrent provider requests"><code class="language-typescript">const results = await Promise.all(
+  providers.map((provider) =&gt; provider.search(chunk)),
+);</code></pre>
+                <p class="code-caption">Illustrative code. Provider failure handling is discussed below.</p>
+                <p>Concurrency inside a chunk does not automatically overlap separate chunks.
+                    A loop that awaits each complete chunk still makes later chunks wait.</p>
+
+                <h2 id="scheduling">2. Bound the work that runs together</h2>
+                <p>When chunks are independent, some can overlap.
+                    Each chunk should keep its request, processing, and save within its own task.</p>
+                <p>A simple illustrative scheduler can:</p>
+                <ol>
+                    <li>Take a small group of chunks from the queue.</li>
+                    <li>Start their tasks together.</li>
+                    <li>Save each successful chunk when it finishes.</li>
+                    <li>Record failures, then continue with the next group.</li>
+                </ol>
+
+                <figure class="article-figure" aria-labelledby="schedule-caption">
+                    <span class="figure-label">Figure 1 &middot; Illustrative chunk scheduling</span>
+                    <div class="figure-panels">
+                        <div class="figure-panel">
+                            <p><strong>Sequential example</strong></p>
+                            <div class="chunk-stack">
+                                <div class="chunk-box">Chunk 1 &middot; process + save</div>
+                                <div class="figure-arrow" aria-hidden="true">&darr;</div>
+                                <div class="chunk-box">Chunk 2 &middot; process + save</div>
+                                <div class="figure-arrow" aria-hidden="true">&darr;</div>
+                                <div class="chunk-box">Next chunk</div>
+                            </div>
+                            <p class="figure-result">Each chunk waits.</p>
+                        </div>
+                        <div class="figure-panel">
+                            <p><strong>Concurrent example</strong></p>
+                            <div class="chunk-stack">
+                                <div class="chunk-box chunk-box--early">Chunk 1 &middot; starts now</div>
+                                <div class="chunk-box chunk-box--early">Chunk 2 &middot; starts now</div>
+                                <div class="figure-arrow" aria-hidden="true">&darr;</div>
+                                <div class="chunk-box">Next group waits</div>
+                            </div>
+                            <p class="figure-result">Successful chunks save independently.</p>
+                        </div>
+                    </div>
+                    <figcaption id="schedule-caption">This example overlaps two chunks. It does not show a production concurrency limit.
+                        Box sizes do not represent duration.</figcaption>
+                </figure>
+
+                <p>A fixed group waits for its slowest task before the next group starts.
+                    A worker pool can instead take another chunk whenever a worker becomes free.</p>
+                <p>The appropriate limit depends on provider quotas, connection use, and database capacity.
+                    A limit within one search also needs to be assessed against the combined demand from simultaneous searches.</p>
+
+                <h2 id="chunk-sizing">3. Use smaller early chunks when they help</h2>
+                <p>Small early chunks can make some results available before the rest of the search finishes.
+                    Larger later chunks can reduce the number of requests.</p>
+                <p>A simple example doubles the requested size after each chunk.
+                    With 200 input IDs, it might divide the work as follows:</p>
+
+                <figure class="article-figure" aria-labelledby="sizes-caption">
+                    <span class="figure-label">Figure 2 &middot; Illustrative split of 200 hotel IDs</span>
+                    <dl class="chunk-bars">
+                        <div class="chunk-bar-row"><dt>Chunk 1</dt><dd class="chunk-bar-track" aria-hidden="true"><span class="chunk-bar-fill" style="--chunk-share: 12.5%"></span></dd><dd>12</dd></div>
+                        <div class="chunk-bar-row"><dt>Chunk 2</dt><dd class="chunk-bar-track" aria-hidden="true"><span class="chunk-bar-fill" style="--chunk-share: 25%"></span></dd><dd>24</dd></div>
+                        <div class="chunk-bar-row"><dt>Chunk 3</dt><dd class="chunk-bar-track" aria-hidden="true"><span class="chunk-bar-fill" style="--chunk-share: 50%"></span></dd><dd>48</dd></div>
+                        <div class="chunk-bar-row"><dt>Chunk 4</dt><dd class="chunk-bar-track" aria-hidden="true"><span class="chunk-bar-fill" style="--chunk-share: 100%"></span></dd><dd>96</dd></div>
+                        <div class="chunk-bar-row"><dt>Chunk 5</dt><dd class="chunk-bar-track" aria-hidden="true"><span class="chunk-bar-fill" style="--chunk-share: 20.833333%"></span></dd><dd>20</dd></div>
+                    </dl>
+                    <figcaption id="sizes-caption">12 + 24 + 48 + 96 + 20 = 200 requested IDs.
+                        These values are examples. The last chunk contains only the remaining IDs; bar lengths do not represent time.</figcaption>
+                </figure>
+
+                <p>Call this <strong>progressive chunk sizing</strong> when sizes follow fixed rules.
+                    A runtime-adaptive approach would need feedback from measurements such as latency or errors.</p>
+                <p>Requested IDs and returned hotels are different counts.
+                    A provider may return no availability for some IDs.</p>
+                <p>Chunk order also does not guarantee completion order.
+                    With concurrent tasks, a later chunk may finish before an earlier one.</p>
+
+                <h2 id="count-race">4. Update shared counts atomically</h2>
+                <p>Concurrent tasks can safely save separate results while still conflicting over a shared total.</p>
+                <p>Consider a common pattern: save a chunk, count stored results, then write that count to the session.
+                    A delayed write can replace a newer count with an older snapshot.</p>
+                <p>This is a <strong>lost-update race</strong>. The example below shows how it can happen.</p>
+
+                <figure class="article-figure" aria-labelledby="count-caption">
+                    <span class="figure-label">Figure 3 &middot; Illustrative count update</span>
+                    <div class="figure-panels">
+                        <div class="figure-panel figure-panel--stale">
+                            <p><strong>Write a count snapshot</strong></p>
+                            <ol>
+                                <li>Chunk A saves 4 results and counts 4. Its session update waits.</li>
+                                <li>Chunk B saves 6 results and counts 10.</li>
+                                <li>Chunk B writes 10 to the session.</li>
+                                <li>Chunk A writes its older count: 4.</li>
+                            </ol>
+                            <p class="figure-result">10 stored &middot; session says 4</p>
+                        </div>
+                        <div class="figure-panel">
+                            <p><strong>Increment the count</strong></p>
+                            <ol>
+                                <li>Chunk A saves 4 results.</li>
+                                <li>Chunk B saves 6 results.</li>
+                                <li>Each successful task increments the total by its saved count.</li>
+                            </ol>
+                            <p class="figure-result">0 + 4 + 6 = 10</p>
+                            <p class="figure-note">The increment order does not change the total.</p>
+                        </div>
+                    </div>
+                    <figcaption id="count-caption">These are example values and a possible task order.
+                        An atomic increment prevents concurrent increments from overwriting each other.</figcaption>
+                </figure>
+
+                <p>An <strong>atomic increment</strong> changes a stored counter as one database operation.
+                    MongoDB's <a href="https://www.mongodb.com/docs/manual/reference/operator/update/inc/"><code>$inc</code></a>
+                    provides this guarantee within one document.</p>
+                <pre tabindex="0" aria-label="Illustrative atomic increment"><code class="language-typescript">await counters.updateOne(
+  { id: searchId },
+  { $inc: { savedCount: savedResults.length } },
+);</code></pre>
+                <p class="code-caption">Illustrative names. Count saved results, rather than requested IDs.</p>
+                <p>Result inserts and a counter update are still separate operations unless the design makes them transactional.
+                    A failure between them can cause a mismatch.</p>
+                <p>Retries need attention too: repeating an increment can count the same work twice.
+                    Consider duplicate protection and a final comparison against stored results when choosing the consistency model.</p>
+
+                <h2 id="post-processing">5. Preserve dependencies during enrichment</h2>
+                <p>Some processing steps need earlier results. Others can start together.</p>
+                <p>For illustration, static hotel details and display settings can be fetched independently:</p>
+                <pre tabindex="0" aria-label="Illustrative independent lookups"><code class="language-typescript">const [details, displaySettings] = await Promise.all([
+  fetchHotelDetails(hotelIds),
+  fetchDisplaySettings(),
+]);</code></pre>
+                <p>Keep dependent calculations in order.
+                    If a price calculation reads the previous step's output, running those steps together changes the behavior.</p>
+                <p>Draw the dependencies before adding concurrency. Start independent work together, then combine its results where needed.</p>
+
+                <h2 id="failure-handling">6. Decide what happens when a task fails</h2>
+                <p>Choose error handling to match the required result.</p>
+                <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all"><code>Promise.all</code></a>
+                    rejects when an input rejects. It does not cancel the other operations.
+                    Use it when the next step requires every result.</p>
+                <p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled"><code>Promise.allSettled</code></a>
+                    waits for every input to settle and reports each outcome.
+                    Inspect those outcomes and record failures explicitly.</p>
+                <p>An empty successful result and a failed request carry different information.
+                    Preserve that distinction when reporting completeness.</p>
+                <p>Neither method creates a timeout.
+                    Saving completed chunks independently also requires a save within each chunk's task; a promise combinator alone does not provide that behavior.</p>
+
+                <h2 id="measurement">7. Compare equivalent work</h2>
+                <p>Keep three measurements separate:</p>
+                <ol>
+                    <li><strong>Session response time:</strong> from the request to the returned session ID.</li>
+                    <li><strong>First-result time:</strong> from the request to the first result displayed by the client.</li>
+                    <li><strong>Completion time:</strong> from the request to all scheduled work finishing.</li>
+                </ol>
+                <p>Backend persistence and browser display are separate events.
+                    Polling adds another wait between a saved result and the client showing it.</p>
+                <p>Define where each timer starts and stops.
+                    A timer for enrichment should not include time spent waiting for an availability request.</p>
+                <p>Use equivalent inputs, provider coverage, cache conditions, and error handling when comparing implementations.
+                    Record both the duration and how much useful work completed.</p>
+                <p>Test simultaneous searches separately.
+                    A request-level limit does not establish how the service behaves under combined load.</p>
+
+                <h2 id="result">The design choices belong together</h2>
+                <p>Chunk sizing controls how work is divided. Scheduling controls which independent tasks overlap.
+                    Persistence determines when results become available and how shared state stays consistent.</p>
+                <p>Assess all three together. The goal is useful results with explicit limits, failure handling, and a count users can trust.</p>
+
+                <h2 id="references">References</h2>
+                <p>The code, numbers, and diagrams are generalized teaching examples rather than a copy of a production implementation.</p>
+                <ol>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all">MDN: Promise.all()</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled">MDN: Promise.allSettled()</a></li>
+                    <li><a href="https://www.mongodb.com/docs/manual/reference/operator/update/inc/">MongoDB: $inc and atomic updates within one document</a></li>
+                </ol>
+            
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next departure" data-match="Next fixture">Next departure</h2>
+            <div class="content">
+            <a class="tk" href="setting-up-postgresql-on-wsl.html" aria-label="Read: Setting Up PostgreSQL Locally on WSL">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 003" data-match="Match report · No. 003">Essay · No. 003</span><time datetime="2024-07-01">1 Jul 2024</time></span>
+                <span class="tk__title">Setting Up PostgreSQL Locally on WSL</span>
+                <span class="tk__fields"><span class="f"><small>Topic</small><span>Development setup</span></span></span>
+                
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/setting-up-postgresql-on-wsl</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            </div>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/optimizing-hotel-search-performance.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=Speeding%20Up%20Hotel%20Search%20with%20Concurrent%20Chunks&amp;url=https://thedrowsywinger.github.io/blog/optimizing-hotel-search-performance.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="foot">
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p>© 2026 Abdullah Md. Sarwar</p>
+    </footer>
+  </div>
+
+  <script src="../main.js"></script>
+</body>
+</html>

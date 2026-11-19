@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- Link-preview card, 1200 x 630. Opened by build_og_cards.py with ?kicker=…&title=… and screenshotted. -->
+<html lang="en"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Literata:opsz,wght@7..72,600&family=Manrope:wght@500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; background: #151311; color: #ebe5dc; overflow: hidden; }
+  .card { position: relative; box-sizing: border-box; width: 1200px; height: 630px; padding: 64px 72px; display: flex; flex-direction: column; }
+  .top { display: flex; align-items: center; gap: 18px; font: 500 22px "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: #7cc4a0; }
+  .top img { width: 58px; height: 58px; }
+  h1 { margin: auto 0 0; max-width: 980px; font: 600 68px/1.12 "Literata", Georgia, serif; letter-spacing: -.01em; }
+  h1.long { font-size: 54px; }
+  .who { margin-top: 30px; padding-top: 26px; border-top: 2px solid #2c2824; font: 500 26px "Manrope", sans-serif; color: #c9c1b6; }
+  svg { position: absolute; right: 60px; top: 70px; width: 420px; height: 90px; overflow: visible; }
+  svg path.t { fill: none; stroke: #7cc4a0; stroke-width: 2.5; stroke-dasharray: 6 9; opacity: .55; }
+  svg path.p { fill: #1d1a17; stroke: #ebe5dc; stroke-width: 2.4; stroke-linejoin: round; }
+</style></head>
+<body><div class="card">
+  <div class="top"><img src="../v3/img/logo.svg" alt=""><span id="kicker"></span></div>
+  <svg viewBox="0 0 420 90"><path class="t" d="M6 78 C110 6 250 92 392 22"/><path class="p" d="M378 20 L412 8 L402 36 L395 24 Z"/></svg>
+  <h1 id="title"></h1>
+  <div class="who">Abdullah Sarwar · Senior Software Engineer</div>
+</div>
+<script>
+  var q = new URLSearchParams(location.search);
+  document.getElementById('kicker').textContent = q.get('kicker') || '';
+  var t = document.getElementById('title'); t.textContent = q.get('title') || '';
+  if (t.textContent.length > 44) t.className = 'long';
+</script></body></html>

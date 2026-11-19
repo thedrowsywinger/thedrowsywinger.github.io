@@ -1,66 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="work">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Set up Ubuntu on WSL 2, keep Linux projects in the right filesystem, and inspect the versions and resource settings that affect development.">
-    <meta name="author" content="Abdullah Md. Sarwar">
-    <meta property="og:title" content="Setting Up WSL on Windows: A Practical Guide">
-    <meta property="og:description" content="Set up Ubuntu on WSL 2, keep Linux projects in the right filesystem, and inspect the versions and resource settings that affect development.">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html">
-    <meta property="og:image" content="https://thedrowsywinger.github.io/img/profile_picture.jpg">
-    <meta property="article:published_time" content="2024-06-10">
-    <meta property="article:modified_time" content="2026-10-15">
-    <meta property="article:author" content="Abdullah Md. Sarwar">
-    <meta property="article:section" content="Development setup">
-    <title>Setting Up WSL on Windows: A Practical Guide - Abdullah Md. Sarwar</title>
-    <link rel="canonical" href="https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html">
-    <link rel="icon" type="image/jpeg" href="../img/profile_picture.jpg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,400,900&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/blog-article.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Set up Ubuntu on WSL 2, keep Linux projects in the right filesystem, and inspect the versions and resource settings that affect development.">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="Setting Up WSL on Windows: A Practical Guide">
+  <meta property="og:description" content="Set up Ubuntu on WSL 2, keep Linux projects in the right filesystem, and inspect the versions and resource settings that affect development.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/setting-up-wsl-on-windows.png">
+  <meta property="article:published_time" content="2024-06-10">
+  <meta property="article:modified_time" content="2026-10-15">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Development setup">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Setting Up WSL on Windows: A Practical Guide · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html">
+  <link rel="icon" type="image/svg+xml" href="../img/logo.svg">
+  <script>
+    document.documentElement.classList.add('js'); try { if ((new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme')) === 'light') document.documentElement.dataset.theme = 'light'; if (localStorage.getItem('calm') === '1' || (localStorage.getItem('calm') === null && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.documentElement.classList.add('calm'); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../v3.css">
 </head>
-<body class="technical-article-page">
-    <a class="skip-nav" href="#article">Skip to article</a>
-    <header>
-        <button class="nav-toggle" aria-label="Toggle navigation">
-            <span class="hamburger"></span>
-        </button>
-        <nav class="nav" aria-label="Main navigation">
-            <ul class="nav__list">
-                <li class="nav__item"><a href="../" class="nav__link">Home</a></li>
-                <li class="nav__item"><a href="../portfolio.html" class="nav__link">Portfolio</a></li>
-                <li class="nav__item"><a href="./" class="nav__link">My Blog</a></li>
-                <li class="nav__item"><a href="../publications.html" class="nav__link">Publications &amp; Reports</a></li>
-                <li class="nav__item">
-                    <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon" aria-hidden="true"></i>
-                    </button>
-                </li>
-            </ul>
-        </nav>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      </div>
     </header>
 
-    <main class="blog-content technical-article" id="article">
-        <a class="article-back" href="./index.html">&larr; All blog posts</a>
-        <article>
-            <header>
-                <p class="article-kicker">Development setup</p>
-                <h1>Setting Up WSL on Windows: A Practical Guide</h1>
-                <div class="blog-post__meta">
-                    <time datetime="2024-06-10">June 10, 2024</time>
-                    <span>Updated <time datetime="2026-10-15">October 15, 2026</time></span>
-                    <span class="blog-post__tags">
-                        <a href="index.html#wsl" class="tag">WSL</a>
-                        <a href="index.html#windows" class="tag">Windows</a>
-                        <a href="index.html#linux" class="tag">Linux</a>
-                    </span>
-                </div>
-            </header>
-            <div class="blog-post__content">
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 002" data-match="Match report · No. 002">Essay · No. 002</span><span class="post__sep">·</span><time datetime="2024-06-10">10 Jun 2024</time><span class="post__sep">·</span><span>2 min read</span><span class="post__sep">·</span><span>Updated <time datetime="2026-10-15">15 Oct 2026</time></span></p>
+          <p class="post__kicker">Development setup</p>
+          <h1 class="post__title">Setting Up WSL on Windows: A Practical Guide</h1>
+          <ul class="post__tags" aria-label="Topics"><li>WSL</li><li>Windows</li><li>Linux</li></ul>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-install-wsl-and-ubuntu">1. Install WSL and Ubuntu</a></li><li><a href="#2-check-the-installed-versions">2. Check the installed versions</a></li><li><a href="#3-install-the-development-tools">3. Install the development tools</a></li><li><a href="#4-keep-linux-projects-in-the-linux-filesystem">4. Keep Linux projects in the Linux filesystem</a></li><li><a href="#5-open-the-project-in-vs-code">5. Open the project in VS Code</a></li><li><a href="#6-set-resource-limits-only-when-needed">6. Set resource limits only when needed</a></li><li><a href="#where-to-go-next">Where to go next</a></li></ol><p class="toc__meta"><span>2 min read</span><span class="toc__left" data-minutes="2"></span><span>Published 10 Jun 2024</span><span>Updated 15 Oct 2026</span></p></details>
+          <div class="post__body">
+
+
 <p class="article-lead">WSL let me keep a Linux development environment without leaving Windows for everyday applications.</p>
                 <p>During university, I moved to Linux because Windows setup often differed from the programming tutorials I followed.
                     I later used a dual-boot setup: Linux for development and Windows for other software.</p>
@@ -69,7 +73,7 @@
                 <p>This guide uses Ubuntu on WSL 2. Run Windows commands in PowerShell and Linux commands inside Ubuntu.
                     Distribution names and package versions depend on your installation.</p>
 
-                <h2>1. Install WSL and Ubuntu</h2>
+                <h2 id="1-install-wsl-and-ubuntu">1. Install WSL and Ubuntu</h2>
                 <p>Open PowerShell as Administrator and run:</p>
                 <pre tabindex="0"><code class="language-powershell">wsl --install -d Ubuntu</code></pre>
                 <p>Restart Windows when prompted. Launch Ubuntu and create your Linux username and password.</p>
@@ -78,7 +82,7 @@
                 <p>If WSL is already installed, list available distributions before installing another:</p>
                 <pre tabindex="0"><code class="language-powershell">wsl --list --online</code></pre>
 
-                <h2>2. Check the installed versions</h2>
+                <h2 id="2-check-the-installed-versions">2. Check the installed versions</h2>
                 <p>In PowerShell, inspect WSL and its distributions:</p>
                 <pre tabindex="0"><code class="language-powershell">wsl --version
 wsl --list --verbose</code></pre>
@@ -88,7 +92,7 @@ wsl --list --verbose</code></pre>
                 <pre tabindex="0"><code class="language-bash">cat /etc/os-release</code></pre>
                 <p>Record these versions when reporting a setup problem. “Ubuntu on WSL” alone leaves several variables unknown.</p>
 
-                <h2>3. Install the development tools</h2>
+                <h2 id="3-install-the-development-tools">3. Install the development tools</h2>
                 <p>Inside Ubuntu, refresh the package lists and review available upgrades:</p>
                 <pre tabindex="0"><code class="language-bash">sudo apt update
 sudo apt upgrade</code></pre>
@@ -96,7 +100,7 @@ sudo apt upgrade</code></pre>
                 <pre tabindex="0"><code class="language-bash">sudo apt install build-essential git curl unzip</code></pre>
                 <p>Add project-specific runtimes separately. This keeps the base setup small and makes required versions explicit.</p>
 
-                <h2>4. Keep Linux projects in the Linux filesystem</h2>
+                <h2 id="4-keep-linux-projects-in-the-linux-filesystem">4. Keep Linux projects in the Linux filesystem</h2>
                 <p>Create a workspace inside your Linux home directory:</p>
                 <pre tabindex="0"><code class="language-bash">mkdir -p ~/projects
 cd ~/projects</code></pre>
@@ -107,7 +111,7 @@ cd ~/projects</code></pre>
                 <p>From a Linux project directory, open Windows File Explorer with:</p>
                 <pre tabindex="0"><code class="language-bash">explorer.exe .</code></pre>
 
-                <h2>5. Open the project in VS Code</h2>
+                <h2 id="5-open-the-project-in-vs-code">5. Open the project in VS Code</h2>
                 <p>Install VS Code on Windows and add Microsoft's
                     <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl">WSL extension</a>.</p>
                 <p>From your project directory inside Ubuntu, run:</p>
@@ -115,7 +119,7 @@ cd ~/projects</code></pre>
                 <p>Check that VS Code shows a WSL connection before installing project dependencies.
                     Its integrated terminal should open in the Linux environment.</p>
 
-                <h2>6. Set resource limits only when needed</h2>
+                <h2 id="6-set-resource-limits-only-when-needed">6. Set resource limits only when needed</h2>
                 <p>WSL 2 supports resource settings in <code>%UserProfile%.wslconfig</code> on Windows.
                     For example:</p>
                 <pre tabindex="0"><code class="language-ini">[wsl2]
@@ -128,27 +132,59 @@ swap=2GB</code></pre>
                 <pre tabindex="0"><code class="language-powershell">wsl --shutdown</code></pre>
                 <p>Launch Ubuntu again after the shutdown.</p>
 
-                <h2>Where to go next</h2>
+                <h2 id="where-to-go-next">Where to go next</h2>
                 <p>The useful result is a Linux workspace that fits your Windows workflow.
                     Keep source files in Linux, record tool versions, and add only the services your project needs.</p>
                 <p>For a local database, continue with <a href="./setting-up-postgresql-on-wsl.html">PostgreSQL on WSL</a>.</p>
+            
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next essay" data-match="Next essay">Next essay</h2>
+            <div class="content">
+            <a class="tk" href="scoring-goals-securely.html" aria-label="Read: JWT Authentication for a Football Booking App: Login, Refresh, and Logout">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 001" data-match="Match report · No. 001">Essay · No. 001</span><time datetime="2024-04-10">10 Apr 2024</time></span>
+                <span class="tk__title">JWT Authentication for a Football Booking App: Login, Refresh, and Logout</span>
+                <span class="tk__fields"><span class="f"><small>Topic</small><span>Authentication</span></span></span>
+                
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/scoring-goals-securely</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
             </div>
-            <footer class="article-footer">
-                <p>Written by <a href="../">Abdullah Md. Sarwar</a></p>
-                <a href="./index.html">&larr; Back to the blog</a>
-            </footer>
-        </article>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=Setting%20Up%20WSL%20on%20Windows:%20A%20Practical%20Guide&amp;url=https://thedrowsywinger.github.io/blog/setting-up-wsl-on-windows.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
     </main>
 
-    <footer class="footer">
-        <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
-        <ul class="social-list">
-            <li class="social-list__item"><a class="social-list__link" href="https://github.com/thedrowsywinger" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a></li>
-            <li class="social-list__item"><a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" aria-label="LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
-            <li class="social-list__item"><a class="social-list__link" href="https://twitter.com/thedrowsywinger" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-        </ul>
+    <footer class="foot foot--site">
+      <p class="foot__nav"><a class="link" href="../index.html">Home</a> · <a class="link" href="../portfolio.html">Work</a> · <a class="link" href="../blog/index.html">Writing</a> · <a class="link" href="../publications.html">Research</a> · <a class="link" href="../agents.html">AI agents</a></p>
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p class="foot__end"><a class="link" href="../index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="../img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
     </footer>
-    <script src="../js/index.js"></script>
-</body>
+    <a class="peek" href="../blog/scoring-goals-securely.html" aria-label="Next page: JWT Authentication for a Football Booking App: Login, Refresh, and Logout">
+      <span class="peek__hint"><span class="peek__arrow" aria-hidden="true">↓</span><span class="peek__say">Keep scrolling for the next page</span><span class="peek__go">Keep scrolling…</span></span>
+      <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
+      <span class="peek__title">JWT Authentication for a Football Booking App: Login, Refresh, and Logout</span>
+      <i class="peek__fill" aria-hidden="true"></i>
+    </a>
+  </div>
 
+  <script src="../main.js"></script>
+  <script src="../v3.js"></script>
+</body>
 </html>

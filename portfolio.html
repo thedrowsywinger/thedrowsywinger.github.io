@@ -1,231 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-mode="work">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Professional portfolio of Abdullah Md. Sarwar - Software Engineer with experience at ShareTrip, Talvette, mPower Social Enterprise, and more">
-  <meta name="keywords" content="Software Engineer, Portfolio, ShareTrip, Talvette, mPower, Backend Development, Node.js, Python">
+  <meta name="description" content="The work of Abdullah Md. Sarwar, Senior Software Engineer at ShareTrip and lead of its Public API team.">
   <meta name="author" content="Abdullah Md. Sarwar">
-
-  <!-- Open Graph / Social Media Meta Tags -->
-  <meta property="og:title" content="Portfolio - Abdullah Md. Sarwar">
-  <meta property="og:description" content="Professional portfolio showcasing my work experience and projects in software engineering">
+  <meta property="og:title" content="Work · Abdullah Sarwar">
+  <meta property="og:description" content="The work of Abdullah Md. Sarwar, Senior Software Engineer at ShareTrip and lead of its Public API team.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/portfolio.png">
+  <meta name="twitter:card" content="summary_large_image">
   <meta property="og:url" content="https://thedrowsywinger.github.io/portfolio.html">
-  <meta property="og:image" content="img/profile_picture.jpg">
-
-  <title>Portfolio</title>
-  <link rel="icon" type="image/x-icon" href="img/profile_picture.jpg">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-    integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
-
-  <!-- Update these with your own fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400,900|Source+Sans+Pro:300,900&display=swap"
-    rel="stylesheet">
-
-  <link rel="stylesheet" href="css/style.css">
-
+  <title>Work · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/portfolio.html">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+  <script>
+    document.documentElement.classList.add('js'); try { if ((new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme')) === 'light') document.documentElement.dataset.theme = 'light'; if (localStorage.getItem('calm') === '1' || (localStorage.getItem('calm') === null && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.documentElement.classList.add('calm'); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="v3.css">
 </head>
-
 <body>
-  <header>
-    <button class="nav-toggle" aria-label="Toggle navigation">
-      <span class="hamburger"></span>
-    </button>
-    <nav class="nav">
-      <ul class="nav__list">
-        <li class="nav__item"><a href="./" class="nav__link">Home</a></li>
-        <li class="nav__item"><a href="./portfolio.html" class="nav__link">Portfolio</a></li>
-        <li class="nav__item"><a href="./blog/index.html" class="nav__link">My Blog</a></li>
-        <li class="nav__item"><a href="./publications.html" class="nav__link">Publications & Reports</a></li>
-        <li class="nav__item">
-          <button id="theme-toggle" class="btn" aria-label="Toggle dark mode">
-            <i class="fas fa-moon" data-fa-transform="shrink-2" aria-hidden="true"></i>
-          </button>
-        </li>
-      </ul>
-    </nav>
-  </header>
+  <a class="skip" href="#main">Skip to content</a>
 
-  <!-- Technical Skills -->
-  <section class="my-services" id="skills">
-    <h2 class="section__title section__title--services">Technical Skills</h2>
-    <div class="services">
-      <div class="service">
-        <h3>Backend Frameworks & Languages</h3>
-        <p>Node.js (5+ years): NestJS, Express.js, Sails.js, REST API design</p>
-        <p>Python (4+ years): Django, Django REST Framework, FastAPI</p>
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="img/portrait-work.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="blog/index.html">Writing</a>
+        <a class="link" href="portfolio.html" aria-current="page">Work</a>
+        <a class="link" href="publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
       </div>
+    </header>
 
-      <div class="service">
-        <h3>Databases & Caching</h3>
-        <p>PostgreSQL, MySQL, MongoDB, Typesense</p>
-        <p>Redis, RabbitMQ</p>
-        <p>ORMs: TypeORM, Sequelize, Django ORM, SQLAlchemy</p>
-      </div>
+    <main id="main">
+      <section class="row reveal row--top" aria-labelledby="work-h">
+        <h1 class="label" id="work-h" data-work="Work" data-match="The club">Work</h1>
+        <div class="content">
+          <p class="lead">I joined ShareTrip in Dhaka in November 2022, and I lead its Public API team. The work is as much business logic as engineering: clear booking states, careful supplier integrations, and prices that come out right. I plan the team's work, review its code and take changes from staging to production.</p>
+        </div>
+      </section>
 
-      <div class="service">
-        <h3>Architecture Patterns</h3>
-        <p>Distributed systems design, Microservices, API aggregation</p>
-        <p>Circuit breaker, timeout patterns, Caching strategies, multi-tenancy</p>
-        <p>Third-party API integration (payment gateways, hotel suppliers, telecom APIs)</p>
-      </div>
+      <section class="row reveal" aria-labelledby="team-h">
+        <h2 class="label" id="team-h" data-work="Public API team" data-match="The squad">Public API team</h2>
+        <div class="content">
+          <ul class="domains"><li class="domain"><span class="domain__name">Public gateways</span></li><li class="domain"><span class="domain__name">Flights</span></li><li class="domain"><span class="domain__name">Hotels</span><span class="domain__desc">Supplier integrations and booking states.</span></li><li class="domain"><span class="domain__name">E-commerce</span></li><li class="domain"><span class="domain__name">Mobile recharge</span></li><li class="domain"><span class="domain__name">Utility bill payments</span></li><li class="domain"><span class="domain__name">Visa</span><span class="domain__desc">Including B2B visa services.</span></li><li class="domain"><span class="domain__name">Holidays</span></li><li class="domain"><span class="domain__name">B2B</span></li><li class="domain"><span class="domain__name">B2E</span></li></ul>
+          <p class="caption">The services the team builds and maintains.</p>
+        </div>
+      </section>
 
-      <div class="service">
-        <h3>AI/ML</h3>
-        <p>LangGraph (multi-agent systems)</p>
-        <p>FastAPI integration with LLM APIs</p>
-        <p>LLM API integration and prompt engineering</p>
-      </div>
-    </div>
-  </section>
+      <section class="row reveal" aria-labelledby="also-h">
+        <h2 class="label" id="also-h" data-work="Also at ShareTrip" data-match="Set pieces">Also at ShareTrip</h2>
+        <div class="content">
+          <ul class="plain-list"><li>A coupon engine with inclusive and exclusive rules across services and brands.</li><li>B2B visa services, travel insurance, and virtual card management.</li><li>AI travel-planning workflows: tool integration and controls on provider-call usage.</li><li>Hotel supplier API integrations, and public API documentation.</li></ul>
+        </div>
+      </section>
+      <section class="row reveal" aria-labelledby="career-h">
+        <h2 class="label" id="career-h">Career</h2>
+        <div class="content">
+          <div class="timeline scene-observe" data-timeline>
+            <div class="timeline__track" role="tablist" aria-label="Career, oldest first">
+              <button class="timeline__stop" type="button" role="tab" id="tl-t0" aria-controls="tl-p0" aria-selected="false"><b>Alter F4</b><span>2020</span></button>
+              <button class="timeline__stop" type="button" role="tab" id="tl-t1" aria-controls="tl-p1" aria-selected="false"><b>Early Advantage</b><span>2020 – 21</span></button>
+              <button class="timeline__stop" type="button" role="tab" id="tl-t2" aria-controls="tl-p2" aria-selected="false"><b>mPower</b><span>2021 – 22</span></button>
+              <button class="timeline__stop is-now" type="button" role="tab" id="tl-t3" aria-controls="tl-p3" aria-selected="true"><b>ShareTrip</b><span>2022 – now</span></button>
+            </div>
+            <div class="timeline__panel entry" role="tabpanel" id="tl-p0" aria-labelledby="tl-t0">
+              <p class="entry__title">Alter F4 <span class="muted">· Software Engineer</span></p>
+              <p class="entry__meta">Jan – Jul 2020</p>
+              <p class="entry__text">A content management backend with authorization and media uploads (Django).</p>
+            </div>
+            <div class="timeline__panel entry" role="tabpanel" id="tl-p1" aria-labelledby="tl-t1">
+              <p class="entry__title">Early Advantage Bangladesh <span class="muted">· Software Engineer</span></p>
+              <p class="entry__meta">Jul 2020 – Apr 2021</p>
+              <p class="entry__text">The backend of an SME management platform: contracts, inventory, e-invoicing, cash planning, analytics, and accounts (Django, PostgreSQL).</p>
+            </div>
+            <div class="timeline__panel entry" role="tabpanel" id="tl-p2" aria-labelledby="tl-t2">
+              <p class="entry__title">mPower Social Enterprise <span class="muted">· Software Engineer</span></p>
+              <p class="entry__meta">May 2021 – Oct 2022</p>
+              <p class="entry__text">Systems across humanitarian, agricultural, and financial work: an agricultural stock and distribution ERP, a relief-tracking platform with QR codes, an emissions-survey dashboard, a nutrition content platform, and a cattle-insurance app with image recognition.</p>
+            </div>
+            <div class="timeline__panel entry" role="tabpanel" id="tl-p3" aria-labelledby="tl-t3">
+              <p class="entry__title">ShareTrip <span class="muted">· Senior Software Engineer · Public API lead</span></p>
+              <p class="entry__meta">Nov 2022 – now</p>
+              <p class="entry__text">Backend for the public gateways and every product above, for consumers, B2B and B2E.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <section class="my-services" id="services">
-    <h2 class="section__title section__title--services">Professional Work</h2>
-  </section>
+      <section class="row reveal" aria-labelledby="edu-h">
+        <h2 class="label" id="edu-h" data-work="Education" data-match="Academy">Education</h2>
+        <div class="content">
+          <p class="entry__title">North South University <span class="muted">· BSc, Computer Science and Engineering</span></p>
+        </div>
+      </section>
+      <section class="row reveal" aria-labelledby="more-h">
+        <h2 class="label" id="more-h">Elsewhere</h2>
+        <div class="content">
+          <p class="more more--pair"><a class="link" href="index.html?mode=work#work">Three cases, on the home page <span class="arrow" aria-hidden="true">→</span></a><a class="link" href="index.html?mode=work#toolkit">Toolkit <span class="arrow" aria-hidden="true">→</span></a><a class="link" href="agents.html">How I work with AI agents <span class="arrow" aria-hidden="true">→</span></a></p>
+        </div>
+      </section>
+      <nav class="next-page" aria-label="Next page">
+        <a href="blog/index.html"><small>Next</small><span>Writing <span class="arrow" aria-hidden="true">→</span></span></a>
+      </nav>
+    </main>
 
-  <!-- ShareTrip-->
-  <section class="about-me" id="about">
-    <h2 class="section__title section__title--about">ShareTrip</h2>
-    <p class="section__subtitle section__subtitle--about">Software Engineer (Nov 2022 - Present)</p>
+    <footer class="foot foot--site">
+      <p class="foot__nav"><a class="link" href="index.html">Home</a> · <a class="link" href="portfolio.html">Work</a> · <a class="link" href="blog/index.html">Writing</a> · <a class="link" href="publications.html">Research</a> · <a class="link" href="agents.html">AI agents</a></p>
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p class="foot__end"><a class="link" href="index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
+    </footer>
+    <a class="peek" href="blog/index.html" aria-label="Next page: Writing">
+      <span class="peek__hint"><span class="peek__arrow" aria-hidden="true">↓</span><span class="peek__say">Keep scrolling for the next page</span><span class="peek__go">Keep scrolling…</span></span>
+      <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
+      <span class="peek__title">Writing</span>
+      <i class="peek__fill" aria-hidden="true"></i>
+    </a>
+  </div>
 
-    <div class="about-me__body">
-      <p>
-        Leading backend engineering for ShareTrip's Hotel and Lifestyle verticals, architecting scalable systems for B2C and B2B platforms serving 10-15K monthly active users.
-      <ul>
-        <li>Architected and launched international hotel booking system integrating 2.2M+ properties with sub-30s response time for initial results and progressive search, processing 5,000+ monthly bookings across B2C and B2B with 1,000+ daily searches.</li>
-        <li>Shipped 4 lifestyle verticals (Shop, Vouchers, Mobile Recharge, Utility Bills) generating 60-135L BDT monthly revenue (Shop: 30-50L, Mobile Recharge: 21-25L, Utility Bills: 10-30L) serving 10-15K MAU.</li>
-        <li>Led architecture for AI-powered travel assistant using FastAPI and LangGraph multi-agent system, integrating flight search and visa APIs for intelligent travel planning and conversational booking assistance.</li>
-        <li>Designed dynamic coupon engine supporting multi-brand bookings with complex rule validation, enabling 100% of platform transactions with inclusive/exclusive rules and service-specific discounts.</li>
-        <li>Spearheaded integration of Visa Services (B2B), Travel Insurance, and secure Virtual Card Management System, expanding B2B service offerings and enabling seamless international travel services.</li>
-        <li>Manage relationships with 5+ international API vendors (RateHawk, GRNConnect, etc.), ensuring secure, performant, and compliant integrations with sub-30s response times.</li>
-        <li>Contributed to public API documentation and maintained code quality across hotel and lifestyle backend systems.</li>
-      </ul>
-      </p>
-    </div>
-    <img src="img/st.png" alt="ShareTrip Logo" class="about-me__img">
-  </section>
-
-  <!-- Talvette -->
-  <section class="about-me" id="about">
-    <h2 class="section__title section__title--about">Talvette</h2>
-    <p class="section__subtitle section__subtitle--about">Consultant Backend Engineer (May 2024 - Dec 2024, Part-Time)</p>
-
-    <div class="about-me__body">
-      <p>
-        Collaborated with Talvette to build a robust backend system for their recruitment platform.
-      <ul>
-        <li>Designed and implemented REST APIs for candidate management, job posting workflows, and company profiles.
-        </li>
-        <li>Developed an intelligent algorithm to match job posts with the most suitable candidates based on skills,
-          experience, and preferences.</li>
-        <li>Implemented advanced filter functionalities for candidate profiles, enabling precise talent searches.</li>
-        <li>Integrated secure authentication workflows and role-based access control to ensure data privacy.</li>
-        <li>Streamlined data handling by optimizing API response times and database queries for improved performance.
-        </li>
-        <li>Created comprehensive API documentation for seamless integration with frontend and third-party applications.
-        </li>
-      </ul>
-      </p>
-    </div>
-    <img src="img/talvette-logo.svg" alt="ShareTrip Logo" class="about-me__img">
-  </section>
-
-  <!-- mPower -->
-  <section class="about-me" id="about">
-    <h2 class="section__title section__title--about">mPower Social Enterprise Ltd</h2>
-    <p class="section__subtitle section__subtitle--about">Software Engineer (May 2020 - Oct 2021)</p>
-
-    <div class="about-me__body">
-      <p>
-        Delivered 5 production systems for multiple clients at mPower, managing concurrent projects across humanitarian, agricultural, and financial sectors. Demonstrated ability to context-switch between domains while maintaining code quality and delivery timelines.
-      <ul>
-        <li><b>BHALO</b>: Designed agricultural ERP for stock management and distribution tracking system using Node.js/PostgreSQL with JSON API standard, deployed in field for live use.</li>
-        <li><b>IOM-Gazientep</b>: Built humanitarian crisis response platform with QR-based relief tracking, beneficiary management, and analytics dashboards (Django/React/PostgreSQL).</li>
-        <li><b>FAO-MRV</b>: Developed surveying platform and analytics dashboard for FAO's carbon emissions monitoring program, enabling survey collection and real-time insights (Django/PostgreSQL).</li>
-        <li><b>JANO</b>: Built multi-format content management system supporting text, image, video, audio, and PDF content for Care Bangladesh's nutritional information platform (Django/PostgreSQL).</li>
-        <li><b>Muzzle Recognition</b>: Developed cattle insurance application with image recognition for farmer insurance claims, deployed in 3 live instances (Node.js/PostgreSQL).</li>
-      </ul>
-      </p>
-    </div>
-    <img src="img/mPower.jpg" alt="mPower Logo" class="about-me__img">
-  </section>
-
-  <!-- early advantage bd -->
-  <section class="about-me" id="about">
-    <h2 class="section__title section__title--about">Early Advantage Bangladesh</h2>
-    <p class="section__subtitle section__subtitle--about">Software Engineer (July 2020 - April 2021)</p>
-
-    <div class="about-me__body">
-      <p>
-        Designed backend systems for comprehensive SME business management platform using Django/Python, building features across contract management, inventory, e-invoicing, cash planning, trend analytics, and accounts management.
-      <ul>
-        <li>Architected backend systems supporting multiple core modules (contract management, inventory, e-invoicing, cash planning, trend analytics, accounts management) using Django/Python/PostgreSQL.</li>
-        <li>Implemented quality assurance and data protection processes ensuring data integrity across financial and operational modules.</li>
-      </ul>
-      </p>
-    </div>
-    <img src="img/ea.png" alt="EA bd logo" class="about-me__img">
-  </section>
-
-  <!-- alterF4 -->
-  <section class="about-me" id="about">
-    <h2 class="section__title section__title--about">Alter F4</h2>
-    <p class="section__subtitle section__subtitle--about">Software Engineer (Jan 2020 - July 2020)</p>
-
-    <div class="about-me__body">
-      <p>
-        Built custom CMS backend for Independent Apparels portfolio website with user authorization and file upload system supporting images, videos, and PDFs (Python/Django).
-      </p>
-    </div>
-    <img src="img/alterF4.png" alt="alterF4 Logo" class="about-me__img">
-  </section>
-
-  <!-- My Work -->
-  <section class="my-work" id="work">
-    <!-- <h2 class="section__title section__title--work">My work</h2> -->
-    <p class="section__subtitle section__subtitle--work">You can find my Resume here!</p>
-
-    <a href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" class="btn">My
-      Resume</a>
-  </section>
-
-
-  <!-- Footer -->
-  <footer class="footer">
-    <a href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a>
-    <ul class="social-list">
-      <li class="social-list__item">
-        <a class="social-list__link" href="https://github.com/thedrowsywinger">
-          <i class="fab fa-github"></i>
-        </a>
-      </li>
-      <li class="social-list__item">
-        <a class="social-list__link" href="https://www.linkedin.com/in/abdullah-md-sarwar/">
-          <i class="fab fa-linkedin"></i>
-        </a>
-      </li>
-      <li class="social-list__item">
-        <a class="social-list__link" href="https://www.instagram.com/thedrowsywinger/">
-          <i class="fab fa-instagram"></i>
-        </a>
-      </li>
-      <li class="social-list__item">
-        <a class="social-list__link" href="https://twitter.com/thedrowsywinger">
-          <i class="fab fa-twitter"></i>
-        </a>
-      </li>
-
-    </ul>
-  </footer>
-
-
-  <script src="js/index.js"></script>
-
+  <script src="main.js"></script>
+  <script src="v3.js"></script>
 </body>
-
-<!-- This template has been edited from Kevin Powell's course at Scrimba, here's the url to it: https://scrimba.com/course/gportfolio -->
-
 </html>

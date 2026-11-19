@@ -1,0 +1,11 @@
+# GitHub Pages builds the site with Jekyll. Every page here is plain HTML, so Jekyll only copies files.
+# The published site is the v3 copy at the root, made by redesign/_tools/publish_v3.py.
+# These folders stay in the repository but are not published:
+#   legacy/    the previous production site, kept as a fallback (no build reads it)
+#   redesign/  the source and build tools for v3
+#   design/    design explainers and drafts
+exclude:
+  - legacy
+  - redesign
+  - design
+  - LICENSE

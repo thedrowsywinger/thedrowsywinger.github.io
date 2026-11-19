@@ -1,0 +1,133 @@
+/* The approved four scenes, scoped to this one journey. */
+.booking-journey { --journey-ink:#2a2623; --journey-green:#1e5b45; --journey-green-light:#7cc4a0; --journey-yellow:#f5cf5b; --journey-sand:#f3e3a0; margin:18px 0; max-width:680px; min-width:0; }
+.journey-viewport { position:relative; aspect-ratio:2; overflow:hidden; border:1px solid var(--line-2); border-radius:10px; background:#ece6da; }
+.journey-scene { position:absolute; inset:0; visibility:hidden; opacity:0; transition:opacity var(--t-panel) var(--ease-out); background:#ece6da; }
+.journey-scene--night { background:#17202b; }
+.journey-scene.is-active { visibility:visible; opacity:1; }
+.journey-scene svg { display:block; width:100%; height:auto; }
+.booking-journey .o { stroke:var(--journey-ink); stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.booking-journey .t { font:600 7px ui-monospace,monospace; letter-spacing:.08em; fill:#6d655c; }
+.booking-journey .s { font:600 10px system-ui,sans-serif; fill:var(--journey-ink); }
+.booking-journey .journey-scene.is-active * { animation-duration:7s; animation-iteration-count:1; animation-timing-function:ease-in-out; animation-fill-mode:both; }
+.booking-journey .journey-scene:not(.is-active) * { animation-name:none !important; }
+.booking-journey:not(.is-running) .journey-scene * { animation-play-state:paused; }
+.journey-ticket { position:absolute; top:8%; left:4.4%; width:36%; max-width:220px; padding:8px 24px 8px 10px; border:2px solid #2a2623; border-radius:8px; background:#fff; color:#2a2623; }
+.journey-ticket::after { content:''; position:absolute; inset:0 0 0 auto; width:17px; border-left:1.5px solid #2a2623; border-radius:0 6px 6px 0; background:#f5cf5b; }
+.journey-ticket small { display:block; margin-bottom:5px; font:600 clamp(7px,1.3vw,10px) var(--mono); letter-spacing:.08em; }
+.journey-ticket strong { display:block; font:700 clamp(10px,1.8vw,16px) var(--sans); }
+.journey-ticket.is-confirmed strong { color:#1e5b45; }
+.journey-controls { display:flex; justify-content:flex-end; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.journey-controls button { padding:6px 12px; border:1px solid var(--line-2); border-radius:99px; background:var(--card); color:var(--ink-2); font:500 11px var(--mono); cursor:pointer; }
+.journey-controls button[hidden] { display:none; }
+.booking-journey figcaption { margin:12px 0; min-height:80px; }
+.booking-journey figcaption strong { display:block; margin-bottom:5px; font:600 15px var(--sans); color:var(--ink); }
+.booking-journey figcaption span { display:block; font:13px/1.6 var(--sans); color:var(--muted); }
+.journey-steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.journey-steps button { padding:8px 0; min-width:0; border:0; background:none; color:var(--muted); font:10px var(--mono); text-align:left; cursor:pointer; }
+.journey-steps button[aria-current="step"] { color:var(--accent); }
+.journey-track { display:block; height:3px; margin-bottom:8px; overflow:hidden; border-radius:2px; background:var(--line-2); }
+.journey-track i { display:block; height:100%; width:0; background:var(--accent); }
+.booking-journey.is-static .journey-scene.is-active * { animation-duration:.001ms !important; animation-delay:0s !important; animation-play-state:running !important; }
+@media(max-width:420px) {
+ .journey-ticket { padding:5px 20px 5px 6px; border-width:1.5px; }
+ .journey-ticket small { margin-bottom:3px; }
+ .journey-steps button { font-size:9px; }
+ .booking-journey figcaption { min-height:90px; }
+}
+@media(prefers-reduced-motion:reduce) { .booking-journey * { transition:none !important; } }
+.calm .booking-journey * { transition:none !important; }
+@media print { .booking-journey { display:none; } }
+
+  .booking-journey .wheel { transform-box: fill-box; transform-origin: center; }
+
+  /* 1. Airport */
+  .booking-journey .a-suit { animation-name: bj-a-suit; }
+  @keyframes bj-a-suit { 0% { transform: translateX(-34px); } 24%, 56% { transform: translateX(150px); } 70%, 100% { transform: translateX(212px); } }
+  .booking-journey .a-suit .wheel { animation-name: bj-a-wheel; }
+  @keyframes bj-a-wheel { 0% { transform: rotate(0); } 24%, 100% { transform: rotate(720deg); } }
+  .booking-journey .a-tag { opacity: 0; animation-name: bj-a-tag; }
+  @keyframes bj-a-tag { 0%, 30% { opacity: 0; transform: translateY(-16px) rotate(-20deg); } 36%, 100% { opacity: 1; transform: none; } }
+  .booking-journey .a-check { stroke-dasharray: 1; stroke-dashoffset: 1; animation-name: bj-a-check; }
+  @keyframes bj-a-check { 0%, 40% { stroke-dashoffset: 1; } 46%, 100% { stroke-dashoffset: 0; } }
+  .booking-journey .a-screen { animation-name: bj-a-screen; }
+  @keyframes bj-a-screen { 0%, 40% { fill: #cfd6d2; } 46%, 100% { fill: #d9f0e4; } }
+  .booking-journey .a-belt { stroke-dasharray: 5 5; animation-name: bj-a-belt; animation-timing-function: linear; }
+  @keyframes bj-a-belt { 0%, 56% { stroke-dashoffset: 0; } 70%, 100% { stroke-dashoffset: -40; } }
+  .booking-journey .a-plane { animation-name: bj-a-plane; }
+  @keyframes bj-a-plane { 0%, 58% { transform: translate(0, 0) rotate(0); } 72% { transform: translate(52px, 0) rotate(0); } 94%, 100% { transform: translate(150px, -58px) rotate(-22deg); } }
+  .booking-journey .a-l1, .booking-journey .a-l2, .booking-journey .a-l3, .booking-journey .a-l4 { animation-name: bj-a-light; }
+  .booking-journey .a-l2 { --journey-delay: .25s; animation-delay: .25s; } .booking-journey .a-l3 { --journey-delay: .5s; animation-delay: .5s; } .booking-journey .a-l4 { --journey-delay: .75s; animation-delay: .75s; }
+  @keyframes bj-a-light { 0%, 54% { fill: #b9b2a6; } 58%, 62% { fill: var(--journey-yellow); } 66%, 100% { fill: #b9b2a6; } }
+  .booking-journey .a-cloud { animation-name: bj-a-cloud; animation-timing-function: linear; }
+  @keyframes bj-a-cloud { from { transform: translateX(0); } to { transform: translateX(-46px); } }
+
+  /* 2. Beach */
+  .booking-journey .b-suit { animation-name: bj-b-suit; }
+  @keyframes bj-b-suit { 0% { transform: translateX(-34px); } 24%, 100% { transform: translateX(44px); } }
+  .booking-journey .b-suit .wheel { animation-name: bj-a-wheel; }
+  .booking-journey .b-sun { animation-name: bj-b-sun; }
+  @keyframes bj-b-sun { 0%, 50% { transform: translateY(46px); } 72%, 100% { transform: translateY(0); } }
+  .booking-journey .b-rays { opacity: 0; transform-box: fill-box; transform-origin: center; animation-name: bj-b-rays; }
+  @keyframes bj-b-rays { 0%, 72% { opacity: 0; transform: rotate(0); } 78% { opacity: 1; } 100% { opacity: 1; transform: rotate(40deg); } }
+  .booking-journey .b-sky { animation-name: bj-b-sky; }
+  @keyframes bj-b-sky { 0%, 50% { fill: #dfe3df; } 72%, 100% { fill: #fbeecb; } }
+  .booking-journey .b-umb { transform-origin: 132px 82px; animation-name: bj-b-umb; }
+  @keyframes bj-b-umb { 0%, 52% { transform: scale(.12, .5); } 60% { transform: scale(1.08, 1.04); } 64%, 100% { transform: scale(1); } }
+  .booking-journey .b-w1 { animation-name: bj-b-wave; animation-timing-function: linear; } .booking-journey .b-w2 { animation-name: bj-b-wave; animation-direction: reverse; animation-timing-function: linear; }
+  @keyframes bj-b-wave { from { transform: translateX(0); } to { transform: translateX(-40px); } }
+  .booking-journey .b-boat { animation-name: bj-b-boat; }
+  @keyframes bj-b-boat { 0% { transform: translate(0, 0) rotate(-2deg); } 50% { transform: translate(-26px, 1.5px) rotate(2deg); } 100% { transform: translate(-52px, 0) rotate(-2deg); } }
+  .booking-journey .b-bird { opacity: 0; animation-name: bj-b-bird; animation-timing-function: linear; }
+  .booking-journey .b-bird2 { --journey-delay: .5s; animation-delay: .5s; }
+  @keyframes bj-b-bird { 0%, 66% { opacity: 0; transform: translate(0, 0); } 70% { opacity: 1; } 96% { opacity: 1; transform: translate(-150px, -14px); } 100% { opacity: 0; transform: translate(-160px, -15px); } }
+  .booking-journey .b-drink { opacity: 0; animation-name: bj-b-drink; }
+  @keyframes bj-b-drink { 0%, 62% { opacity: 0; transform: translateY(6px); } 68%, 100% { opacity: 1; transform: none; } }
+
+  /* 3. Night arrival */
+  .booking-journey .c-taxi { animation-name: bj-c-taxi; }
+  @keyframes bj-c-taxi { 0% { transform: translateX(-90px); } 24%, 58% { transform: translateX(96px); } 84%, 100% { transform: translateX(360px); } }
+  .booking-journey .c-taxi .wheel { animation-name: bj-c-wheel; }
+  @keyframes bj-c-wheel { 0% { transform: rotate(0); } 24%, 58% { transform: rotate(720deg); } 84%, 100% { transform: rotate(1800deg); } }
+  .booking-journey .c-beam { animation-name: bj-c-beam; }
+  @keyframes bj-c-beam { 0%, 100% { opacity: .5; } 40% { opacity: .3; } }
+  .booking-journey .c-suit { opacity: 0; animation-name: bj-c-suit; }
+  @keyframes bj-c-suit { 0%, 30% { opacity: 0; transform: translate(150px, 0); } 34% { opacity: 1; transform: translate(150px, 0); } 52% { opacity: 1; transform: translate(206px, 0); } 56%, 100% { opacity: 0; transform: translate(214px, 0); } }
+  .booking-journey .c-win { fill: #2c3947; animation-name: bj-c-win; }
+  @keyframes bj-c-win { 0%, 60% { fill: #2c3947; } 64%, 100% { fill: var(--journey-yellow); } }
+  .booking-journey .c-door { transform-origin: 251px 122px; animation-name: bj-c-door; }
+  @keyframes bj-c-door { 0%, 46% { transform: scaleX(1); } 52%, 58% { transform: scaleX(.12); } 64%, 100% { transform: scaleX(1); } }
+  .booking-journey .c-star { animation-name: bj-c-star; }
+  @keyframes bj-c-star { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+  .booking-journey .c-sign { animation-name: bj-c-sign; }
+  @keyframes bj-c-sign { 0%, 46% { fill: #6d7783; } 48% { fill: var(--journey-yellow); } 50% { fill: #6d7783; } 52%, 100% { fill: var(--journey-yellow); } }
+  .booking-journey .c-moon { animation-name: bj-c-moon; }
+  @keyframes bj-c-moon { from { transform: translate(0, 0); } to { transform: translate(18px, -6px); } }
+
+  /* 4. Passport desk */
+  .booking-journey .d-closed { animation-name: bj-d-closed; }
+  @keyframes bj-d-closed { 0%, 14% { opacity: 1; transform: none; } 20%, 100% { opacity: 0; transform: translateX(-8px); } }
+  .booking-journey .d-open { opacity: 0; animation-name: bj-d-open; }
+  @keyframes bj-d-open { 0%, 15% { opacity: 0; } 21%, 100% { opacity: 1; } }
+  .booking-journey .d-cover { transform-origin: 92px 96px; animation-name: bj-d-cover; }
+  @keyframes bj-d-cover { 0%, 15% { transform: scaleX(-1); } 24%, 100% { transform: scaleX(1); } }
+  .booking-journey .d-tool { animation-name: bj-d-tool; }
+  @keyframes bj-d-tool { 0%, 28% { transform: translate(40px, -86px) rotate(12deg); } 37% { transform: translate(0, -18px) rotate(0); } 41%, 43% { transform: translate(0, 0); } 50%, 100% { transform: translate(60px, -92px) rotate(16deg); } }
+  .booking-journey .d-mark { opacity: 0; animation-name: bj-d-mark; }
+  @keyframes bj-d-mark { 0%, 41% { opacity: 0; } 43%, 100% { opacity: 1; } }
+  .booking-journey .d-shake { animation-name: bj-d-shake; }
+  @keyframes bj-d-shake { 0%, 40%, 46%, 100% { transform: translateY(0); } 42% { transform: translateY(2px); } }
+  .booking-journey .d-pass { animation-name: bj-d-pass; }
+  @keyframes bj-d-pass { 0%, 54% { transform: translate(190px, 10px) rotate(8deg); } 66%, 100% { transform: translate(0, 0) rotate(-3deg); } }
+  .booking-journey .d-fly { offset-path: path("M196 112 Q232 86 270 112"); offset-rotate: auto; animation-name: bj-d-fly; }
+  @keyframes bj-d-fly { 0%, 68% { offset-distance: 0%; } 90%, 100% { offset-distance: 100%; } }
+  .booking-journey .d-steam { animation-name: bj-d-steam; animation-duration: 3s; animation-timing-function: linear; }
+  .booking-journey .d-steam2 { --journey-delay: 1.5s; animation-delay: 1.5s; }
+  @keyframes bj-d-steam { 0% { opacity: 0; transform: translateY(4px); } 30% { opacity: .7; } 100% { opacity: 0; transform: translateY(-12px); } }
+
+
+/* Calm permits motion started with the journey controls. */
+html.calm .booking-journey:not(.is-static) .journey-scene.is-active * { animation-duration:7s !important; animation-delay:var(--journey-delay, 0s) !important; }
+/* Preserve the illustration's paper and waves inside its own coloured scene. */
+.booking-journey svg [fill="#fff"] { fill:#fff; }
+.booking-journey svg [stroke="#fff"] { stroke:#fff; }
+@media(max-width:420px) { .journey-ticket { width:43%; } }

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A routing design for booking events in several markets: the separate roles of connections, channels, routing keys and queues in RabbitMQ.">
+  <meta name="keywords" content="RabbitMQ, Messaging, Routing, Backend Engineering">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="Designing RabbitMQ Routing for Multiple Markets">
+  <meta property="og:description" content="A routing design for booking events in several markets: the separate roles of connections, channels, routing keys and queues in RabbitMQ.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/designing-rabbitmq-routing-for-multiple-markets.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/designing-rabbitmq-routing-for-multiple-markets.png">
+  <meta property="article:published_time" content="2026-11-13">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Backend Development">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Designing RabbitMQ Routing for Multiple Markets · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/designing-rabbitmq-routing-for-multiple-markets.html">
+  <link rel="icon" type="image/svg+xml" href="../img/logo.svg">
+  <script>
+    document.documentElement.classList.add('js'); try { if ((new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme')) === 'light') document.documentElement.dataset.theme = 'light'; if (localStorage.getItem('calm') === '1' || (localStorage.getItem('calm') === null && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.documentElement.classList.add('calm'); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../v3.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 006" data-match="Match report · No. 006">Essay · No. 006</span><span class="post__sep">·</span><time datetime="2026-11-13">13 Nov 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
+          <p class="post__kicker">Backend engineering · Messaging</p>
+          <h1 class="post__title">Designing RabbitMQ Routing for Multiple Markets</h1>
+          <ul class="post__tags" aria-label="Topics"><li>RabbitMQ</li><li>Messaging</li><li>Routing</li></ul>
+<div class="card__stage post__cover scene-observe" aria-hidden="true" style="view-transition-name: cover-rabbit"><div class="plugs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-give-each-messaging-resource-a-clear-role">1. Give each messaging resource a clear role</a></li><li><a href="#2-put-the-market-into-the-routing-contract">2. Put the market into the routing contract</a></li><li><a href="#3-share-connections-within-an-intentional-boundary">3. Share connections within an intentional boundary</a></li><li><a href="#4-resolve-configuration-before-declaring-subscriptions">4. Resolve configuration before declaring subscriptions</a></li><li><a href="#5-define-the-message-contract-at-the-handler">5. Define the message contract at the handler</a></li><li><a href="#6-make-rejection-and-recovery-deliberate">6. Make rejection and recovery deliberate</a></li><li><a href="#7-plan-topology-changes-as-a-deployment-sequence">7. Plan topology changes as a deployment sequence</a></li><li><a href="#8-verify-routing-and-business-effects-separately">8. Verify routing and business effects separately</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 13 Nov 2026</span></p></details>
+          <div class="post__body">
+
+                <p class="article-lead">We organize booking events around a clear routing rule: each market's events must reach that market's handlers. Connections, channels, routing keys, and queues each have a separate role in expressing that rule.</p>
+
+                <p>A market is a business segment with its own booking workflow. Several markets can run the same application code while using different configuration and data. The messaging design must preserve those boundaries throughout publication and processing.</p>
+
+                <p>This article uses RabbitMQ's AMQP 0-9-1 messaging model. All names, identifiers, and example values are synthetic. The verification steps describe checks to perform, rather than completed deployment results.</p>
+
+                <h2 id="1-give-each-messaging-resource-a-clear-role">1. Give each messaging resource a clear role</h2>
+
+                <p>A connection is a network connection between an application and RabbitMQ. A channel is a logical session inside that connection. A queue holds messages for delivery, and a consumer receives deliveries from a queue.</p>
+
+                <p>An exchange routes published messages according to its type and bindings. A binding connects an exchange to a destination queue and defines the relevant routing rule. The routing key is a value supplied when publishing the message. <a href="https://www.rabbitmq.com/docs/exchanges">RabbitMQ exchanges</a></p>
+
+                <p>The message path looks like this.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 1</span>
+<pre tabindex="0" aria-label="Figure 1"><code>Publisher
+  --&gt; exchange + routing key
+        --&gt; matching queue binding
+              --&gt; queue
+                    --&gt; consumer
+                          --&gt; application handler</code></pre>
+</figure>
+
+                <p>Connection sharing addresses network resources. Queue bindings determine where messages go. Changing one does not automatically change the other.</p>
+
+                <p>We therefore start with the delivery rule before choosing how many connections to open.</p>
+
+                <h2 id="2-put-the-market-into-the-routing-contract">2. Put the market into the routing contract</h2>
+
+                <p>For this example, we use a direct exchange. It matches published routing keys exactly against binding keys. <a href="https://www.rabbitmq.com/docs/exchanges">RabbitMQ exchanges</a></p>
+
+                <p>We include the market in both routing keys and queue names. The key controls matching; the queue name makes the destination's purpose visible.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 2</span>
+<pre tabindex="0" aria-label="Figure 2"><code>Direct exchange: demo.bookings
+
+Routing key: booking.completed.market-a
+  --&gt; queue: demo.booking-status.market-a
+        --&gt; market-a workers
+
+Routing key: booking.completed.market-b
+  --&gt; queue: demo.booking-status.market-b
+        --&gt; market-b workers</code></pre>
+</figure>
+
+                <p>The publisher and consumer configuration must agree on the exchange, routing key, and binding. A suffix in a queue name alone does not tell the exchange how to route a message.</p>
+
+                <p>Multiple eligible consumers on the same queue share its deliveries. They do not each receive every message. <a href="https://www.rabbitmq.com/docs/consumers">RabbitMQ consumers</a></p>
+
+                <p>That is useful when several workers process one market's workload. Each worker can handle the same business events and use the appropriate market configuration.</p>
+
+                <p>If another service needs its own copy, it needs its own queue with a matching binding. For example, a status service and an audit service can each bind a separate queue to the same routing key.</p>
+
+                <p>Naming expresses routing intent. It does not establish an authorization boundary. Broker permissions and virtual-host design must provide the required access controls.</p>
+
+                <div class="demo demo--wide" data-quotes-demo hidden>
+<p class="demo__head"><span class="demo__title">Try it · A queue name that kept its quotes</span><span class="demo__tag">Example values</span></p>
+  <div class="demo__stage quotes">
+    <p class="quotes__config"><code>QUEUE_NAME="bookings"</code><span>The publisher reads the name as <code class="quotes__name">"bookings"</code></span></p>
+    <div class="quotes__queues">
+      <div class="quotes__q quotes__q--good"><code>bookings</code><b data-n="read">0</b><span>read by the consumer</span></div>
+      <div class="quotes__q quotes__q--bad"><code>"bookings"</code><b data-n="pile">0</b><span>waiting, with no consumer</span></div>
+    </div>
+  </div>
+  <p class="demo__opts"><label class="demo__opt"><input type="checkbox"> Strip the quotes from the config value</label></p>
+  <p class="demo__row"><button class="demo__btn" type="button">Publish a message</button><button class="demo__reset" type="button">Reset</button></p>
+  <p class="demo__log" aria-live="polite">Publish a few messages.</p>
+</div>
+
+                <h2 id="3-share-connections-within-an-intentional-boundary">3. Share connections within an intentional boundary</h2>
+
+                <p>One connection can carry several channels. We can use named channels to keep subscriber configuration explicit while sharing that connection.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 3</span>
+<pre tabindex="0" aria-label="Figure 3"><code>Application instance
+  |
+  +--&gt; booking connection
+         |
+         +--&gt; status channel  --&gt; status consumer
+         |
+         +--&gt; payment channel --&gt; payment consumer</code></pre>
+</figure>
+
+                <p>The channels still share the connection's lifecycle. Closing the connection closes its channels. <a href="https://www.rabbitmq.com/docs/channels">RabbitMQ channels</a></p>
+
+                <p>We also configure prefetch for the workload. Prefetch limits how many deliveries can remain unacknowledged within its configured scope. In RabbitMQ, a non-global prefetch setting applies separately to each consumer. <a href="https://www.rabbitmq.com/docs/consumer-prefetch">RabbitMQ consumer prefetch</a></p>
+
+                <p>We check how the selected client library applies that setting. Separate channel names alone do not establish a shared or independent delivery budget.</p>
+
+                <p>A virtual host is a broker namespace containing resources such as exchanges, queues, and bindings. An AMQP 0-9-1 connection belongs to one virtual host. Communicating with another virtual host requires another connection. <a href="https://www.rabbitmq.com/docs/vhosts">RabbitMQ virtual hosts</a></p>
+
+                <p>The useful connection count follows from those boundaries and workload needs. A lower number alone does not establish a better design.</p>
+
+                <h2 id="4-resolve-configuration-before-declaring-subscriptions">4. Resolve configuration before declaring subscriptions</h2>
+
+                <p>The application needs its market before it can build the routing configuration. We keep the subscription's logical identity separate from configuration-dependent queue names.</p>
+
+                <p>A framework can register a stable handler name while loading code. A configuration factory can later supply its exchange, routing key, queue, and options. A configuration factory is a function that builds settings from initialized configuration.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 4</span>
+<pre tabindex="0" aria-label="Figure 4"><code>Load handler definitions
+  --&gt; register a stable handler name
+        --&gt; initialize configuration
+              --&gt; validate market
+                    --&gt; build queue and routing names
+                          --&gt; declare resources and attach consumer</code></pre>
+</figure>
+
+                <p>This sequence makes configuration timing explicit. Require a recognized market before constructing market-specific names. That is a design requirement, not a claim about every framework's startup order.</p>
+
+                <p>Framework integration needs its own checks. A controller-based handler may require an explicit discovery setting. The startup check must establish that the intended handler is attached to the intended queue. A declared queue alone does not establish that a consumer is running.</p>
+
+                <h2 id="5-define-the-message-contract-at-the-handler">5. Define the message contract at the handler</h2>
+
+                <p>The routing key and message body have different jobs. The routing key selects the destination; the body carries the application event.</p>
+
+                <p>For example, we can use the routing key <code>booking.completed.market-a</code> with this synthetic body.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 5</span>
+<pre tabindex="0" aria-label="Figure 5"><code>{
+  "pattern": "booking.completed",
+  "data": {
+    "bookingId": "demo-booking-42"
+  }
+}</code></pre>
+</figure>
+
+                <p>A client library may pass the complete body to a handler or unwrap its data field. We verify that behavior at the application boundary instead of inferring it from an HTTP handler's annotations.</p>
+
+                <p>The handler sequence is straightforward.</p>
+
+                <ol><li>Validate the incoming message shape.</li><li>Map the event data to the expected operation.</li><li>Await the operation's completion.</li><li>Acknowledge the delivery after the required work succeeds.</li><li>Apply the configured error path when processing fails.</li></ol>
+
+                <p>An acknowledgement tells RabbitMQ that the consumer considers a delivery handled. Publisher confirms cover the publisher's interaction with the broker; they do not confirm consumer processing. <a href="https://www.rabbitmq.com/docs/confirms">RabbitMQ acknowledgement guide</a></p>
+
+                <p>A business check still needs evidence that the intended record changed. That check can include the booking identifier, market, resulting state, and relevant operation result.</p>
+
+                <h2 id="6-make-rejection-and-recovery-deliberate">6. Make rejection and recovery deliberate</h2>
+
+                <p>We choose the handler's error behavior as part of the subscription design. Immediate requeue can repeatedly deliver a message whose processing will keep failing. A bounded retry policy needs a delay, a limit, and a defined outcome when attempts are exhausted.</p>
+
+                <p>Another path rejects without requeue and sends eligible messages through a configured dead-letter exchange. A dead-letter exchange routes messages removed from their source queues under specified conditions. <a href="https://www.rabbitmq.com/docs/dlx">RabbitMQ dead-letter exchanges</a></p>
+
+                <p>The following diagram assumes the required dead-letter configuration and routing are available.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 6</span>
+<pre tabindex="0" aria-label="Figure 6"><code>Handler succeeds
+  --&gt; acknowledge delivery
+
+Handler fails
+  --&gt; reject without requeue
+        --&gt; configured dead-letter exchange
+              --&gt; inspection queue</code></pre>
+</figure>
+
+                <p>We check the exchange, binding, permissions, destination availability, and queue-type behavior. Dead-lettering is not an unconditional guarantee that every rejected message is retained. <a href="https://www.rabbitmq.com/docs/dlx#safety">RabbitMQ dead-letter safety</a></p>
+
+                <p>The inspection queue also needs an owner and a review process. Moving a delivery there does not finish the underlying booking operation.</p>
+
+                <p>Before replaying a message, we check for effects that may already have happened. A database write or supplier request can succeed before a later processing step fails. <a href="making-booking-retries-safe.html">Making Booking Retries Safe</a> explains coordinating repeated database effects for one booking identifier.</p>
+
+                <p>External operations need their own duplicate-detection and reconciliation rules. Reconciliation compares recorded states and resolves uncertainty about what completed.</p>
+
+                <h2 id="7-plan-topology-changes-as-a-deployment-sequence">7. Plan topology changes as a deployment sequence</h2>
+
+                <p>Topology means the configured exchanges, queues, and bindings. Publishers and consumers can move between topology versions at different times.</p>
+
+                <p>Some queue properties must match an existing declaration. An incompatible redeclaration can close the channel with a precondition error. <a href="https://www.rabbitmq.com/docs/queues#property-equivalence">RabbitMQ queue declarations</a></p>
+
+                <p>Use a planned migration when declarations cannot be changed in place.</p>
+
+                <ol><li>Declare the new queues, bindings, and error-handling destinations.</li><li>Start the intended consumers and verify their configuration.</li><li>Check routing with synthetic messages for each market.</li><li>Switch publishers according to the migration plan.</li><li>Confirm that superseded publishers have stopped sending to the previous destinations.</li><li>Wait for previous queues and in-flight deliveries to finish processing.</li><li>Stop superseded consumers and retire their queues after verification.</li></ol>
+
+                <p>The plan must also define rollback behavior. If both paths can deliver the same business event during migration, handlers need a way to recognize repeated work. Deleting a queue must not become the method for deciding whether its remaining work matters.</p>
+
+                <div class="demo demo--wide" data-deploys-demo hidden>
+<p class="demo__head"><span class="demo__title">Try it · A broker change in three deploys</span><span class="demo__tag">Example values</span></p>
+  <div class="demo__stage deploys">
+    <div class="plugs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <ol class="deploys__steps"><li>Bind the new subscribers</li><li>Move the publishers</li><li>Remove the old transports</li></ol>
+  </div>
+  <p class="demo__row"><button class="demo__btn" type="button">Next deploy</button><button class="demo__reset" type="button">Reset</button></p>
+  <p class="demo__log" aria-live="polite"></p>
+</div>
+
+                <h2 id="8-verify-routing-and-business-effects-separately">8. Verify routing and business effects separately</h2>
+
+                <p>A successful connection establishes only one part of the design. We also need to check declarations, bindings, consumers, acknowledgement behavior, and application results.</p>
+
+                <p>Use this verification sequence.</p>
+
+                <ol><li>Inspect the expected exchange, queue names, and bindings.</li><li>Confirm the intended consumers are attached.</li><li>Publish a synthetic event for market A.</li><li>Verify its intended handler and business-state effect.</li><li>Confirm that market B's handler does not process it.</li><li>Repeat the checks for market B.</li><li>Trigger a controlled handler error and inspect the configured recovery path.</li><li>Test reconnect behavior and repeated deliveries in an appropriate test environment.</li></ol>
+
+                <p>These checks answer different questions. A publisher confirm is not a consumer acknowledgement, and neither alone proves the intended business result.</p>
+
+                <p>We make the routing rule visible at every stage. Connections follow namespace and workload boundaries, channels carry explicit settings, and bindings connect each market's events to its consumers. That gives us a design we can explain and verify without treating connection count as the goal.</p>
+
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next essay" data-match="Next essay">Next essay</h2>
+            <div class="content">
+            <a class="tk" href="making-booking-retries-safe.html" aria-label="Read: Making Booking Retries Safe">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 005" data-match="Match report · No. 005">Essay · No. 005</span><time datetime="2026-10-21">21 Oct 2026</time></span>
+                <span class="tk__title">Making Booking Retries Safe</span>
+                <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Retry</span></span><span class="f"><small>To</small><span>Same booking</span></span><span class="f"><small>Topic</small><span>Idempotency</span></span></span>
+                <span class="tk__vs">Retry <b>vs</b> Duplicates</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/making-booking-retries-safe</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            </div>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/designing-rabbitmq-routing-for-multiple-markets.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=Designing%20RabbitMQ%20Routing%20for%20Multiple%20Markets&amp;url=https://thedrowsywinger.github.io/blog/designing-rabbitmq-routing-for-multiple-markets.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="foot foot--site">
+      <p class="foot__nav"><a class="link" href="../index.html">Home</a> · <a class="link" href="../portfolio.html">Work</a> · <a class="link" href="../blog/index.html">Writing</a> · <a class="link" href="../publications.html">Research</a> · <a class="link" href="../agents.html">AI agents</a></p>
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p class="foot__end"><a class="link" href="../index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="../img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
+    </footer>
+    <a class="peek" href="../blog/making-booking-retries-safe.html" aria-label="Next page: Making Booking Retries Safe">
+      <span class="peek__hint"><span class="peek__arrow" aria-hidden="true">↓</span><span class="peek__say">Keep scrolling for the next page</span><span class="peek__go">Keep scrolling…</span></span>
+      <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
+      <span class="peek__title">Making Booking Retries Safe</span>
+      <i class="peek__fill" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <script src="../main.js"></script>
+  <script src="../v3.js"></script>
+</body>
+</html>

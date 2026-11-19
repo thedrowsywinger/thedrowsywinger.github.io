@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A booking-retry design using stable identifiers, MySQL named locks, transactions, and coordinated cancellation to preserve one inventory effect.">
+  <meta name="keywords" content="Booking Retries, Idempotency, MySQL, Transactions, Backend Engineering">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="Making Booking Retries Safe">
+  <meta property="og:description" content="A booking-retry design using stable identifiers, MySQL named locks, transactions, and coordinated cancellation to preserve one inventory effect.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/making-booking-retries-safe.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/profile_picture.jpg">
+  <meta property="article:published_time" content="2026-10-21">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Backend Development">
+  <meta property="article:tag" content="MySQL">
+  <meta property="article:tag" content="Concurrency">
+  <meta property="article:tag" content="Idempotency">
+  <title>Making Booking Retries Safe · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/making-booking-retries-safe.html">
+  <link rel="icon" type="image/jpeg" href="../../img/profile_picture.jpg">
+  <script>
+    try { var m = new URLSearchParams(location.search).get('mode') || localStorage.getItem('mode'); if (m === 'match') document.documentElement.dataset.mode = 'match'; if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+          <img class="portrait__img portrait__img--match" src="../img/portrait-match.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      <button class="switch" id="mode-switch" type="button" role="switch" aria-checked="false" aria-label="Show the personal Matchday view">
+        <span class="switch__word switch__word--work">Workday</span>
+        <span class="switch__track" aria-hidden="true"><span class="switch__ball"></span></span>
+        <span class="switch__word switch__word--match">Matchday</span>
+      </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 005" data-match="Match report · No. 005">Essay · No. 005</span><span class="post__sep">·</span><time datetime="2026-10-21">21 Oct 2026</time><span class="post__sep">·</span><span>5 min read</span></p>
+          <p class="post__kicker">Backend engineering · Database coordination</p>
+          <h1 class="post__title">Making Booking Retries Safe</h1>
+          <ul class="post__tags" aria-label="Topics"><li>MySQL</li><li>Concurrency</li><li>Idempotency</li></ul>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#give-the-booking-intention-a-stable-identifier">1. Give the booking intention a stable identifier</a></li><li><a href="#coordinate-the-check-and-the-change">2. Coordinate the check and the change</a></li><li><a href="#give-the-lock-and-transaction-separate-jobs">3. Give the lock and transaction separate jobs</a></li><li><a href="#coordinate-cancellation-through-the-same-boundary">4. Coordinate cancellation through the same boundary</a></li><li><a href="#verify-concurrent-behavior-with-a-real-database">5. Verify concurrent behavior with a real database</a></li><li><a href="#state-the-assumptions-behind-the-design">6. State the assumptions behind the design</a></li></ol></details>
+          <div class="post__body">
+
+
+                <p class="article-lead">We coordinate booking submissions and cancellations by booking identifier. A shared lock orders operations for the same booking, while a transaction groups the related database changes. Together, these controls let us give repeated requests a clear inventory rule.</p>
+
+                <p>Booking requests can arrive more than once. A client can retry after a timeout, or a user can repeat a submission while waiting for a response. Those requests can represent one booking intention.</p>
+
+                <p>The rule is simple: repeating that intention must not consume another room. Cancellation needs the same care because it reverses the inventory effect.</p>
+
+                <p>This article explains that design with synthetic examples. The diagrams describe possible request sequences, and the room counts illustrate expected behavior.</p>
+
+                <h2 id="give-the-booking-intention-a-stable-identifier">1. Give the booking intention a stable identifier</h2>
+
+                <p>Idempotency means that repeating an operation does not repeat its effect. For booking submission, the effect is creating a booking and taking rooms from inventory.</p>
+
+                <p>We use the booking identifier to recognize repeated submissions. A retry carries the same identifier even when it arrives as a new HTTP request. A request identifier can help trace one attempt, but does not necessarily identify the booking intention across attempts.</p>
+
+                <p>The state of the existing booking determines the response.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 1 &middot; Illustrative booking state decisions</span>
+<pre tabindex="0" aria-label="Illustrative booking state decisions"><code>Submit with booking identifier
+  |
+  +--&gt; active booking exists
+  |      --&gt; return its booking identifier
+  |      --&gt; preserve inventory
+  |
+  +--&gt; inactive booking exists
+  |      --&gt; reject this submit
+  |      --&gt; preserve inventory
+  |
+  +--&gt; no booking exists
+         --&gt; create booking and deduct rooms together</code></pre>
+</figure>
+
+                <p>This design treats an identifier as one booking intention. It does not reactivate a cancelled booking just because a request arrives again.</p>
+
+                <h2 id="coordinate-the-check-and-the-change">2. Coordinate the check and the change</h2>
+
+                <p>Checking for an existing booking is necessary, but concurrent requests also need coordination. The following hypothetical sequence shows why.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 2 &middot; Hypothetical concurrent booking requests</span>
+<pre tabindex="0" aria-label="Hypothetical concurrent booking requests"><code>Two uncoordinated requests for the same identifier
+
+Request A: check --&gt; absent --&gt; create
+Request B: check --&gt; absent --&gt; create
+
+Both checks can finish before either creation completes.</code></pre>
+</figure>
+
+                <p>We use a MySQL named lock for the booking identifier. A named lock gives cooperating database sessions exclusive access to work under the same lock name.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 3 &middot; Illustrative coordination for one booking identifier</span>
+<pre tabindex="0" aria-label="Illustrative coordination for one booking identifier"><code>Request A: lock --&gt; check --&gt; deduct + create --&gt; commit --&gt; unlock
+
+Request B: wait
+             |
+             +--&gt; acquire lock --&gt; find existing booking --&gt; return ID
+             |
+             +--&gt; acquisition timeout --&gt; return error</code></pre>
+</figure>
+
+                <p>MySQL associates named locks with a database session. Committing or rolling back a transaction does not release the named lock. <a href="https://dev.mysql.com/doc/refman/8.4/en/locking-functions.html">MySQL locking functions</a></p>
+
+                <p>That gives the connection a specific responsibility. It must remain the same database session through acquisition, booking work, and release.</p>
+
+                <p>We give lock acquisition a bounded wait. If the lock is unavailable when that wait ends, the operation returns an error without starting its booking transaction. The acquisition timeout does not limit the duration of work after the lock is acquired.</p>
+
+                <h2 id="give-the-lock-and-transaction-separate-jobs">3. Give the lock and transaction separate jobs</h2>
+
+                <p>The lock coordinates operations for one booking identifier. The transaction groups the database changes that belong to one operation.</p>
+
+                <p>A transaction commits its changes together or rolls them back when the operation fails. The booking row and its inventory deduction therefore belong inside the same transaction. That assumes the participating tables and database operations support the intended transaction behavior.</p>
+
+                <p>The operation follows this order.</p>
+
+                <ol>
+                <li>Reserve one connection from the pool.</li>
+                <li>Acquire the named lock for the booking identifier.</li>
+                <li>Start a transaction on that connection.</li>
+                <li>Check the existing booking state.</li>
+                <li>Return an active booking, reject an inactive booking, or create the booking and deduct rooms.</li>
+                <li>Commit successful work or roll back failed work.</li>
+                <li>Release the named lock if it was acquired.</li>
+                <li>Return the connection to the pool after cleanup.</li>
+                </ol>
+
+                <p>The cleanup path uses <code>finally</code> blocks. A <code>finally</code> block runs when control leaves its associated <code>try</code> block, including when an operation throws.</p>
+
+                <p>Explicit lock release remains part of cleanup even after a successful commit. Connection-pool behavior also needs verification because returning a connection does not necessarily end its database session.</p>
+
+                <h2 id="coordinate-cancellation-through-the-same-boundary">4. Coordinate cancellation through the same boundary</h2>
+
+                <p>Submission and cancellation affect the same booking and its inventory. They therefore use the same lock-naming rule.</p>
+
+                <p>Once cancellation holds the named lock, its transaction locks the matching booking rows and checks their states. Only active booking rows contribute an inventory release. An already-cancelled booking does not release rooms again.</p>
+
+                <p>The inventory update uses database arithmetic. It increments the stored room count instead of replacing it with a value previously read into application memory.</p>
+
+                <p>For example, the essential update has this shape. The table and column names are synthetic.</p>
+
+                <pre tabindex="0" aria-label="Synthetic SQL inventory increment"><code class="language-sql">UPDATE demo_room_availability
+SET available_rooms = available_rooms + 1
+WHERE id = 42;</code></pre>
+
+                <p>The increment and booking-state change remain inside the cancellation transaction. They must agree when the transaction commits.</p>
+
+                <p>The following example assumes one booking reserves one room for one night. These are expected values, not measurements from a customer booking.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 4 &middot; Illustrative inventory changes for one room night</span>
+<pre tabindex="0" aria-label="Illustrative inventory changes for one room night"><code>Start:              five available rooms
+
+First submit:       5 --&gt; 4
+Repeated submit:    4 --&gt; 4   existing booking ID returned
+First cancellation: 4 --&gt; 5
+Repeated cancel:    5 --&gt; 5   already-cancelled response</code></pre>
+</figure>
+
+                <p>The first and repeated cancellations can return different responses. Their inventory effect remains idempotent because the room is returned once.</p>
+
+                <h2 id="verify-concurrent-behavior-with-a-real-database">5. Verify concurrent behavior with a real database</h2>
+
+                <p>Mocked database calls can check method ordering. They cannot establish how the database coordinates independent connections.</p>
+
+                <p>A useful integration check runs concurrent operations against the same database engine and transaction path used by the application. It inspects both the returned responses and the stored effects.</p>
+
+                <p>Use these checks for the design.</p>
+
+                <ol>
+                <li>Submit the same booking concurrently from separate connections.</li>
+                <li>Confirm one booking effect and one inventory deduction.</li>
+                <li>Cancel that booking concurrently from separate connections.</li>
+                <li>Confirm one inventory release.</li>
+                <li>Submit again with the cancelled booking&#x27;s identifier and inspect the rejection.</li>
+                <li>Hold the lock from another connection and verify acquisition timeout behavior.</li>
+                <li>Trigger a transaction error and inspect rollback and lock cleanup.</li>
+                <li>Repeat with the deployment&#x27;s connection pool and proxy settings.</li>
+                </ol>
+
+                <p>These are verification steps, not results claimed by the synthetic example. The expected outcome includes stored state, inventory, connection cleanup, and caller responses.</p>
+
+                <h2 id="state-the-assumptions-behind-the-design">6. State the assumptions behind the design</h2>
+
+                <p>Every coordinated operation needs a stable booking identifier. All participating writers must follow the same lock-naming rule and reach the same database server. MySQL named locks coordinate within one server; they do not provide a distributed lock across independent servers. <a href="https://dev.mysql.com/doc/refman/8.4/en/locking-functions.html">MySQL locking functions</a></p>
+
+                <p>Database constraints have a separate role. A unique constraint rejects duplicate values at the database boundary. Its key must reflect the application&#x27;s booking lifecycle and permitted records. Choosing an application lock does not remove that schema-design decision.</p>
+
+                <p>The lock described here coordinates one booking identifier. Two different booking identifiers competing for the last room require separate inventory coordination. Calls to suppliers or payment services also need their own retry and reconciliation rules.</p>
+
+                <p>The design starts with an effect we want to preserve. A stable identifier recognizes the intention, the lock orders its operations, and the transaction groups the related writes. Cancellation follows the same boundary because it reverses that effect.</p>
+            
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next departure" data-match="Next fixture">Next departure</h2>
+            <div class="content">
+            <a class="tk" href="optimizing-hotel-search-performance.html" aria-label="Read: Speeding Up Hotel Search with Concurrent Chunks">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 004" data-match="Match report · No. 004">Essay · No. 004</span><time datetime="2025-11-26">26 Nov 2025</time></span>
+                <span class="tk__title">Speeding Up Hotel Search with Concurrent Chunks</span>
+                <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Chunk by chunk</span></span><span class="f"><small>To</small><span>Bounded overlap</span></span><span class="f"><small>Topic</small><span>Concurrency</span></span></span>
+                <span class="tk__vs">Overlap <b>vs</b> Waiting</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/optimizing-hotel-search-performance</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            </div>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/making-booking-retries-safe.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=Making%20Booking%20Retries%20Safe&amp;url=https://thedrowsywinger.github.io/blog/making-booking-retries-safe.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="foot">
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">abdullah.md.sarwar@gmail.com</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p>© 2026 Abdullah Md. Sarwar</p>
+    </footer>
+  </div>
+
+  <script src="../main.js"></script>
+</body>
+</html>
