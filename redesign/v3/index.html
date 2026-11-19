@@ -420,7 +420,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
         <div class="content">
           <div class="intro">
             <div class="intro__text">
-              <p class="lead">I'm a senior software engineer in Dhaka. I lead the Public API team at ShareTrip and own the backend behind its bookings, payments and pricing.</p>
+              <p class="lead">I'm a senior software engineer in Dhaka. I lead the Public API team at ShareTrip and work on the backend behind its bookings, payments and pricing.</p>
               <p>In my work, search must be fast and efficient. Every level of markup and discount must match. Every booking and payment must be traceable.</p>
               <p>I write about the design choices behind that work, and what each one cost.</p>
               <ul class="links links--inline">
@@ -488,17 +488,15 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
         <div class="content">
           <article class="case leadership" id="case-team">
             <p class="case__kicker">ShareTrip · Public API team</p>
-            <h3 class="case__title">Leading the Public API team</h3>
+            <h3 class="case__title">The Public API team</h3>
             <div class="leadership__layout">
               <div class="leadership__text">
-                <h4>My part</h4>
-                <p>I lead the Public API team, from planning and design review to production releases. I review code and mentor the engineers. I also write code for changes that cross services: runtime upgrades, query performance and messaging.</p>
                 <h4>Scope</h4>
                 <p>The team owns the backend for flights, hotels, visa, holidays, e-commerce, mobile recharge and bill payments. It serves consumers, B2B and B2E. Under every product sit the same three problems: <button class="leadership__choice" type="button" id="demo-supplier" data-lead-demo="supplier" aria-controls="leadership-stage" aria-pressed="false">supplier integrations</button>, <button class="leadership__choice" type="button" id="demo-states" data-lead-demo="states" aria-controls="leadership-stage" aria-pressed="false">booking states</button>, and <button class="leadership__choice" type="button" id="demo-pricing" data-lead-demo="pricing" aria-controls="leadership-stage" aria-pressed="false">pricing</button>.</p>
                 <div class="leadership__slot" data-stage-slot="scope"></div>
                 <h4>How we work</h4>
-                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-ack" data-lead-demo="ack" aria-controls="leadership-stage" aria-pressed="false">Contract first</button>. Services talk through RabbitMQ. Before either side is written, we agree where each message goes and when it counts as handled. This makes the contract explicit before the services are connected.</p><div class="leadership__slot" data-stage-slot="ack"></div></div>
-                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-profile" data-lead-demo="profile" aria-controls="leadership-stage" aria-pressed="false">Measure first</button>. We profile a query before we change it.</p><p class="leadership__follow"><button class="leadership__choice" type="button" id="demo-trips" data-lead-demo="trips" aria-controls="leadership-stage" aria-pressed="false">Count the round trips</button></p><div class="leadership__slot" data-stage-slot="measure"></div></div>
+                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-ack" data-lead-demo="ack" aria-controls="leadership-stage" aria-pressed="false">Contract first</button>. Services talk through RabbitMQ. Before either side is written, we agree where each message goes and when it counts as handled.</p><div class="leadership__slot" data-stage-slot="ack"></div></div>
+                <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-profile" data-lead-demo="profile" aria-controls="leadership-stage" aria-pressed="false">Measure first</button>. We profile a query before we change it, and <button class="leadership__choice" type="button" id="demo-trips" data-lead-demo="trips" aria-controls="leadership-stage" aria-pressed="false">count its round trips</button>.</p><div class="leadership__slot" data-stage-slot="measure"></div></div>
                 <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-trace" data-lead-demo="trace" aria-controls="leadership-stage" aria-pressed="false">One request, one trail</button>. One ID follows a request across services, and we read it in Grafana and Loki.</p><div class="leadership__slot" data-stage-slot="trace"></div></div>
                 <div class="leadership__rule"><p><button class="leadership__choice" type="button" id="demo-gate" data-lead-demo="gate" aria-controls="leadership-stage" aria-pressed="false">Staging first</button>. Every change runs in staging before production.</p><div class="leadership__slot" data-stage-slot="gate"></div></div>
                 <p class="more"><a class="link" href="portfolio.html">More about this work <span class="arrow" aria-hidden="true">→</span></a></p>
@@ -674,7 +672,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
                 <dt>The tempting answer</dt>
                 <dd class="tempt" data-cap="A number that nobody can trace."><s>Keep the formula in code and show only the final number.</s> <span class="tempt__why">Players cannot check a number they cannot trace, and every rule change becomes a deploy.</span></dd>
                 <dt>What I did</dt>
-                <dd data-cap="One fixed ladder decides every tie.">I designed and built the whole platform: the ranking engine, the tournament engine, the admin panel and the public site. I put every ranking constant in one config file, and the tests read that same file. Each player has a breakdown page that shows which results produced the points. The public table is served from precomputed snapshots. Tie-breaks follow one fixed ladder.</dd>
+                <dd data-cap="One fixed ladder decides every tie.">The platform has four parts: the ranking engine, the tournament engine, the admin panel and the public site. I put every ranking constant in one config file, and the tests read that same file. Each player has a breakdown page that shows which results produced the points. The public table is served from precomputed snapshots. Tie-breaks follow one fixed ladder.</dd>
               </dl>
               <p class="more"><a class="link" href="https://padelhubbd.com" target="_blank" rel="noopener">padelhubbd.com <span class="arrow" aria-hidden="true">→</span></a></p>
             </div>
