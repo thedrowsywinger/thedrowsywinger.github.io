@@ -68,101 +68,11 @@
     if (!reduce && motion && motion.beginElement) motion.beginElement();
   }
 
-  // The move: the 7 plays both wings, so each replay switches sides.
-  var moveOnRight = true;
-  function playMove() {
-    var move = document.getElementById('move');
-    if (!move) return;
-    clearTimeout(loopTimer); loopDue = false;
-    // SVG motion does not start before the page loads; CSS would. Wait, so both stay in step.
-    if (document.readyState !== 'complete') {
-      if (!playMove.waiting) {
-        playMove.waiting = true;
-        window.addEventListener('load', function () { playMove.waiting = false; playMove(); }, { once: true });
-      }
-      return;
-    }
-    move.classList.toggle('move--left', !moveOnRight);
-    var wing = move.querySelector('.mv-wing');
-    if (wing) wing.textContent = moveOnRight ? 'Right wing' : 'Left wing';
-    moveOnRight = !moveOnRight;
-    var next = move.querySelector('.mv-next');
-    if (next) next.textContent = moveOnRight ? '↻ Play the right wing' : '↻ Play the left wing';
-
-    // A fresh copy of the SVG drops every queued SMIL start from an earlier replay,
-    // so a quick second tap cannot fire the old cross during the new run.
-    var oldSvg = move.querySelector('svg');
-    var svg = oldSvg.cloneNode(true);
-    move.classList.remove('play', 'live', 'still');
-    oldSvg.replaceWith(svg);
-    void move.getBoundingClientRect();
-
-    // Reduced motion, or no SMIL: jump straight to the final frame.
-    // Right wing: cross for the 9 (goal at 5 s). Left wing: cut inside, top corner (goal at 4.2 s).
-    var onLeft = move.classList.contains('move--left');
-    var cap = move.querySelector('.mv-cap');
-    if (cap) cap.innerHTML = onLeft ? 'Fergie-time winner · Goal: <b>Abdullah</b>' : 'Fergie-time winner · Assist: <b>Abdullah</b>';
-    var motions = svg.querySelectorAll('[data-wing="' + (onLeft ? 'left' : 'right') + '"] animateMotion');
-    var canMove = motions.length && motions[0].beginElementAt;
-    if (reduce || !canMove) { move.classList.add('play', 'still'); runClock(move, 0); return; }
-    move.classList.add('play', 'live');
-    runClock(move, onLeft ? 4.2 : 5);
-    motions.forEach(function (m) {
-      m.beginElementAt(parseFloat(m.dataset.at) || 0);
-    });
-  }
-
-  // Fergie-time scoreboard: 90:00 runs to 92:59 during the move, then 90+3′ and 1–0 at the goal.
-  var clockFrame = 0;
-  function runClock(move, goalAt) {
-    var clock = move.querySelector('.mv-clock');
-    var score = move.querySelector('.mv-score');
-    if (!clock || !score) return;
-    cancelAnimationFrame(clockFrame);
-    var next = move.querySelector('.mv-next');
-    function scored() {
-      clock.textContent = '90+3′'; score.textContent = '1–0'; move.classList.add('scored');
-      if (next) next.tabIndex = 0;
-      if (goalAt) loopMove();
-    }
-    if (next) next.tabIndex = -1;
-    move.classList.remove('scored');
-    if (!goalAt) { scored(); return; }
-    score.textContent = '0–0';
-    var start = performance.now();
-    (function tick(now) {
-      var t = (now - start) / 1000;
-      if (t >= goalAt) { scored(); return; }
-      var secs = Math.floor(t / goalAt * 180);
-      clock.textContent = '9' + Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
-      clockFrame = requestAnimationFrame(tick);
-    })(start);
-  }
-
-  var moveEl = document.getElementById('move');
-  if (moveEl) moveEl.addEventListener('click', playMove);
-
-  // The move runs on a loop: after each goal the other wing plays. It waits while the scene is off the
-  // screen, the tab is hidden or Workday is showing, and it continues when the scene can be seen again.
-  var loopTimer = 0, loopDue = false, moveSeen = true;
-  function canLoop() { return moveSeen && !document.hidden && root.dataset.mode === 'match'; }
-  function loopMove() {
-    clearTimeout(loopTimer);
-    loopDue = false;
-    if (reduce || root.classList.contains('calm')) return;
-    loopTimer = setTimeout(function () { if (canLoop()) playMove(); else loopDue = true; }, 2600);
-  }
-  function resumeLoop() { if (loopDue && canLoop()) { loopDue = false; playMove(); } }
-  if (moveEl && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) { moveSeen = entries[entries.length - 1].isIntersecting; resumeLoop(); }, { threshold: 0.3 }).observe(moveEl);
-  }
-  document.addEventListener('visibilitychange', resumeLoop);
-
   function playMatch() {
     // A scene that waits for scrolling (v2) is played by the observer instead.
     replay('#cross:not(.scene-observe)');
     replay('.chalk');
-    playMove();
+    // hero-scenes.js restarts the tactics board on 'modechange'.
   }
 
   // ---------- Modes ----------

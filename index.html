@@ -83,144 +83,11 @@
       <!-- Matchday hero: the No. 7 goes down the wing, beats two, crosses, and the 9 heads it in.
            Full pitch, top-down, with a side-view close-up of the 7's cross. -->
       <div class="hero hero--match">
-        <div class="move move--mixed" id="move">
-          <p class="mv-board-clock" aria-hidden="true"><span class="mv-score">1–0</span><span class="mv-clock">90+3′</span></p>
-          <button class="mv-next" type="button" tabindex="-1">↻ Play the left wing</button>
-          <svg viewBox="0 0 360 246" width="360" height="246" aria-hidden="true">
-            <defs>
-              <mask id="mv-run-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--run" pathLength="100" d="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/></mask>
-              <mask id="mv-cross-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--cross" pathLength="100" d="M331 220 Q340 168 318 124"/></mask>
-              <mask id="mv-run-mask-l" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--run-l" pathLength="100" d="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/></mask>
-              <mask id="mv-shot-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask mv-mask--shot" pathLength="100" d="M295 174 Q310 118 348 115"/></mask>
-              <mask id="cu-shot-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask cu-mask-shot" pathLength="100" d="M112 238 C182 228 262 198 292 147"/></mask>
-              <mask id="cu-trail-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="246"><path class="mv-mask cu-mask" pathLength="100" d="M247 201 C303 168 333 88 303 38"/></mask>
-            </defs>
-            <g class="mv-board">
-            <g class="mv-field">
-              <g class="mv-lines">
-                <rect x="12" y="14" width="336" height="218"/>
-                <path d="M180 14 V232"/>
-                <circle cx="180" cy="123" r="29.3"/>
-                <path d="M348 58.5 H295.2 V187.5 H348 M348 93.7 H330.4 V152.3 H348"/>
-                <path d="M295.2 99.6 A29.3 29.3 0 0 0 295.2 146.4"/>
-                <path d="M12 58.5 H64.8 V187.5 H12 M12 93.7 H29.6 V152.3 H12"/>
-                <path d="M64.8 99.6 A29.3 29.3 0 0 1 64.8 146.4"/>
-                <circle class="mv-spot" cx="180" cy="123" r="1.4"/>
-                <circle class="mv-spot" cx="312.8" cy="123" r="1.4"/>
-                <circle class="mv-spot" cx="47.2" cy="123" r="1.4"/>
-                <rect class="mv-goal-far" x="6" y="111.3" width="6" height="23.4" rx="1"/>
-              </g>
-              <rect class="mv-net" x="348" y="111.3" width="6" height="23.4" rx="1"/>
-              <g data-wing="right">
-                <path class="mv-trail" mask="url(#mv-run-mask)" d="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/>
-                <path class="mv-trail mv-trail--cross" mask="url(#mv-cross-mask)" d="M331 220 Q340 168 318 124"/>
-              </g>
-              <g data-wing="left">
-                <path class="mv-trail" mask="url(#mv-run-mask-l)" d="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/>
-                <path class="mv-trail mv-trail--cross" mask="url(#mv-shot-mask)" d="M295 174 Q310 118 348 115"/>
-              </g>
-              <g class="mv-us">
-                <circle cx="38" cy="123" r="4.5"/>
-                <circle cx="118" cy="62" r="4.5"/><circle cx="112" cy="104" r="4.5"/><circle cx="112" cy="142" r="4.5"/><circle cx="124" cy="186" r="4.5"/>
-                <circle cx="196" cy="48" r="4.5"/><circle cx="186" cy="104" r="4.5"/><circle cx="192" cy="146" r="4.5"/>
-                <circle cx="262" cy="72" r="4.5"/>
-              </g>
-              <g class="mv-them">
-                <circle cx="168" cy="86" r="5"/><circle cx="160" cy="132" r="5"/>
-                <circle cx="252" cy="52" r="5"/><circle cx="246" cy="92" r="5"/><circle cx="244" cy="134" r="5"/>
-                <circle cx="302" cy="70" r="5"/><circle cx="296" cy="98" r="5"/>
-              </g>
-              <circle class="mv-opp mv-d1" cx="213" cy="213" r="5"/>
-              <circle class="mv-opp mv-d2" cx="274" cy="228" r="5"/>
-              <circle class="mv-opp mv-cb" cx="300" cy="146" r="5"/>
-              <circle class="mv-opp mv-gk" cx="338" cy="123" r="5"/>
-              <g data-wing="right">
-              <g class="mv-s9">
-                <animateMotion data-at="0" dur="4.7s" keyTimes="0;0.6;1" fill="freeze" begin="indefinite" calcMode="spline" keyPoints="0;0;1" keySplines="0 0 1 1;0.3 0 0.4 1" path="M250 104 C276 104 300 118 318 124"/>
-                <circle r="6.5" class="mv-mate"/><text class="mv-num mv-num--mate" y="3">9</text>
-              </g>
-              <g class="mv-w7">
-                <animateMotion data-at="0" dur="2.4s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/>
-                <circle r="7" class="mv-me"/><text class="mv-num" y="3.2">7</text>
-              </g>
-              <g class="mv-ball">
-                <animateMotion data-at="0" dur="2.4s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C245 227 255 216 275 216 C296 216 308 223 322 222"/>
-                <animateMotion data-at="3.95" dur="0.75s" fill="freeze" begin="indefinite" path="M322 222 Q331 170 309 126"/>
-                <animateMotion data-at="4.7" dur="0.3s" fill="freeze" begin="indefinite" path="M309 126 L343 121"/>
-                <circle cx="9" cy="-2" r="2.8"/>
-              </g>
-              </g>
-              <g data-wing="left">
-                <g class="mv-s9">
-                  <animateMotion data-at="0" dur="2.4s" fill="freeze" begin="indefinite" calcMode="spline" keyPoints="0;0;1" keyTimes="0;0.3;1" keySplines="0 0 1 1;0.3 0 0.4 1" path="M250 104 C270 106 294 116 312 122"/>
-                  <circle r="6.5" class="mv-mate"/><text class="mv-num mv-num--mate" y="3">9</text>
-                </g>
-                <g class="mv-w7">
-                  <animateMotion data-at="0" dur="2.2s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/>
-                  <circle r="7" class="mv-me"/><text class="mv-num" y="3.2">7</text>
-                </g>
-                <g class="mv-ball">
-                  <animateMotion data-at="0" dur="2.2s" fill="freeze" begin="indefinite" path="M150 218 C175 218 190 227 215 227 C238 227 252 214 266 198 C274 189 280 181 286 176"/>
-                  <animateMotion data-at="3.9" dur="0.3s" fill="freeze" begin="indefinite" path="M286 176 Q301 120 339 117"/>
-                  <circle cx="9" cy="-2" r="2.8"/>
-                </g>
-              </g>
-            </g>
-            </g>
-            <!-- Close-ups: right wing = side view of the cross; left wing = behind-the-shooter view of the top-corner finish -->
-            <g class="mv-close">
-              <g data-wing="right">
-              <path class="cu-ground" d="M0 206 H360"/>
-              <path class="cu-byline" d="M334 206 L360 214"/>
-              <g class="cu-flag"><path class="cu-pole" d="M334 206 V168"/><path class="cu-pennant" d="M334 168 L350 174 L334 180 Z"/></g>
-              <path class="cu-trail" mask="url(#cu-trail-mask)" d="M247 201 C303 168 333 88 303 38"/>
-              <g class="cu7">
-                <!-- Torso turned a little toward the camera, so the name and number on the back read. -->
-                <g transform="translate(196 206) scale(1.25) translate(-196 -206)">
-                  <path class="cu-limb" d="M190 134 L176 150 M218 133 L234 124 M194 176 L191 192 L196 206"/>
-                  <path class="cu-shirt" d="M188 128 L220 131 L215 166 L190 163 Z"/>
-                  <path class="cu-shorts" d="M190 163 L215 166 L214 178 L189 175 Z"/>
-                  <text class="cu-name" x="203.5" y="141">ABDULLAH</text>
-                  <text class="cu-num" x="203" y="160">7</text>
-                  <circle class="cu-head" cx="204" cy="116" r="9"/>
-                  <g class="cu7-leg"><path class="cu-limb" d="M209 176 L219 191 L229 202 L237 199"/></g>
-                </g>
-              </g>
-              <g class="cu-ball-run">
-                <g class="cu-ball">
-                  <animateMotion data-at="3.22" dur="0.6s" fill="freeze" begin="indefinite" path="M0 0 C56 -33 86 -113 56 -163"/>
-                  <circle cx="247" cy="201" r="5"/>
-                </g>
-              </g>
-              </g>
-              <g data-wing="left">
-                <path class="cu-ground" d="M0 200 H360"/>
-                <g class="cu-goal">
-                  <path class="cu-mesh" d="M110 140 L122 148 H288 L300 140 M122 148 V200 M288 148 V200 M129 140 V200 M148 140 V200 M167 140 V200 M186 140 V200 M205 140 V200 M224 140 V200 M243 140 V200 M262 140 V200 M281 140 V200 M110 155 H300 M110 170 H300 M110 185 H300"/>
-                </g>
-                <path class="cu-frame" d="M110 200 V140 H300 V200"/>
-                <g class="cu-keeper">
-                  <path class="cu-limb cu-limb--gk" d="M201 182 L197 200 M209 182 L213 200 M200 162 L188 150 M210 162 L222 150"/>
-                  <path class="cu-gk-body" d="M199 159 H211 L212 183 H198 Z"/>
-                  <circle class="cu-gk-head" cx="205" cy="152" r="5"/>
-                </g>
-                <path class="cu-trail" mask="url(#cu-shot-mask)" d="M112 238 C182 228 262 198 292 147"/>
-                <g class="cu-shot-ball">
-                  <animateMotion data-at="2.8" dur="0.6s" fill="freeze" begin="indefinite" calcMode="spline" keyTimes="0;1" keySplines="0.2 0 0.6 1" path="M0 0 C70 -10 150 -40 180 -91"/>
-                  <circle cx="112" cy="238" r="7"/>
-                </g>
-                <g class="cu-shooter">
-                  <path class="cu-limb cu-limb--big" d="M50 172 L28 196 M92 172 L114 188 M58 236 L56 252"/>
-                  <g class="cu-shooter-leg"><path class="cu-limb cu-limb--big" d="M86 234 L108 244"/></g>
-                  <path class="cu-shirt" d="M48 166 L94 166 L98 222 L44 222 Z"/>
-                  <path class="cu-shorts" d="M46 222 H96 L96 238 H46 Z"/>
-                  <text class="cu-name cu-name--big" x="71" y="184">ABDULLAH</text>
-                  <text class="cu-num cu-num--big" x="71" y="211">7</text>
-                  <circle class="cu-head" cx="71" cy="150" r="13"/>
-                </g>
-              </g>
-            </g>
-          </svg>
+        <div class="move" id="move">
+          <p class="mv-board-clock" aria-hidden="true"><span class="mv-score">0–0</span><span class="mv-clock">92:00</span></p>
+          <button class="mv-next" type="button">↻ Play it again</button>
+          <!-- hero-scenes.js draws the tactics board here. -->
+          <svg viewBox="0 0 360 246" width="360" height="246" aria-hidden="true"></svg>
           <p class="mv-foot" aria-hidden="true"><span class="mv-wing">Right wing</span><span class="mv-cap">Fergie-time winner · Assist: <b>Abdullah</b></span></p>
         </div>
       </div>
@@ -943,6 +810,7 @@ GROUP BY status;</code><span class="sqlbox__out">→ one query, not one per book
 
   <script src="main.js"></script>
   <script src="v3.js"></script>
+  <script src="hero-scenes.js"></script>
   <script src="leadership-demos.js"></script>
   <script src="booking-journey.js"></script>
 </body>

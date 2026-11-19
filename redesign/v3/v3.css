@@ -615,12 +615,6 @@ html:not([data-mode="match"]) main > .row.work-only:first-of-type { border-top: 
   --pitch: #2c7a4b; --pitch-2: #37895a;
 }
 [data-mode="match"][data-theme="light"] .portrait { box-shadow: 0 0 0 1px var(--line), 0 0 0 5px var(--paper), 0 0 0 7px #151515; }
-/* Away kit on the pitch: white shirt, black shorts, black name and number. */
-[data-mode="match"][data-theme="light"] .mv-me { fill: #f6f6f3; stroke: #151515; }
-[data-mode="match"][data-theme="light"] .mv-w7 .mv-num { fill: #151515; }
-[data-mode="match"][data-theme="light"] .cu-shirt { fill: #f6f6f3; stroke: #f6f6f3; }
-[data-mode="match"][data-theme="light"] .cu-shorts { fill: #151515; stroke: #151515; }
-[data-mode="match"][data-theme="light"] .cu-name, [data-mode="match"][data-theme="light"] .cu-num { fill: #151515; }
 [data-mode="match"][data-theme="light"] .matchnav__bar i { background: var(--accent); }
 [data-mode="match"][data-theme="light"] .chapter__min { color: var(--accent); }
 
