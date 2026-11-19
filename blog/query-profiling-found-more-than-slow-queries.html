@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A query profiler that keeps each database operation inside the request that caused it: fingerprints, round trips, sampling and what the numbers can and cannot prove.">
+  <meta name="keywords" content="Profiling, MongoDB, Loki, Backend Engineering">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="Query Profiling Found More Than Slow Queries">
+  <meta property="og:description" content="A query profiler that keeps each database operation inside the request that caused it: fingerprints, round trips, sampling and what the numbers can and cannot prove.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/query-profiling-found-more-than-slow-queries.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/query-profiling-found-more-than-slow-queries.png">
+  <meta property="article:published_time" content="2026-11-19">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Backend Development">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Query Profiling Found More Than Slow Queries · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/query-profiling-found-more-than-slow-queries.html">
+  <link rel="icon" type="image/svg+xml" href="../img/logo.svg">
+  <script>
+    document.documentElement.classList.add('js'); try { if ((new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme')) === 'light') document.documentElement.dataset.theme = 'light'; if (localStorage.getItem('calm') === '1' || (localStorage.getItem('calm') === null && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.documentElement.classList.add('calm'); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../v3.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 007" data-match="Match report · No. 007">Essay · No. 007</span><span class="post__sep">·</span><time datetime="2026-11-19">19 Nov 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
+          <p class="post__kicker">Backend engineering · Databases</p>
+          <h1 class="post__title">Query Profiling Found More Than Slow Queries</h1>
+          <ul class="post__tags" aria-label="Topics"><li>Profiling</li><li><a href="../index.html?mode=work&amp;tool=MongoDB#toolkit" title="MongoDB in my toolkit">MongoDB</a></li><li>Loki</li></ul>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-put-the-query-back-inside-its-request">1. Put the query back inside its request</a></li><li><a href="#2-group-query-shapes-without-collecting-values">2. Group query shapes without collecting values</a></li><li><a href="#3-count-the-round-trips-in-one-request">3. Count the round trips in one request</a></li><li><a href="#4-a-completed-query-is-not-a-completed-change">4. A completed query is not a completed change</a></li><li><a href="#5-keep-elapsed-time-and-query-time-apart">5. Keep elapsed time and query time apart</a></li><li><a href="#6-keep-the-sampling-rate-visible">6. Keep the sampling rate visible</a></li><li><a href="#7-check-the-profiler-itself">7. Check the profiler itself</a></li><li><a href="#8-claim-only-what-the-evidence-shows">8. Claim only what the evidence shows</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 19 Nov 2026</span></p></details>
+          <div class="post__body">
+
+                <p class="article-lead">A list of slow queries tells you which operations take time. It does not tell you why the application ran them, or whether they did the right work. We built our query profiler to answer those questions by keeping each operation inside the request that caused it.</p>
+
+                <p>We started with hotel services and then added other parts of the platform. The services used different database libraries, but we asked the same three questions everywhere.</p>
+
+                <ol><li>Which request caused this operation?</li><li>How many times did it run inside that request?</li><li>Did it make the business change we expected?</li></ol>
+
+                <p>This article explains the design and the method. All names, identifiers, and values are synthetic. It describes how we read profiler output, not a measured speedup.</p>
+
+                <h2 id="1-put-the-query-back-inside-its-request">1. Put the query back inside its request</h2>
+
+                <p>The profiler writes structured JSON events to standard output. Loki collects them with the application logs, and Grafana gives us the views to analyze them.</p>
+
+                <p>We use two main event types.</p>
+
+                <ol><li>A query event describes one database operation.</li><li>A request event summarizes one HTTP request.</li></ol>
+
+                <p>Request context connects the two. It holds a trace identifier, the route, and counters for the database work seen so far.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 1</span>
+<pre tabindex="0" aria-label="Figure 1"><code>HTTP request
+  --&gt; create request context
+        |
+        +--&gt; database operation --&gt; query event
+        |
+        +--&gt; database operation --&gt; query event
+        |
+        +--&gt; response completes --&gt; request summary
+
+Events --&gt; standard output --&gt; Loki --&gt; Grafana</code></pre>
+</figure>
+
+                <p>We record route templates, not full URLs. For example, <code>/bookings/:id</code> groups every booking page without putting each booking identifier into that field.</p>
+
+                <p>An adapter connects the shared profiler logic to one database library. The adapter captures the request context when an operation starts. It uses that same context when the operation completes. Some libraries run their completion callbacks after the original context is gone, so this pairing keeps each operation attached to the right request.</p>
+
+                <p>Background work needs separate care. A query can finish after the response summary is already written. That query then does not appear in the summary's totals.</p>
+
+                <h2 id="2-group-query-shapes-without-collecting-values">2. Group query shapes without collecting values</h2>
+
+                <p>A query fingerprint is the structure of an operation with its values removed or replaced. It lets many requests add to the same query group.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 2</span>
+<pre tabindex="0" aria-label="Figure 2"><code>Original filter
+  demo_mappings.findOne({hotelId: "demo-hotel-a"})
+
+MongoDB fingerprint
+  demo_mappings.findOne({"hotelId":"string"})</code></pre>
+</figure>
+
+                <p>Our MongoDB adapter keeps field names and operators, and replaces each value with its type name. It also sorts object keys and collapses repeated array elements into one shape.</p>
+
+                <p>So a lookup with three identifiers and a lookup with thirty share one fingerprint. The fingerprint describes the shape of the query, not the size of the batch. We still need request counts and the code to understand the real workload.</p>
+
+                <p>SQL needs its own fingerprint logic. A SQL statement and a MongoDB filter do not hold their values in the same form, so one replacement rule cannot cover both.</p>
+
+                <p>Fingerprints keep query values out of the profiler's query fields. They do not make every log field safe. Error messages and other metadata still need their own review.</p>
+
+                <h2 id="3-count-the-round-trips-in-one-request">3. Count the round trips in one request</h2>
+
+                <p>Request context makes one pattern easy to see: many small queries inside one request. Each query is fast on its own, so none of them appears in a slow-query list. Together they can add up to most of the request's database time.</p>
+
+                <p>This is often an N+1 pattern. One operation gets a list, and then one more operation runs for each item in it.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 3</span>
+<pre tabindex="0" aria-label="Figure 3"><code>One request, hotel identifiers looked up one by one
+
+  hotel A --&gt; findOne
+  hotel B --&gt; findOne
+  hotel C --&gt; findOne
+
+Same request, identifiers looked up together
+
+  [A, B, C] --&gt; one batch lookup --&gt; reuse the returned rows</code></pre>
+</figure>
+
+                <p>This simplified code shows the change.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 4</span>
+<pre tabindex="0" aria-label="Figure 4"><code>// One query per hotel.
+for (const hotelId of hotelIds) {
+  await mappings.findOne({ hotelId });
+}
+
+// One query for all of them.
+const rows = await mappings.find({ hotelId: { $in: hotelIds } });</code></pre>
+</figure>
+
+                <p>The request summary shows the pattern directly. Its query count grows with the number of items, while each query event looks harmless.</p>
+
+                <p>A real flow can need several batch lookups, not one. For example, a supplier search can translate our identifiers into supplier identifiers, and then translate the results back. Each direction is its own batch.</p>
+
+                <p>Two details decide whether the batch is correct. First, keep identifier types the same as the stored values. A numeric identifier turned into a string can stop matching in MongoDB. Second, check that the batch query has an index on the deployed database. An index declared in source code does not prove that the deployed collection has it.</p>
+
+                <h2 id="4-a-completed-query-is-not-a-completed-change">4. A completed query is not a completed change</h2>
+
+                <p>A database operation can finish quickly and without a driver error, and still miss its purpose. An update that matches no record succeeds as an operation. Its duration tells us nothing about whether the right record changed.</p>
+
+                <p>The profiler shows that an operation ran. It does not show that the business state is correct. So we read the code path behind important writes, not only their timing.</p>
+
+                <p>A failure path is a good example. Suppose a booking record is created and a later step fails. The handler must mark that record as failed, and for that it needs the record's identifier.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 5</span>
+<pre tabindex="0" aria-label="Figure 5"><code>Creation fails before a record exists
+  --&gt; log the error
+  --&gt; no status write
+
+Record exists, then a later step fails
+  --&gt; use the identifier kept from creation
+  --&gt; try to save FAILED status</code></pre>
+</figure>
+
+                <p>We keep the identifier in scope as soon as the record exists. Our shared data layer also skips the write and logs a warning when the identifier is missing. That guard checks that an identifier is present. It cannot prove that the update matched the record we meant.</p>
+
+                <p>We keep the response to the caller separate from the status write. If saving the failed status also fails, we log that error. It does not replace the original failure response.</p>
+
+                <h2 id="5-keep-elapsed-time-and-query-time-apart">5. Keep elapsed time and query time apart</h2>
+
+                <p>We measure request elapsed time and accumulated database time separately. The operation timer measures the interval around the library call. It is not database-server CPU time.</p>
+
+                <p>Operations can also run at the same time. Their durations then add up to more than the time the user waited.</p>
+
+                <p>This is an idealized example, not a benchmark.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 6</span>
+<pre tabindex="0" aria-label="Figure 6"><code>Query A: [------ 100 ms ------]
+Query B: [------ 100 ms ------]
+
+Accumulated query time:  200 ms
+Elapsed time for both:   100 ms, when they fully overlap</code></pre>
+</figure>
+
+                <p>Request elapsed time also includes application work and calls to other services. A slow endpoint can have very little database time. The profiler helps us choose the next thing to investigate, instead of assuming that every slow response needs a database fix.</p>
+
+                <h2 id="6-keep-the-sampling-rate-visible">6. Keep the sampling rate visible</h2>
+
+                <p>Sampling means that we record only some of the requests. Different routes can use different rates. For each request, the profiler makes one sampling decision and keeps it for all the work in that request.</p>
+
+                <p>So raw event counts from routes with different rates are not comparable. Traffic volume and the mix of routes can also change between two windows.</p>
+
+                <p>To compare a before and an after, we use these measures.</p>
+
+                <ol><li>Queries per request.</li><li>Database time per request.</li><li>Time per run of one query fingerprint.</li><li>Total database time over comparable periods, corrected for sampling.</li></ol>
+
+                <p>Both windows need the same coverage. Some route filters keep request summaries but drop individual query events. A comparison must use routes with the same profiler settings.</p>
+
+                <p>Deploys need care too. During a rollout, an older instance without the profiler writes no profiler events. If its requests are in the denominator, the new instance seems to miss traffic.</p>
+
+                <h2 id="7-check-the-profiler-itself">7. Check the profiler itself</h2>
+
+                <p>The profiler adds application work and log volume. It is not free, and its output is not complete by default.</p>
+
+                <p>Its reporting code catches its own errors and records them as separate events. That keeps profiler failures out of the normal request path. It does not mean that logging costs nothing.</p>
+
+                <p>When we roll the profiler out to a service, we run these checks.</p>
+
+                <ol><li>Confirm that the expected build is running.</li><li>Check the service, environment, module, and route labels.</li><li>Compare sampled request counts with an independent request log.</li><li>Check query timings, failure fields, and events with missing context.</li><li>Read sample output for values that should not be there.</li><li>Review log volume and profiler error events.</li></ol>
+
+                <p>These checks test the instrument. They do not show that a fix worked. A healthy profiler can still report a slow or incorrect application.</p>
+
+                <h2 id="8-claim-only-what-the-evidence-shows">8. Claim only what the evidence shows</h2>
+
+                <p>A code change and its measured effect are two separate claims. Batching a lookup is a concrete change that we can read in the code. Its effect in production needs a comparable measurement window, with the sampling rate and coverage from section 6.</p>
+
+                <p>The most useful thing the profiler gave us was not a faster query. It was the link between an operation and its purpose. A repeated lookup explains extra work. A write that runs but changes nothing explains a wrong state. Keeping each query inside its request let us ask both questions with the same data.</p>
+
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next essay" data-match="Next essay">Next essay</h2>
+            <div class="content">
+            <a class="tk" href="designing-rabbitmq-routing-for-multiple-markets.html" aria-label="Read: Designing RabbitMQ Routing for Multiple Markets">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 006" data-match="Match report · No. 006">Essay · No. 006</span><time datetime="2026-11-13">13 Nov 2026</time></span>
+                <span class="tk__title">Designing RabbitMQ Routing for Multiple Markets</span>
+                <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Publisher</span></span><span class="f"><small>To</small><span>Market queue</span></span><span class="f"><small>Topic</small><span>Routing</span></span></span>
+                <span class="tk__vs">Connections <b>vs</b> Routing</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/designing-rabbitmq-routing-for-multiple-markets</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            </div>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/query-profiling-found-more-than-slow-queries.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=Query%20Profiling%20Found%20More%20Than%20Slow%20Queries&amp;url=https://thedrowsywinger.github.io/blog/query-profiling-found-more-than-slow-queries.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="foot foot--site">
+      <p class="foot__nav"><a class="link" href="../index.html">Home</a> · <a class="link" href="../portfolio.html">Work</a> · <a class="link" href="../blog/index.html">Writing</a> · <a class="link" href="../publications.html">Research</a> · <a class="link" href="../agents.html">AI agents</a></p>
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p class="foot__end"><a class="link" href="../index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="../img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
+    </footer>
+    <a class="peek" href="../blog/designing-rabbitmq-routing-for-multiple-markets.html" aria-label="Next page: Designing RabbitMQ Routing for Multiple Markets">
+      <span class="peek__hint">Next page · keep scrolling, or tap</span>
+      <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
+      <span class="peek__title">Designing RabbitMQ Routing for Multiple Markets</span>
+      <i class="peek__fill" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <script src="../main.js"></script>
+  <script src="../v3.js"></script>
+</body>
+</html>

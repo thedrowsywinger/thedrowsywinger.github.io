@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="work">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A method for following one request across services with Grafana and Loki: fix the window, find the identifier, read the context, count carefully and state what is still unknown.">
+  <meta name="keywords" content="Grafana, Loki, LogQL, Backend Engineering">
+  <meta name="author" content="Abdullah Md. Sarwar">
+  <meta property="og:title" content="Following One Request Through Logs with Grafana and Loki">
+  <meta property="og:description" content="A method for following one request across services with Grafana and Loki: fix the window, find the identifier, read the context, count carefully and state what is still unknown.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thedrowsywinger.github.io/blog/following-one-request-through-logs-with-grafana-and-loki.html">
+  <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/following-one-request-through-logs-with-grafana-and-loki.png">
+  <meta property="article:published_time" content="2026-11-19">
+  <meta property="article:author" content="Abdullah Md. Sarwar">
+  <meta property="article:section" content="Backend Development">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Following One Request Through Logs with Grafana and Loki · Abdullah Sarwar</title>
+  <link rel="canonical" href="https://thedrowsywinger.github.io/blog/following-one-request-through-logs-with-grafana-and-loki.html">
+  <link rel="icon" type="image/svg+xml" href="../img/logo.svg">
+  <script>
+    document.documentElement.classList.add('js'); try { if ((new URLSearchParams(location.search).get('theme') || localStorage.getItem('theme')) === 'light') document.documentElement.dataset.theme = 'light'; if (localStorage.getItem('calm') === '1' || (localStorage.getItem('calm') === null && matchMedia('(prefers-reduced-motion: reduce)').matches)) document.documentElement.classList.add('calm'); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../v3.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to article</a>
+
+  <div class="page page--inner">
+    <header class="site-header">
+      <a class="site-id" href="../index.html">
+        <span class="mini-portrait" aria-hidden="true">
+          <img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600">
+        </span>
+        <span class="site-id__name">Abdullah Sarwar</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="../blog/index.html" aria-current="page">Writing</a>
+        <a class="link" href="../portfolio.html">Work</a>
+        <a class="link" href="../publications.html">Research</a>
+      </nav>
+      <div class="controls">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg class="theme-btn__sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+        <svg class="theme-btn__moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1z"/></svg>
+      </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <article class="post">
+        <header class="post__head">
+          <p class="post__strip"><span data-work="Essay · No. 008" data-match="Match report · No. 008">Essay · No. 008</span><span class="post__sep">·</span><time datetime="2026-11-19">19 Nov 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
+          <p class="post__kicker">Backend engineering · Observability</p>
+          <h1 class="post__title">Following One Request Through Logs with Grafana and Loki</h1>
+          <ul class="post__tags" aria-label="Topics"><li>Grafana</li><li>Loki</li><li>LogQL</li></ul>
+        </header>
+
+        <div class="post__layout">
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-know-which-tool-answers-which-question">1. Know which tool answers which question</a></li><li><a href="#2-fix-the-environment-service-and-time-window">2. Fix the environment, service, and time window</a></li><li><a href="#3-find-the-identifier-before-you-parse-anything">3. Find the identifier before you parse anything</a></li><li><a href="#4-read-the-lines-around-the-match">4. Read the lines around the match</a></li><li><a href="#5-follow-identifiers-across-services">5. Follow identifiers across services</a></li><li><a href="#6-count-events-without-overstating-impact">6. Count events without overstating impact</a></li><li><a href="#7-keep-large-collections-bounded">7. Keep large collections bounded</a></li><li><a href="#8-write-the-finding-with-what-is-still-unknown">8. Write the finding with what is still unknown</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 19 Nov 2026</span></p></details>
+          <div class="post__body">
+
+                <p class="article-lead">We use Grafana and Loki to turn one reported problem into a sequence of events that we can check against the code. The goal is a bounded explanation: what happened, which evidence supports it, and what we still do not know.</p>
+
+                <p>The starting point is often one identifier and an approximate time. The useful error can be in another service, under another identifier, or in the line next to the one that matched. So we follow a fixed method instead of searching everywhere at once.</p>
+
+                <p>This article explains that method. All identifiers, services, timelines, and values are synthetic. They show how the method works, not a real event.</p>
+
+                <h2 id="1-know-which-tool-answers-which-question">1. Know which tool answers which question</h2>
+
+                <p>Grafana is our investigation interface. It connects to backends through data sources. Loki stores application logs and answers queries written in LogQL, its query language.</p>
+
+                <p>Prometheus holds measurements, such as CPU and memory, and Grafana shows those too.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 1</span>
+<pre tabindex="0" aria-label="Figure 1"><code>Reported problem
+  --&gt; Grafana
+        +--&gt; Loki: what the application recorded
+        +--&gt; Prometheus: how the services and hosts behaved
+
+Events + measurements
+  --&gt; the deployed code and configuration
+        --&gt; an explanation we can test</code></pre>
+</figure>
+
+                <p>A CPU increase next to an error spike is a reason to ask another question. It does not show which one caused the other.</p>
+
+                <p>We reach Loki from the command line through a small wrapper. The wrapper reads a local credential profile, so no token goes into the command itself. The token's permissions decide what we can read. Log access does not give access to databases or to the cluster.</p>
+
+                <h2 id="2-fix-the-environment-service-and-time-window">2. Fix the environment, service, and time window</h2>
+
+                <p>First, we find out where the reported action ran. An identifier without an environment can lead to unrelated records. A local time without its timezone moves the search to the wrong window.</p>
+
+                <ol><li>Confirm the environment and the business area.</li><li>Record the reported time and its timezone.</li><li>Convert the window to UTC, and save both forms.</li><li>Choose the likely service and check its labels.</li><li>Start with a narrow window around the reported action.</li></ol>
+
+                <p>A label is a named attribute on a log stream. A log stream is the group of entries that share the same labels. Our services do not all use the same label name for the service, so we look up the labels instead of assuming <code>app</code> everywhere.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 2</span>
+<pre tabindex="0" aria-label="Figure 2"><code>agent-loki demo-prod labels
+agent-loki demo-prod values app</code></pre>
+</figure>
+
+                <p>For an event in the past, we set an absolute time range in Grafana. Grafana supports both relative and absolute ranges. <a href="https://grafana.com/docs/loki/latest/query/bp-query/">Loki query guidance</a></p>
+
+                <p>We take a time from an identifier only after we check its format and the code that generates it. Otherwise we use the reported time or a verified record timestamp.</p>
+
+                <h2 id="3-find-the-identifier-before-you-parse-anything">3. Find the identifier before you parse anything</h2>
+
+                <p>We search the likely service for the known identifier. This query selects one service and keeps lines that contain the trace identifier.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 3</span>
+<pre tabindex="0" aria-label="Figure 3"><code>{app="demo-flight"} |= "demo-trace-42"</code></pre>
+</figure>
+
+                <p>The <code>|=</code> operator keeps lines that contain the given text. We put simple text filters before parsers, so Loki does less work later. <a href="https://grafana.com/docs/loki/latest/query/bp-query/">Loki query guidance</a></p>
+
+                <p>For a recent problem, the wrapper takes a duration and a line limit.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 4</span>
+<pre tabindex="0" aria-label="Figure 4"><code>agent-loki demo-prod query \
+  '{app="demo-flight"} |= "demo-trace-42"' 10m 100</code></pre>
+</figure>
+
+                <p>This searches the last ten minutes and asks for at most one hundred lines. Loki returns the newest matches first, and the wrapper sorts them oldest first for display. A display in time order does not prove that we have the whole window.</p>
+
+                <p>For structured logs, we parse JSON after the text filter has narrowed the matches.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 5</span>
+<pre tabindex="0" aria-label="Figure 5"><code>{app="demo-flight"} |= "demo-trace-42" | json | event="http.request"</code></pre>
+</figure>
+
+                <p>The parser extracts fields from valid JSON only. A line that fails to parse gets an <code>__error__</code> label, and we check for it when results look incomplete. <a href="https://grafana.com/docs/loki/latest/query/log_queries/">Loki log queries</a></p>
+
+                <p>No matches can mean several things. The time, environment, labels, or identifier can be wrong. The service may not log that identifier, or the logs may be past their retention period. We check these before we widen the search to every service.</p>
+
+                <h2 id="4-read-the-lines-around-the-match">4. Read the lines around the match</h2>
+
+                <p>The line that matches the identifier is often not the line that explains the problem. A stack trace can span several entries, and only the first one may contain the identifier.</p>
+
+                <p>So we open the surrounding context of the matching stream, and keep the window small. Grafana's context view loads nearby entries from the same stream. <a href="https://grafana.com/docs/grafana/latest/datasources/loki/query-editor/">Grafana Loki query editor</a></p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 6</span>
+<pre tabindex="0" aria-label="Figure 6"><code>Identifier search
+  --&gt; matching event
+        --&gt; same stream, nearby time
+              --&gt; stack trace or the step before it
+                    --&gt; candidate code path</code></pre>
+</figure>
+
+                <p>Nearby lines can belong to other requests running at the same time. Before we join lines into one story, we check request identifiers, instance labels, and operation names. Two lines close in time are not proof that they belong to the same request.</p>
+
+                <h2 id="5-follow-identifiers-across-services">5. Follow identifiers across services</h2>
+
+                <p>The first service may log a booking code, and the next one a supplier reference. We keep the evidence that links one identifier to the next.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 7</span>
+<pre tabindex="0" aria-label="Figure 7"><code>Gateway event
+  trace: demo-trace-42
+  booking: demo-booking-17
+          |
+          v
+Booking service event
+  booking: demo-booking-17
+  supplier reference: demo-supplier-8
+          |
+          v
+Supplier adapter event
+  supplier reference: demo-supplier-8
+  result: validation rejected</code></pre>
+</figure>
+
+                <p>Each arrow needs a recorded mapping or a code path that we have read. A similar timestamp or a similar message is weaker evidence. When a service does not log the shared identifier, we record that gap instead of inventing a full trace.</p>
+
+                <p>Then we read the handler in the revision that was deployed. That tells a validation failure apart from a later database or supplier failure. A local branch can differ from production, so its code alone cannot answer the question.</p>
+
+                <h2 id="6-count-events-without-overstating-impact">6. Count events without overstating impact</h2>
+
+                <p>Once we understand one occurrence, we ask whether the same signature appears elsewhere. This query counts matching entries across the service's streams.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 8</span>
+<pre tabindex="0" aria-label="Figure 8"><code>sum(count_over_time({app="demo-flight"} |= "demo-error-code" [10m]))</code></pre>
+</figure>
+
+                <p><code>count_over_time</code> counts entries in the given duration for each stream, and <code>sum</code> adds the stream counts together. <a href="https://grafana.com/docs/loki/latest/query/metric_queries/">Loki metric queries</a></p>
+
+                <p>We run it as an instant query at the end of the chosen window. In Grafana, an instant query uses the To value of the time range. <a href="https://grafana.com/docs/grafana/latest/datasources/loki/query-editor/">Grafana Loki query editor</a></p>
+
+                <p>A range query evaluates the expression again at each step. If you add up overlapping ten-minute counts, you count some entries more than once. <a href="https://grafana.com/docs/loki/latest/reference/loki-http-api/">Loki HTTP API</a> So we check the query mode before we report a total.</p>
+
+                <p>A count of log entries is also not a count of affected bookings. One booking can log the same error several times, or retry. An impact number needs a defined business event and a reliable way to find unique records.</p>
+
+                <h2 id="7-keep-large-collections-bounded">7. Keep large collections bounded</h2>
+
+                <p>Every production log query is work for a shared service. A small result does not mean that Loki scanned a small amount of data. So a large collection needs a reason and a plan.</p>
+
+                <ol><li>State why a larger collection is necessary.</li><li>Choose one service and fixed start and end times.</li><li>Split the window into small parts.</li><li>Request one part at a time, with a pause between requests.</li><li>Save each part with its query and its window.</li><li>Stop on errors or signs of load on the service.</li><li>Check coverage before you calculate totals.</li></ol>
+
+                <p>Loki's range API takes explicit start, end, direction, and line-limit parameters. A response that reaches the line limit may be cut off. <a href="https://grafana.com/docs/loki/latest/reference/loki-http-api/">Loki HTTP API</a></p>
+
+                <p>A formatted display is not an export. Our wrapper's display drops stream labels and rounds timestamps to the second. An exporter must keep the original timestamps, stream labels, and line text.</p>
+
+                <p>It must also handle page boundaries where several entries share one timestamp. Moving past that timestamp can skip entries, and repeating it can return the same entries again. Timestamp and text alone cannot tell every legitimate repeated entry apart.</p>
+
+                <p>We compare exported counts with counts queried separately over the same boundaries. We also check the entries at each boundary and which streams are covered. Matching counts alone do not prove that the entries are the same. Logs that arrive late can also change the results between two checks.</p>
+
+                <p>When the logs hold query events, the same data can show database work per request. <a href="query-profiling-found-more-than-slow-queries.html">Query Profiling Found More Than Slow Queries</a> explains that analysis and its sampling limits.</p>
+
+                <h2 id="8-write-the-finding-with-what-is-still-unknown">8. Write the finding with what is still unknown</h2>
+
+                <p>We end with a timeline and a claim that the evidence supports. This report is fully synthetic.</p>
+
+                <figure class="article-figure">
+<span class="figure-label">Figure 9</span>
+<pre tabindex="0" aria-label="Figure 9"><code>Window: 09:10-09:20 UTC, demo production environment
+
+09:12:04  Gateway accepted demo-trace-42.
+09:12:05  Booking service linked it to demo-booking-17.
+09:12:05  Adapter logged a validation rejection for demo-supplier-8.
+
+Observed:   linked events reached supplier validation.
+Code check: the handler we read rejects a missing required field.
+Hypothesis: that field was missing from this request.
+Next check: confirm the field through an approved source.
+Limit:      the logs we read do not show the original field value.</code></pre>
+</figure>
+
+                <p>We share the relevant facts, not full request bodies. Raw logs can hold credentials, customer details, and internal addresses. Saved evidence needs access control and a retention period, even when the account can only read.</p>
+
+                <p>The method works when each step answers one specific question. We move from one identifier to nearby context, then to related services, the code, and a carefully defined count. The explanation stays tied to the evidence we actually collected.</p>
+
+          </div>
+        </div>
+
+        <footer class="post__foot">
+          <div class="row row--flush">
+            <h2 class="label" data-work="Next essay" data-match="Next essay">Next essay</h2>
+            <div class="content">
+            <a class="tk" href="query-profiling-found-more-than-slow-queries.html" aria-label="Read: Query Profiling Found More Than Slow Queries">
+              <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
+              <span class="tk__main">
+                <span class="tk__top"><span data-work="Essay · No. 007" data-match="Match report · No. 007">Essay · No. 007</span><time datetime="2026-11-19">19 Nov 2026</time></span>
+                <span class="tk__title">Query Profiling Found More Than Slow Queries</span>
+                <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Slow query</span></span><span class="f"><small>To</small><span>Its request</span></span><span class="f"><small>Topic</small><span>Profiling</span></span></span>
+                <span class="tk__vs">Query <b>vs</b> Purpose</span>
+                <span class="tk__bar"><i aria-hidden="true"></i><code>/blog/query-profiling-found-more-than-slow-queries</code></span>
+              </span>
+              <span class="tk__stub"><span class="tk__action">Read</span><span class="tk__no">ADMIT<br>ONE</span></span>
+            </a>
+            </div>
+          </div>
+          <div class="row row--flush">
+            <h2 class="label">Share</h2>
+            <div class="content">
+              <ul class="links links--inline">
+                <li><a class="link" href="https://www.linkedin.com/sharing/share-offsite/?url=https://thedrowsywinger.github.io/blog/following-one-request-through-logs-with-grafana-and-loki.html" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><a class="link" href="https://twitter.com/intent/tweet?text=Following%20One%20Request%20Through%20Logs%20with%20Grafana%20and%20Loki&amp;url=https://thedrowsywinger.github.io/blog/following-one-request-through-logs-with-grafana-and-loki.html" target="_blank" rel="noopener">X / Twitter</a></li>
+                <li><a class="link" href="index.html">All writing <span class="arrow" aria-hidden="true">→</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="foot foot--site">
+      <p class="foot__nav"><a class="link" href="../index.html">Home</a> · <a class="link" href="../portfolio.html">Work</a> · <a class="link" href="../blog/index.html">Writing</a> · <a class="link" href="../publications.html">Research</a> · <a class="link" href="../agents.html">AI agents</a></p>
+      <p><a class="link" href="mailto:abdullah.md.sarwar@gmail.com">Email</a> · <a class="link" href="https://github.com/thedrowsywinger" target="_blank" rel="noopener">GitHub</a> · <a class="link" href="https://www.linkedin.com/in/abdullah-md-sarwar/" target="_blank" rel="noopener">LinkedIn</a> · <a class="link" href="https://drive.google.com/file/d/1YnQN7jGuS_z25cZA5cOdOv-a0zBbXJ-p/view?usp=sharing" target="_blank" rel="noopener">Résumé</a></p>
+      <p class="foot__end"><a class="link" href="../index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="../img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
+    </footer>
+    <a class="peek" href="../blog/query-profiling-found-more-than-slow-queries.html" aria-label="Next page: Query Profiling Found More Than Slow Queries">
+      <span class="peek__hint">Next page · keep scrolling, or tap</span>
+      <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
+      <span class="peek__title">Query Profiling Found More Than Slow Queries</span>
+      <i class="peek__fill" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <script src="../main.js"></script>
+  <script src="../v3.js"></script>
+</body>
+</html>

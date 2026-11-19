@@ -353,7 +353,38 @@ V3_ESSAYS = [{
     "kicker": "Backend engineering · Messaging", "tags": ["RabbitMQ", "Messaging", "Routing"],
     "description": "A routing design for booking events in several markets: the separate roles of connections, channels, routing keys and queues in RabbitMQ.",
     "next": "making-booking-retries-safe",
+    "ticket": [("From", "Publisher"), ("To", "Market queue"), ("Topic", "Routing")], "vs": ("Connections", "Routing"),
+}, {
+    "slug": "query-profiling-found-more-than-slow-queries", "no": 7, "published": "2026-11-19",
+    "kicker": "Backend engineering · Databases", "tags": ["Profiling", "MongoDB", "Loki"],
+    "description": "A query profiler that keeps each database operation inside the request that caused it: fingerprints, round trips, sampling and what the numbers can and cannot prove.",
+    "next": "designing-rabbitmq-routing-for-multiple-markets",
+    "ticket": [("From", "Slow query"), ("To", "Its request"), ("Topic", "Profiling")], "vs": ("Query", "Purpose"),
+}, {
+    "slug": "following-one-request-through-logs-with-grafana-and-loki", "no": 8, "published": "2026-11-19",
+    "kicker": "Backend engineering · Observability", "tags": ["Grafana", "Loki", "LogQL"],
+    "description": "A method for following one request across services with Grafana and Loki: fix the window, find the identifier, read the context, count carefully and state what is still unknown.",
+    "next": "query-profiling-found-more-than-slow-queries",
+    "ticket": [("From", "One ID"), ("To", "Timeline"), ("Topic", "Logs")], "vs": ("Evidence", "Guesswork"),
 }]
+ESSAY_BY_SLUG = {spec["slug"]: spec for spec in V3_ESSAYS}
+
+
+def next_ticket(spec, donor):
+    """The "Next essay" ticket. A v3-only essay is drawn from the donor's ticket for essay No. 005."""
+    base = re.search(r'<a class="tk" href="making-booking-retries-safe\.html".*?</a>', donor, re.S).group(0)
+    target = ESSAY_BY_SLUG.get(spec["next"])
+    if target is None:
+        assert spec["next"] == "making-booking-retries-safe", spec["next"]
+        return base.replace("Next departure", "Next essay")
+    title = re.search(r"^# (.*)$", (Path(__file__).resolve().parent / "v3-essays" / f"{target['slug']}.md").read_text(), re.M).group(1)
+    fields = "".join(f'<span class="f"><small>{k}</small><span>{v}</span></span>' for k, v in target["ticket"])
+    t = base.replace("making-booking-retries-safe", target["slug"]).replace("Making Booking Retries Safe", title)
+    t = t.replace("No. 005", f"No. {target['no']:03d}")
+    t = t.replace('datetime="2026-10-21">21 Oct 2026', f'datetime="{target["published"]}">{fmt_date(target["published"])}')
+    t = re.sub(r'(<span class="tk__fields tk__fields--work">).*?(</span></span></span>)', lambda m: m.group(1) + fields + "</span>", t, count=1, flags=re.S)
+    t = re.sub(r'<span class="tk__vs">.*?</span>', f'<span class="tk__vs">{target["vs"][0]} <b>vs</b> {target["vs"][1]}</span>', t, count=1)
+    return t.replace("Next departure", "Next essay")
 MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 
 DEMO_HEAD = '<p class="demo__head"><span class="demo__title">{title}</span><span class="demo__tag">Example values</span></p>'
@@ -508,13 +539,13 @@ def v3_essay(spec, shell, ticket_html):
 # The board: what is published and what is planned. Planned essays show a title only.
 # ---------------------------------------------------------------------------------------------
 PLANNED = [
-    "Query Profiling Found More Than Slow Queries",
     "Upgrading Node in a Service That Renders PDFs",
     "Building Safer Production Access for AI Coding Agents",
     "One Booking Code Across Several Services",
-    "Following One Request Through Logs with Grafana and Loki",
 ]
 PUBLISHED = [   # newest first; the first row flips from its old status when the board is reached
+    ("Following One Request Through Logs with Grafana and Loki", "following-one-request-through-logs-with-grafana-and-loki.html"),
+    ("Query Profiling Found More Than Slow Queries", "query-profiling-found-more-than-slow-queries.html"),
     ("Designing RabbitMQ Routing for Multiple Markets", "designing-rabbitmq-routing-for-multiple-markets.html"),
     ("Making Booking Retries Safe", "making-booking-retries-safe.html"),
     ("Speeding Up Hotel Search with Concurrent Chunks", "optimizing-hotel-search-performance.html"),
@@ -609,8 +640,7 @@ def main():
     essay_shell = convert((SRC / "blog" / "making-booking-retries-safe.html").read_text(), "../")
     for spec in V3_ESSAYS:
         donor = (SRC / "blog" / "scoring-goals-securely.html").read_text()     # its "next essay" ticket is the one for essay No. 005
-        ticket_html = re.search(r'<a class="tk" href="%s\.html".*?</a>' % spec["next"], donor, re.S).group(0)
-        ticket_html = ticket_html.replace("Next departure", "Next essay")
+        ticket_html = next_ticket(spec, donor)
         html, _ = v3_essay(spec, essay_shell, ticket_html)
         name = spec["slug"] + ".html"
         (OUT / "blog" / name).write_text(finish(essay(html, name), "../", f"blog/{name}"))
