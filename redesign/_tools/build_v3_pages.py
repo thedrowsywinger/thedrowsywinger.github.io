@@ -172,7 +172,7 @@ def career_timeline(html):
 
 
 COVERS = {
-    "making-booking-retries-safe.html": ("Essay · No. 005 · 21 Oct 2026", "Making Booking Retries Safe", "Idempotency with MySQL named locks",
+    "making-booking-retries-safe.html": ("Essay · No. 005 · 9 Jun 2026", "Making Booking Retries Safe", "Idempotency with MySQL named locks",
         '<div class="idem"><span class="idem__dot" style="top:6px;--dy:18px"></span><span class="idem__dot" style="top:25px;--dy:0px;animation-delay:.15s"></span><span class="idem__dot" style="top:44px;--dy:-18px;animation-delay:.3s"></span><span class="idem__lbl">retry ×3</span><span class="idem__card">1 booking ✓</span></div>'),
     "optimizing-hotel-search-performance.html": ("Essay · No. 004 · 26 Nov 2025", "Speeding Up Hotel Search with Concurrent Chunks", "Bounded concurrency",
         '<div class="trace"><div>chunk 1<i style="width:18%"></i></div><div>chunk 2<i style="width:28%;margin-left:8%;animation-delay:.15s"></i></div><div>chunk 3<i style="width:44%;margin-left:16%;animation-delay:.3s"></i></div><div>chunk 4<i style="width:62%;margin-left:24%;animation-delay:.45s"></i></div></div>'),
@@ -349,19 +349,19 @@ def essay(html, name):
 # shell of "Making Booking Retries Safe", so it has the same format.
 # ---------------------------------------------------------------------------------------------
 V3_ESSAYS = [{
-    "slug": "designing-rabbitmq-routing-for-multiple-markets", "no": 6, "published": "2026-11-13",
+    "slug": "designing-rabbitmq-routing-for-multiple-markets", "no": 6, "published": "2026-07-23",
     "kicker": "Backend engineering · Messaging", "tags": ["RabbitMQ", "Messaging", "Routing"],
     "description": "A routing design for booking events in several markets: the separate roles of connections, channels, routing keys and queues in RabbitMQ.",
     "next": "making-booking-retries-safe",
     "ticket": [("From", "Publisher"), ("To", "Market queue"), ("Topic", "Routing")], "vs": ("Connections", "Routing"),
 }, {
-    "slug": "query-profiling-found-more-than-slow-queries", "no": 7, "published": "2026-11-19",
+    "slug": "query-profiling-found-more-than-slow-queries", "no": 7, "published": "2026-09-01",
     "kicker": "Backend engineering · Databases", "tags": ["Profiling", "MongoDB", "Loki"],
     "description": "A query profiler that keeps each database operation inside the request that caused it: fingerprints, round trips, sampling and what the numbers can and cannot prove.",
     "next": "designing-rabbitmq-routing-for-multiple-markets",
     "ticket": [("From", "Slow query"), ("To", "Its request"), ("Topic", "Profiling")], "vs": ("Query", "Purpose"),
 }, {
-    "slug": "following-one-request-through-logs-with-grafana-and-loki", "no": 8, "published": "2026-11-19",
+    "slug": "following-one-request-through-logs-with-grafana-and-loki", "no": 8, "published": "2026-10-14",
     "kicker": "Backend engineering · Observability", "tags": ["Grafana", "Loki", "LogQL"],
     "description": "A method for following one request across services with Grafana and Loki: fix the window, find the identifier, read the context, count carefully and state what is still unknown.",
     "next": "query-profiling-found-more-than-slow-queries",
@@ -381,7 +381,7 @@ def next_ticket(spec, donor):
     fields = "".join(f'<span class="f"><small>{k}</small><span>{v}</span></span>' for k, v in target["ticket"])
     t = base.replace("making-booking-retries-safe", target["slug"]).replace("Making Booking Retries Safe", title)
     t = t.replace("No. 005", f"No. {target['no']:03d}")
-    t = t.replace('datetime="2026-10-21">21 Oct 2026', f'datetime="{target["published"]}">{fmt_date(target["published"])}')
+    t = re.sub(r'<time datetime="[\d-]+">[^<]*</time>', f'<time datetime="{target["published"]}">{fmt_date(target["published"])}</time>', t, count=1)
     t = re.sub(r'(<span class="tk__fields tk__fields--work">).*?(</span></span></span>)', lambda m: m.group(1) + fields + "</span>", t, count=1, flags=re.S)
     t = re.sub(r'<span class="tk__vs">.*?</span>', f'<span class="tk__vs">{target["vs"][0]} <b>vs</b> {target["vs"][1]}</span>', t, count=1)
     return t.replace("Next departure", "Next essay")
@@ -606,7 +606,7 @@ def essay_cover(html, name):
     assert html.count("        </header>") == 1, name
     return html.replace("        </header>", cover, 1)
 
-COVERS = {"designing-rabbitmq-routing-for-multiple-markets.html": ("Essay · No. 006 · 13 Nov 2026", "Designing RabbitMQ Routing for Multiple Markets",
+COVERS = {"designing-rabbitmq-routing-for-multiple-markets.html": ("Essay · No. 006 · 23 Jul 2026", "Designing RabbitMQ Routing for Multiple Markets",
                                                                   "Routing keys, queues and connections", PLUGS), **COVERS}
 
 

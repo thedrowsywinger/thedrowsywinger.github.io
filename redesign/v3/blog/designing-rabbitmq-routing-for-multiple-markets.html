@@ -11,7 +11,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://thedrowsywinger.github.io/blog/designing-rabbitmq-routing-for-multiple-markets.html">
   <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/designing-rabbitmq-routing-for-multiple-markets.png">
-  <meta property="article:published_time" content="2026-11-13">
+  <meta property="article:published_time" content="2026-07-23">
   <meta property="article:author" content="Abdullah Md. Sarwar">
   <meta property="article:section" content="Backend Development">
   <meta name="twitter:card" content="summary_large_image">
@@ -54,7 +54,7 @@
     <main id="main">
       <article class="post">
         <header class="post__head">
-          <p class="post__strip"><span data-work="Essay · No. 006" data-match="Match report · No. 006">Essay · No. 006</span><span class="post__sep">·</span><time datetime="2026-11-13">13 Nov 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
+          <p class="post__strip"><span data-work="Essay · No. 006" data-match="Match report · No. 006">Essay · No. 006</span><span class="post__sep">·</span><time datetime="2026-07-23">23 Jul 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
           <p class="post__kicker">Backend engineering · Messaging</p>
           <h1 class="post__title">Designing RabbitMQ Routing for Multiple Markets</h1>
           <ul class="post__tags" aria-label="Topics"><li>RabbitMQ</li><li>Messaging</li><li>Routing</li></ul>
@@ -62,7 +62,7 @@
         </header>
 
         <div class="post__layout">
-          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-give-each-messaging-resource-a-clear-role">1. Give each messaging resource a clear role</a></li><li><a href="#2-put-the-market-into-the-routing-contract">2. Put the market into the routing contract</a></li><li><a href="#3-share-connections-within-an-intentional-boundary">3. Share connections within an intentional boundary</a></li><li><a href="#4-resolve-configuration-before-declaring-subscriptions">4. Resolve configuration before declaring subscriptions</a></li><li><a href="#5-define-the-message-contract-at-the-handler">5. Define the message contract at the handler</a></li><li><a href="#6-make-rejection-and-recovery-deliberate">6. Make rejection and recovery deliberate</a></li><li><a href="#7-plan-topology-changes-as-a-deployment-sequence">7. Plan topology changes as a deployment sequence</a></li><li><a href="#8-verify-routing-and-business-effects-separately">8. Verify routing and business effects separately</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 13 Nov 2026</span></p></details>
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-give-each-messaging-resource-a-clear-role">1. Give each messaging resource a clear role</a></li><li><a href="#2-put-the-market-into-the-routing-contract">2. Put the market into the routing contract</a></li><li><a href="#3-share-connections-within-an-intentional-boundary">3. Share connections within an intentional boundary</a></li><li><a href="#4-resolve-configuration-before-declaring-subscriptions">4. Resolve configuration before declaring subscriptions</a></li><li><a href="#5-define-the-message-contract-at-the-handler">5. Define the message contract at the handler</a></li><li><a href="#6-make-rejection-and-recovery-deliberate">6. Make rejection and recovery deliberate</a></li><li><a href="#7-plan-topology-changes-as-a-deployment-sequence">7. Plan topology changes as a deployment sequence</a></li><li><a href="#8-verify-routing-and-business-effects-separately">8. Verify routing and business effects separately</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 23 Jul 2026</span></p></details>
           <div class="post__body">
 
                 <p class="article-lead">We organize booking events around a clear routing rule: each market's events must reach that market's handlers. Connections, channels, routing keys, and queues each have a separate role in expressing that rule.</p>
@@ -278,7 +278,7 @@ Handler fails
             <a class="tk" href="making-booking-retries-safe.html" aria-label="Read: Making Booking Retries Safe">
               <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
               <span class="tk__main">
-                <span class="tk__top"><span data-work="Essay · No. 005" data-match="Match report · No. 005">Essay · No. 005</span><time datetime="2026-10-21">21 Oct 2026</time></span>
+                <span class="tk__top"><span data-work="Essay · No. 005" data-match="Match report · No. 005">Essay · No. 005</span><time datetime="2026-06-09">9 Jun 2026</time></span>
                 <span class="tk__title">Making Booking Retries Safe</span>
                 <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Retry</span></span><span class="f"><small>To</small><span>Same booking</span></span><span class="f"><small>Topic</small><span>Idempotency</span></span></span>
                 <span class="tk__vs">Retry <b>vs</b> Duplicates</span>

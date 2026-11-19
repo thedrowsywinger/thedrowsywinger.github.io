@@ -11,7 +11,7 @@
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://thedrowsywinger.github.io/blog/following-one-request-through-logs-with-grafana-and-loki.html">
   <meta property="og:image" content="https://thedrowsywinger.github.io/img/og/following-one-request-through-logs-with-grafana-and-loki.png">
-  <meta property="article:published_time" content="2026-11-19">
+  <meta property="article:published_time" content="2026-10-14">
   <meta property="article:author" content="Abdullah Md. Sarwar">
   <meta property="article:section" content="Backend Development">
   <meta name="twitter:card" content="summary_large_image">
@@ -54,14 +54,14 @@
     <main id="main">
       <article class="post">
         <header class="post__head">
-          <p class="post__strip"><span data-work="Essay · No. 008" data-match="Match report · No. 008">Essay · No. 008</span><span class="post__sep">·</span><time datetime="2026-11-19">19 Nov 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
+          <p class="post__strip"><span data-work="Essay · No. 008" data-match="Match report · No. 008">Essay · No. 008</span><span class="post__sep">·</span><time datetime="2026-10-14">14 Oct 2026</time><span class="post__sep">·</span><span>7 min read</span></p>
           <p class="post__kicker">Backend engineering · Observability</p>
           <h1 class="post__title">Following One Request Through Logs with Grafana and Loki</h1>
           <ul class="post__tags" aria-label="Topics"><li>Grafana</li><li>Loki</li><li>LogQL</li></ul>
         </header>
 
         <div class="post__layout">
-          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-know-which-tool-answers-which-question">1. Know which tool answers which question</a></li><li><a href="#2-fix-the-environment-service-and-time-window">2. Fix the environment, service, and time window</a></li><li><a href="#3-find-the-identifier-before-you-parse-anything">3. Find the identifier before you parse anything</a></li><li><a href="#4-read-the-lines-around-the-match">4. Read the lines around the match</a></li><li><a href="#5-follow-identifiers-across-services">5. Follow identifiers across services</a></li><li><a href="#6-count-events-without-overstating-impact">6. Count events without overstating impact</a></li><li><a href="#7-keep-large-collections-bounded">7. Keep large collections bounded</a></li><li><a href="#8-write-the-finding-with-what-is-still-unknown">8. Write the finding with what is still unknown</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 19 Nov 2026</span></p></details>
+          <details class="toc" open><summary data-work="Contents" data-match="Team talk">Contents</summary><ol><li><a href="#1-know-which-tool-answers-which-question">1. Know which tool answers which question</a></li><li><a href="#2-fix-the-environment-service-and-time-window">2. Fix the environment, service, and time window</a></li><li><a href="#3-find-the-identifier-before-you-parse-anything">3. Find the identifier before you parse anything</a></li><li><a href="#4-read-the-lines-around-the-match">4. Read the lines around the match</a></li><li><a href="#5-follow-identifiers-across-services">5. Follow identifiers across services</a></li><li><a href="#6-count-events-without-overstating-impact">6. Count events without overstating impact</a></li><li><a href="#7-keep-large-collections-bounded">7. Keep large collections bounded</a></li><li><a href="#8-write-the-finding-with-what-is-still-unknown">8. Write the finding with what is still unknown</a></li></ol><p class="toc__meta"><span>7 min read</span><span class="toc__left" data-minutes="7"></span><span>Published 14 Oct 2026</span></p></details>
           <div class="post__body">
 
                 <p class="article-lead">We use Grafana and Loki to turn one reported problem into a sequence of events that we can check against the code. The goal is a bounded explanation: what happened, which evidence supports it, and what we still do not know.</p>
@@ -250,7 +250,7 @@ Limit:      the logs we read do not show the original field value.</code></pre>
             <a class="tk" href="query-profiling-found-more-than-slow-queries.html" aria-label="Read: Query Profiling Found More Than Slow Queries">
               <span class="tk__notch tk__notch--t"></span><span class="tk__notch tk__notch--b"></span>
               <span class="tk__main">
-                <span class="tk__top"><span data-work="Essay · No. 007" data-match="Match report · No. 007">Essay · No. 007</span><time datetime="2026-11-19">19 Nov 2026</time></span>
+                <span class="tk__top"><span data-work="Essay · No. 007" data-match="Match report · No. 007">Essay · No. 007</span><time datetime="2026-09-01">1 Sep 2026</time></span>
                 <span class="tk__title">Query Profiling Found More Than Slow Queries</span>
                 <span class="tk__fields tk__fields--work"><span class="f"><small>From</small><span>Slow query</span></span><span class="f"><small>To</small><span>Its request</span></span><span class="f"><small>Topic</small><span>Profiling</span></span></span>
                 <span class="tk__vs">Query <b>vs</b> Purpose</span>
@@ -280,7 +280,7 @@ Limit:      the logs we read do not show the original field value.</code></pre>
       <p class="foot__end"><a class="link" href="../index.html?mode=match">The Matchday side <span class="arrow" aria-hidden="true">→</span></a><span class="foot__mark"><img src="../img/logo.svg" alt="" width="22" height="22">© 2026 Abdullah Md. Sarwar</span></p>
     </footer>
     <a class="peek" href="../blog/query-profiling-found-more-than-slow-queries.html" aria-label="Next page: Query Profiling Found More Than Slow Queries">
-      <span class="peek__hint">Next page · keep scrolling, or tap</span>
+      <span class="peek__hint"><span class="peek__arrow" aria-hidden="true">↓</span><span class="peek__say">Keep scrolling for the next page</span><span class="peek__go">Keep scrolling…</span></span>
       <span class="peek__head"><span class="mini-portrait" aria-hidden="true"><img class="portrait__img portrait__img--work" src="../img/portrait-work.jpg" alt="" width="480" height="600" loading="lazy"></span><span class="site-id__name">Abdullah Sarwar</span></span>
       <span class="peek__title">Query Profiling Found More Than Slow Queries</span>
       <i class="peek__fill" aria-hidden="true"></i>
